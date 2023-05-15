@@ -27,4 +27,10 @@
     <string name="no_house_create_label">Crea una nuova casa!</string>
     <string name="no_house_create_field">Nome casa</string>
     <string name="no_house_create_btn">Crea</string>
+    <string name="house_created_label">Congratulazioni, hai creato una nuova casa! Condividi ora il codice con i tuoi coinquilini.</string>
+    <string name="house_created_name">Nome casa:</string>
+    <string name="house_created_code">Codice casa:</string>
+    <string name="home_btn">Home</string>
+    <string name="forgot_password_to_login">Torna a login</string>
+    <string name="forgot_password_reset">Reset password</string>
 </resources>

@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,21 +15,21 @@ import it.unitn.disi.fumiprovv.roommates.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RegistrationFragment#newInstance} factory method to
+ * Use the {@link HouseCreatedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegistrationFragment extends Fragment {
+public class HouseCreatedFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "email";
-    private static final String ARG_PARAM2 = "param2"; // No pass for security reasons
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public RegistrationFragment() {
+    public HouseCreatedFragment() {
         // Required empty public constructor
     }
 
@@ -39,11 +39,15 @@ public class RegistrationFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RegistrationFragment.
+     * @return A new instance of fragment HouseCreatedFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegistrationFragment newInstance(String param1, String param2) {
-        RegistrationFragment fragment = new RegistrationFragment();
+    public static HouseCreatedFragment newInstance(String param1, String param2) {
+        HouseCreatedFragment fragment = new HouseCreatedFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -60,14 +64,14 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_registration, container, false);
-        Button registrationBtn = (Button) view.findViewById(R.id.registrationButton);
-        registrationBtn.setOnClickListener((a) -> onRegistrationButtonClick(view));
+        View view = inflater.inflate(R.layout.fragment_house_created, container, false);
+        Button homeBtn = (Button) view.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener((a) -> onHomeButtonClick(view));
         return view;
     }
 
-    public void onRegistrationButtonClick(View view) {
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.houseCreationFragment);
+    public void onHomeButtonClick(View view) {
+        NavController navController = NavHostFragment.findNavController(this);
+        navController.navigate(R.id.homeFragment);
     }
 }

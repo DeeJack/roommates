@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 
@@ -47,7 +48,14 @@ public class LoginFragment extends Fragment {
         loginBtn.setOnClickListener((a) -> onLoginButtonClick(view));
         Button registrationBtn = (Button) view.findViewById(R.id.registrationButton);
         registrationBtn.setOnClickListener((a) -> onRegistrationButtonClick(view));
+        TextView forgotPassword = (TextView) view.findViewById(R.id.forgotPassButton);
+        forgotPassword.setOnClickListener((a) -> onForgotPasswordButtonClick(view));
         return view;
+    }
+
+    private void onForgotPasswordButtonClick(View view) {
+        NavController navController = Navigation.findNavController(view);
+        navController.navigate(R.id.forgotPasswordFragment);
     }
 
     public void onLoginButtonClick(View view) {
