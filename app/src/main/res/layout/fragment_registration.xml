@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.login.RegistrationFragment"
+    android:id="@+id/fragment_registration">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_dark">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_home"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.118"
+            android:contentDescription="@string/logo_description" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_label"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imageView2"
+            app:layout_constraintHorizontal_bias="0.48"
+            app:layout_constraintStart_toStartOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            app:layout_constraintVertical_bias="0.037"
+            tools:text="@string/login_label" />
+
+        <EditText
+            android:id="@+id/registerEmailField"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:height="20dp"
+            android:background="@drawable/border"
+            android:ems="10"
+            android:hint="@string/login_email_field"
+            android:inputType="textEmailAddress"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.429"
+            android:autofillHints="emailAddress" />
+
+        <EditText
+            android:id="@+id/registerPasswordField"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:background="@drawable/border"
+            android:ems="10"
+            android:hint="@string/login_pass_field"
+            android:inputType="textPassword"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/registerEmailField"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/registerEmailField"
+            app:layout_constraintTop_toBottomOf="@+id/registerEmailField"
+            app:layout_constraintVertical_bias="0.053"
+            android:autofillHints="password" />
+
+        <EditText
+            android:id="@+id/registerPassword2Field"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="1dp"
+            android:background="@drawable/border"
+            android:ems="10"
+            android:hint="@string/registration_confirm_pass_label"
+            android:inputType="textPassword"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/registerPasswordField"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/registerPasswordField"
+            app:layout_constraintTop_toBottomOf="@+id/registerPasswordField"
+            android:autofillHints="password" />
+
+        <Button
+            android:id="@+id/registrationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="227dp"
+            android:text="@string/login_register_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/registerPassword2Field"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="@+id/registerPassword2Field"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.627" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
