@@ -33,4 +33,6 @@
     <string name="home_btn">Home</string>
     <string name="forgot_password_to_login">Torna a login</string>
     <string name="forgot_password_reset">Reset password</string>
+    <string name="email_not_valid">Email non valida</string>
+    <string name="forgot_password_sent">Email di recupero inviata</string>
 </resources>

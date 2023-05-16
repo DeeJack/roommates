@@ -1,18 +1,25 @@
 package it.unitn.disi.fumiprovv.roommates.fragments.login;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.utils.FieldValidation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,13 +73,34 @@ public class ForgotPasswordFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
-        TextView backToLogin = view.findViewById(R.id.backToLoginButton);
-        backToLogin.setOnClickListener(this::onBackToLoginClick);
+        //TextView backToLogin = view.findViewById(R.id.backToLoginButton);
+        //backToLogin.setOnClickListener(this::onBackToLoginClick);
+        Button forgotPasswordButton = view.findViewById(R.id.forgotPasswordButton);
+        forgotPasswordButton.setOnClickListener((View) -> onForgotPasswordClick(view));
         return view;
+    }
+
+    void onForgotPasswordClick(View view) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String emailAddress = ((TextView) view.findViewById(R.id.forgotEmailField)).getText().toString();
+
+        if (!FieldValidation.checkEmailRequirements(emailAddress)) {
+            Toast.makeText(getContext(), getString(R.string.email_not_valid), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        auth.sendPasswordResetEmail(emailAddress)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Email sent.");
+                        Toast.makeText(getContext(), getString(R.string.forgot_password_sent), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void onBackToLoginClick(View view) {
         NavController navController = Navigation.findNavController(view);
+        //navController.popBackStack(R.id.loginFragment, true);
         navController.navigate(R.id.loginFragment);
     }
 }

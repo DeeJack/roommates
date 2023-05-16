@@ -3,10 +3,17 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextClock;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 
@@ -61,6 +68,17 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        ((TextView) view.findViewById(R.id.user_name)).setText(auth.getCurrentUser().getEmail());
+        Button logoutButton = view.findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(this::onLogoutClick);
+        return view;
+    }
+
+    void onLogoutClick(View view) {
+        FirebaseAuth.getInstance().signOut();
+        NavController navController = Navigation.findNavController(view);
+        navController.navigate(R.id.loginFragment);
     }
 }
