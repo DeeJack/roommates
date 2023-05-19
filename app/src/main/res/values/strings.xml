@@ -2,7 +2,7 @@
     <string name="app_name">Roommates</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="login_label">Accedi a Roommates</string>
+    <string name="login_label">Accedi a Roommates, l\'app per i coinquilini</string>
     <string name="login_email_field">Email</string>
     <string name="login_pass_field">Password</string>
     <string name="login_forgotpass_label">Password dimenticata?</string>
