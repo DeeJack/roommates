@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment {
 
     private void onForgotPasswordButtonClick(View view) {
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.forgotPasswordFragment);
+        navController.navigate(R.id.action_loginFragment_to_forgotPasswordFragment);
     }
 
     public void onLoginButtonClick(View view) {
@@ -94,7 +94,7 @@ public class LoginFragment extends Fragment {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             NavController navController = Navigation.findNavController(view);
-                            navController.navigate(R.id.homeFragment);
+                            navController.navigate(R.id.action_loginFragment_to_homeFragment);
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -109,6 +109,6 @@ public class LoginFragment extends Fragment {
 
     public void onRegistrationButtonClick(View view) {
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.registrationFragment);
+        navController.navigate(R.id.action_loginFragment_to_registrationFragment);
     }
 }

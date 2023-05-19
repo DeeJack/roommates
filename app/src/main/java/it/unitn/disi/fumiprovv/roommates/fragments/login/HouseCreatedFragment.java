@@ -72,6 +72,6 @@ public class HouseCreatedFragment extends Fragment {
 
     public void onHomeButtonClick(View view) {
         NavController navController = NavHostFragment.findNavController(this);
-        navController.navigate(R.id.homeFragment);
+        navController.navigate(R.id.action_houseCreatedFragment_to_homeFragment);
     }
 }

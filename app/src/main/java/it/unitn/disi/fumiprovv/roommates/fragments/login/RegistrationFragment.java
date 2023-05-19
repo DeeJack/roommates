@@ -122,9 +122,10 @@ public class RegistrationFragment extends Fragment {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             NavController navController = Navigation.findNavController(view);
-                            navController.popBackStack(R.id.loginFragment, true);
-                            navController.navigate(R.id.houseCreationFragment, null,
-                                    new NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build());
+                            //navController.popBackStack(R.id.loginFragment, true);
+                            //navController.navigate(R.id.houseCreationFragment, null,
+                            //        new NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build());
+                            navController.navigate(R.id.action_registrationFragment_to_houseCreationFragment);
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.

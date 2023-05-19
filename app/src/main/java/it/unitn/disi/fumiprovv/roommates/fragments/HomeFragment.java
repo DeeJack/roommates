@@ -79,6 +79,6 @@ public class HomeFragment extends Fragment {
     void onLogoutClick(View view) {
         FirebaseAuth.getInstance().signOut();
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.loginFragment);
+        navController.navigate(R.id.action_homeFragment_to_loginFragment);
     }
 }

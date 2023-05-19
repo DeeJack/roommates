@@ -74,11 +74,11 @@ public class HouseCreationFragment extends Fragment {
 
     public void onJoinButtonClick(View view) {
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.homeFragment);
+        navController.navigate(R.id.action_houseCreationFragment_to_homeFragment);
     }
 
     public void onCreateButtonClick(View view) {
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.houseCreatedFragment);
+        navController.navigate(R.id.action_houseCreationFragment_to_houseCreatedFragment);
     }
 }

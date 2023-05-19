@@ -44,7 +44,7 @@
         <action
             android:id="@+id/action_registrationFragment_to_houseCreationFragment"
             app:destination="@id/houseCreationFragment"
-            app:popUpTo="@id/registrationFragment"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_homeFragment_to_houseCreationFragment"
             app:destination="@id/houseCreationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/houseCreationFragment"

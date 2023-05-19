@@ -30,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (mAuth.getCurrentUser() != null) {
             // TODO: check if the user belongs to a house, if he doesn't redirect to the house creation page
-            navController.navigate(R.id.homeFragment);
+            navController.navigate(R.id.action_loginFragment_to_homeFragment);
         } else {
-            navController.navigate(R.id.loginFragment);
+            //navController.navigate(R.id.loginFragment);
         }
     }
 }
