@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 
@@ -67,6 +68,13 @@ public class HouseCreatedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_house_created, container, false);
         Button homeBtn = (Button) view.findViewById(R.id.homeButton);
         homeBtn.setOnClickListener((a) -> onHomeButtonClick(view));
+        Bundle bundle = getArguments();
+        String houseName = bundle.getString("houseName");
+        String houseId = bundle.getString("houseId");
+        TextView houseNameTextView = (TextView) view.findViewById(R.id.houseNameField);
+        houseNameTextView.setText(houseName);
+        TextView houseIdTextView = (TextView) view.findViewById(R.id.houseIdField);
+        houseIdTextView.setText(houseId);
         return view;
     }
 

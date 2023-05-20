@@ -6,12 +6,22 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.models.House;
+import it.unitn.disi.fumiprovv.roommates.models.Roommate;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +29,8 @@ import it.unitn.disi.fumiprovv.roommates.R;
  * create an instance of this fragment.
  */
 public class HouseCreationFragment extends Fragment {
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,12 +85,39 @@ public class HouseCreationFragment extends Fragment {
     }
 
     public void onJoinButtonClick(View view) {
+        String houseId = ((TextView) view.findViewById(R.id.joinHouseField)).getText().toString();
+        String userId = mAuth.getUid();
+        db.collection("case").document(houseId).update("roommates", FieldValue.arrayUnion(new Roommate(userId, Timestamp.now(), false)))
+                .addOnSuccessListener(task -> {
+                    //House house = task.toObject(House.class);
+                    //house.addRoommate(new Roommate(userId, Timestamp.now(), false));
+                    //db.collection("case").document(houseId).set(house);
+                    db.collection("utenti").document(userId).update("casa", houseId);
+                })
+                .addOnFailureListener(task -> {
+                   Toast.makeText(getContext(), R.string.error_join_house, Toast.LENGTH_SHORT).show();
+                });
+
         NavController navController = Navigation.findNavController(view);
         navController.navigate(R.id.action_houseCreationFragment_to_homeFragment);
     }
 
     public void onCreateButtonClick(View view) {
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.action_houseCreationFragment_to_houseCreatedFragment);
+        String houseName = ((TextView) view.findViewById(R.id.createHouseField)).getText().toString();
+        String userId = mAuth.getUid();
+        House house = House.createHouse(houseName, userId);
+        db.collection("case").document(house.getId()).set(house).addOnSuccessListener(aVoid -> {
+                    db.collection("utenti").document(userId).update("casa", house.getId());
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("houseName", house.getName());
+                    bundle.putString("houseId", house.getId());
+                    NavController navController = Navigation.findNavController(view);
+                    navController.navigate(R.id.action_houseCreationFragment_to_houseCreatedFragment, bundle);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d("HouseCreationFragment", "Error writing document", e);
+                    Toast.makeText(getContext(), "Error creating house", Toast.LENGTH_SHORT).show();
+                });
     }
 }
