@@ -3,12 +3,6 @@ package it.unitn.disi.fumiprovv.roommates.fragments.login;
 import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,17 +11,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.util.concurrent.Executor;
-
-import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.utils.FieldValidation;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,24 +78,15 @@ public class LoginFragment extends Fragment {
 
         String password = ((TextView) view.findViewById(R.id.registerPasswordField)).getText().toString();
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            NavController navController = Navigation.findNavController(view);
-                            navController.navigate(R.id.action_loginFragment_to_homeFragment);
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(view.getContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-                    }
+                .addOnSuccessListener(task -> {
+                    Log.d(TAG, "signInWithEmail:success");
+                    NavController navController = Navigation.findNavController(view);
+                    NavigationUtils.conditionalLogin(navController);
+                })
+                .addOnFailureListener(task -> {
+                    Toast.makeText(getContext(), "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                    Log.w(TAG, "signInWithEmail:failure" + task.getMessage(), task.getCause());
                 });
     }
 
