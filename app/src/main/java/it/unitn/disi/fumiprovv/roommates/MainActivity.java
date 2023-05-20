@@ -1,5 +1,8 @@
 package it.unitn.disi.fumiprovv.roommates;
 
+import static android.content.ContentValues.TAG;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentContainerView;
@@ -10,10 +13,18 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
 
         if (mAuth.getCurrentUser() != null) {
-            // TODO: check if the user belongs to a house, if he doesn't redirect to the house creation page
-            navController.navigate(R.id.action_loginFragment_to_homeFragment);
+            NavigationUtils.conditionalLogin(navController);
         } else {
             //navController.navigate(R.id.loginFragment);
+            // The starting fragment is already the login fragment
         }
     }
 }

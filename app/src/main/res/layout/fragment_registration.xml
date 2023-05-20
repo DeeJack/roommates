@@ -13,18 +13,39 @@
         android:layout_height="match_parent"
         android:background="@color/background_dark">
 
+        <EditText
+            android:id="@+id/registerNameField"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:height="20dp"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/border"
+            android:ems="10"
+            android:hint="@string/name_field"
+            android:inputType="textPersonName"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/registerEmailField"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/registerEmailField"
+            app:layout_constraintTop_toBottomOf="@+id/registerEmailField"
+            app:layout_constraintVertical_bias="0.067" />
+
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/logo_description"
             android:src="@drawable/ic_home"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.118"
-            android:contentDescription="@string/logo_description" />
+            app:layout_constraintVertical_bias="0.118" />
 
         <TextView
             android:id="@+id/textView"
@@ -45,6 +66,7 @@
             android:layout_width="300dp"
             android:layout_height="48dp"
             android:height="20dp"
+            android:autofillHints="emailAddress"
             android:background="@drawable/border"
             android:ems="10"
             android:hint="@string/login_email_field"
@@ -58,35 +80,15 @@
             app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.429"
-            android:autofillHints="emailAddress" />
-
-        <EditText
-            android:id="@+id/registerPasswordField"
-            android:layout_width="300dp"
-            android:layout_height="48dp"
-            android:background="@drawable/border"
-            android:ems="10"
-            android:hint="@string/login_pass_field"
-            android:inputType="textPassword"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/registerEmailField"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/registerEmailField"
-            app:layout_constraintTop_toBottomOf="@+id/registerEmailField"
-            app:layout_constraintVertical_bias="0.053"
-            android:autofillHints="password" />
+            app:layout_constraintVertical_bias="0.429" />
 
         <EditText
             android:id="@+id/registerPassword2Field"
             android:layout_width="300dp"
             android:layout_height="48dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="1dp"
+            android:autofillHints="password"
             android:background="@drawable/border"
             android:ems="10"
             android:hint="@string/registration_confirm_pass_label"
@@ -98,21 +100,39 @@
             app:layout_constraintEnd_toEndOf="@+id/registerPasswordField"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/registerPasswordField"
-            app:layout_constraintTop_toBottomOf="@+id/registerPasswordField"
-            android:autofillHints="password" />
+            app:layout_constraintTop_toBottomOf="@+id/registerPasswordField" />
+
+        <EditText
+            android:id="@+id/registerPasswordField"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:autofillHints="password"
+            android:background="@drawable/border"
+            android:ems="10"
+            android:hint="@string/login_pass_field"
+            android:inputType="textPassword"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/registerNameField"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/registerNameField"
+            app:layout_constraintTop_toBottomOf="@+id/registerNameField"
+            app:layout_constraintVertical_bias="0.088" />
 
         <Button
             android:id="@+id/registrationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="227dp"
             android:text="@string/login_register_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/registerPassword2Field"
             app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="@+id/registerPassword2Field"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.627" />
+            app:layout_constraintTop_toBottomOf="@+id/registerPassword2Field"
+            app:layout_constraintVertical_bias="0.251" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
