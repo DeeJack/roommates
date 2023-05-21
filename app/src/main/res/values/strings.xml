@@ -37,4 +37,6 @@
     <string name="forgot_password_sent">Email di recupero inviata</string>
     <string name="name_field">Nome</string>
     <string name="error_join_house">Codice casa errato!</string>
+    <string name="share_code_text">Unisciti alla mia casa su Roomates!\\nCodice: {code}\\nLink: {link}</string>
+    <string name="share_code_title">Condividi il codice</string>
 </resources>
