@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.House;
 import it.unitn.disi.fumiprovv.roommates.models.Roommate;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 
 /**
@@ -94,6 +96,9 @@ public class HouseCreationFragment extends Fragment {
     }
 
     public void onJoinButtonClick(View view) {
+        ProgressBar progressBar = view.findViewById(R.id.houseProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         String houseId = ((TextView) view.findViewById(R.id.joinHouseField)).getText().toString();
         String userId = mAuth.getUid();
         db.collection("case").document(houseId).update("roommates", FieldValue.arrayUnion(new Roommate(userId, Timestamp.now(), false)))
@@ -102,16 +107,19 @@ public class HouseCreationFragment extends Fragment {
                     //house.addRoommate(new Roommate(userId, Timestamp.now(), false));
                     //db.collection("case").document(houseId).set(house);
                     db.collection("utenti").document(userId).update("casa", houseId);
+                    progressBar.setVisibility(View.GONE);
+                    NavigationUtils.navigateTo(R.id.action_houseCreationFragment_to_homeFragment, view);
                 })
                 .addOnFailureListener(task -> {
                    Toast.makeText(getContext(), R.string.error_join_house, Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 });
-
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.action_houseCreationFragment_to_homeFragment);
     }
 
     public void onCreateButtonClick(View view) {
+        ProgressBar progressBar = view.findViewById(R.id.houseProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         String houseName = ((TextView) view.findViewById(R.id.createHouseField)).getText().toString();
         String userId = mAuth.getUid();
         House house = House.createHouse(houseName, userId);
@@ -121,12 +129,13 @@ public class HouseCreationFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("houseName", house.getName());
                     bundle.putString("houseId", house.getId());
-                    NavController navController = Navigation.findNavController(view);
-                    navController.navigate(R.id.action_houseCreationFragment_to_houseCreatedFragment, bundle);
+                    progressBar.setVisibility(View.GONE);
+                    NavigationUtils.navigateTo(R.id.action_houseCreationFragment_to_houseCreatedFragment, view, bundle);
                 })
                 .addOnFailureListener(e -> {
                     Log.d("HouseCreationFragment", "Error writing document", e);
                     Toast.makeText(getContext(), "Error creating house", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 });
     }
 }
