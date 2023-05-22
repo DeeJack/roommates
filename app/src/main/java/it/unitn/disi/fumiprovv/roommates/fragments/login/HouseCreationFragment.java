@@ -1,8 +1,11 @@
 package it.unitn.disi.fumiprovv.roommates.fragments.login;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -22,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.House;
 import it.unitn.disi.fumiprovv.roommates.models.Roommate;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,6 +85,11 @@ public class HouseCreationFragment extends Fragment {
         joinBtn.setOnClickListener((a) -> onJoinButtonClick(view));
         Button createBtn = (Button) view.findViewById(R.id.createButton);
         createBtn.setOnClickListener((a) -> onCreateButtonClick(view));
+        JoinHouseViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(JoinHouseViewModel.class);
+        if (sharedViewModel.isHouseIdValid()) {
+            String code = sharedViewModel.getHouseId();
+            ((TextView) view.findViewById(R.id.joinHouseField)).setText(sharedViewModel.getHouseId());
+        }
         return view;
     }
 

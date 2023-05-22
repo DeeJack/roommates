@@ -20,15 +20,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <intent-filter>
+            <intent-filter android:label="Filter http link">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="roommates.asd" />
+            </intent-filter>
 
-                <data
-                    android:scheme="roommates"
-                    android:host="roommates.me" />
+            <intent-filter android:label="Filter https link">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="roommates.asd" />
+                <!-- note that the leading "/" is required for pathPrefix-->
+            </intent-filter>
+            <intent-filter android:label="Filter roommates://">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "example://gizmos” -->
+                <data android:scheme="roommates"
+                    android:host="join" />
             </intent-filter>
 
         </activity>

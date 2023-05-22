@@ -88,7 +88,7 @@ public class HouseCreatedFragment extends Fragment {
     public void onShareClick(View view) {
         String text = getString(R.string.share_code_text)
                 .replace("{code}", houseId)
-                .replace("{link}", "https://roommates-app.me/join?code=" + houseId)
+                .replace("{link}", "http://roommates.asd/join?code=" + houseId)
                 .replace("\\n", "\n");
 
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
