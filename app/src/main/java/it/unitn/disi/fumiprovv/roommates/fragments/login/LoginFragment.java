@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,11 +76,14 @@ public class LoginFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.email_not_valid), Toast.LENGTH_SHORT).show();
             return;
         }
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.loginProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
         String password = ((TextView) view.findViewById(R.id.registerPasswordField)).getText().toString();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(task -> {
                     Log.d(TAG, "signInWithEmail:success");
+                    progressBar.setVisibility(View.GONE);
                     NavController navController = Navigation.findNavController(view);
                     NavigationUtils.conditionalLogin(navController);
                 })
@@ -87,6 +91,7 @@ public class LoginFragment extends Fragment {
                     Toast.makeText(getContext(), "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
                     Log.w(TAG, "signInWithEmail:failure" + task.getMessage(), task.getCause());
+                    progressBar.setVisibility(View.GONE);
                 });
     }
 
