@@ -39,4 +39,12 @@
     <string name="error_join_house">Codice casa errato!</string>
     <string name="share_code_text">Unisciti alla mia casa su Roomates!\\nCodice: {code}\\nLink: {link}</string>
     <string name="share_code_title">Condividi il codice</string>
+    <string name="turni">Turni di pulizia</string>
+    <string name="home">Home</string>
+    <string name="Calendario">Calendario</string>
+    <string name="listaSpesa">Lista della spesa</string>
+    <string name="gestioneSpese">Gestione spese</string>
+    <string name="rubrica">Rubrica</string>
+    <string name="note">Note</string>
+    <string name="sondaggi">Sondaggi</string>
 </resources>
