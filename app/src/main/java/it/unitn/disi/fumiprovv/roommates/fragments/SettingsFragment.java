@@ -1,6 +1,9 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,6 +28,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -116,6 +121,17 @@ public class SettingsFragment extends Fragment {
         //UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         userName.setText(mAuth.getCurrentUser().getDisplayName());
 
+        List<Roommate> roommates = new ArrayList<>();
+        // Create 3 roommates
+        Roommate roommate1 = new Roommate("Roommate 1", Timestamp.now(), false);
+        Roommate roommate2 = new Roommate("Roommate 2", Timestamp.now(), false);
+        Roommate roommate3 = new Roommate("Roommate 3", Timestamp.now(), false);
+        roommates.add(roommate1);
+        roommates.add(roommate2);
+        roommates.add(roommate3);
+
+        new ModeratorDialogFragment(roommates).show(getChildFragmentManager(), "ModeratorDialogFragment");
+
         return view;
     }
 
@@ -176,5 +192,4 @@ public class SettingsFragment extends Fragment {
         Intent shareIntent = Intent.createChooser(sendIntent, getString(R.string.share_code_title));
         startActivity(shareIntent);
     }
-
 }
