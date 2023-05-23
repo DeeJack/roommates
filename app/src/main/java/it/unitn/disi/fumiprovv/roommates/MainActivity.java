@@ -5,6 +5,8 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHostController;
@@ -14,10 +16,12 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -27,7 +31,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,5 +48,37 @@ public class MainActivity extends AppCompatActivity {
             //navController.navigate(R.id.loginFragment);
             // The starting fragment is already the login fragment
         }
+
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.menu_item_home) {
+                    navController.navigate(R.id.homeFragment);
+                } else if(itemId == R.id.menu_item_calendario){
+                    navController.navigate(R.id.calendarioFragment);
+                } else if(itemId == R.id.menu_item_gestioneSpese){
+                    navController.navigate(R.id.homeFragment);
+                } else if(itemId == R.id.menu_item_note){
+                    navController.navigate(R.id.homeFragment);
+                } else if(itemId == R.id.menu_item_rubrica){
+                    navController.navigate(R.id.homeFragment);
+                } else if(itemId == R.id.menu_item_listaSpesa){
+                    navController.navigate(R.id.homeFragment);
+                } else if(itemId == R.id.menu_item_sondaggi){
+                    navController.navigate(R.id.homeFragment);
+                }else if(itemId == R.id.menu_item_turni){
+                    navController.navigate(R.id.homeFragment);
+                }
+
+                // Close the drawer
+                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+                drawerLayout.closeDrawer(GravityCompat.START);
+
+                return true;
+            }
+        });
+
     }
 }
