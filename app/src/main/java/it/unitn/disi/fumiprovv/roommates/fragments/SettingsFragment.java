@@ -151,7 +151,7 @@ public class SettingsFragment extends Fragment {
                             .update("roommates", FieldValue.arrayRemove(new Roommate(mAuth.getCurrentUser().getUid(), (Timestamp) roommate.get("joinDate"), (Boolean) roommate.get("moderator"))));
                 }
                 db.collection("utenti").document(mAuth.getCurrentUser().getUid())
-                        .update("houseId", null);
+                        .update("casa", null);
                 NavigationUtils.navigateTo(R.id.action_settingsFragment_to_houseCreationFragment, view);
             });
         });
