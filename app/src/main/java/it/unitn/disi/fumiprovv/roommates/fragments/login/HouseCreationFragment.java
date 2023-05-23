@@ -1,13 +1,11 @@
 package it.unitn.disi.fumiprovv.roommates.fragments.login;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +25,7 @@ import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.House;
 import it.unitn.disi.fumiprovv.roommates.models.Roommate;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 
 /**
@@ -107,6 +106,9 @@ public class HouseCreationFragment extends Fragment {
                     //house.addRoommate(new Roommate(userId, Timestamp.now(), false));
                     //db.collection("case").document(houseId).set(house);
                     db.collection("utenti").document(userId).update("casa", houseId);
+
+                    updateHouseId(houseId);
+
                     progressBar.setVisibility(View.GONE);
                     NavigationUtils.navigateTo(R.id.action_houseCreationFragment_to_homeFragment, view);
                 })
@@ -114,6 +116,16 @@ public class HouseCreationFragment extends Fragment {
                    Toast.makeText(getContext(), R.string.error_join_house, Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 });
+    }
+
+    public void updateHouseId(String houseId) {
+        SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("houseId", houseId);
+        editor.apply();
+
+        HouseViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+        sharedViewModel.setHouseId(houseId);
     }
 
     public void onCreateButtonClick(View view) {
@@ -129,6 +141,9 @@ public class HouseCreationFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("houseName", house.getName());
                     bundle.putString("houseId", house.getId());
+
+                    updateHouseId(house.getId());
+
                     progressBar.setVisibility(View.GONE);
                     NavigationUtils.navigateTo(R.id.action_houseCreationFragment_to_houseCreatedFragment, view, bundle);
                 })

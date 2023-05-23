@@ -2,6 +2,8 @@ package it.unitn.disi.fumiprovv.roommates.fragments.login;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -21,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.utils.FieldValidation;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,7 +89,9 @@ public class LoginFragment extends Fragment {
                     Log.d(TAG, "signInWithEmail:success");
                     progressBar.setVisibility(View.GONE);
                     NavController navController = Navigation.findNavController(view);
-                    NavigationUtils.conditionalLogin(navController);
+                    SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
+                    HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
+                    NavigationUtils.conditionalLogin(navController, sharedPref, houseViewModel);
                 })
                 .addOnFailureListener(task -> {
                     Toast.makeText(getContext(), "Authentication failed.",
