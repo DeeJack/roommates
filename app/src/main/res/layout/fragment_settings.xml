@@ -19,7 +19,7 @@
             android:layout_height="20dp"
             android:src="@android:drawable/ic_menu_share"
             app:layout_constraintBottom_toBottomOf="@+id/houseIdField2"
-            app:layout_constraintEnd_toEndOf="@+id/button3"
+            app:layout_constraintEnd_toEndOf="@+id/leaveBtn"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/houseIdField2"
             app:layout_constraintTop_toTopOf="@+id/houseIdField2"
@@ -127,7 +127,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linear2" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/newModeratorBtn"
             android:layout_width="150dp"
             android:layout_height="55dp"
             android:layout_marginEnd="16dp"
@@ -147,15 +147,15 @@
             app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/leaveBtn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="144dp"
             android:text="Esci"
             app:layout_constraintBottom_toBottomOf="@+id/textView10"
-            app:layout_constraintEnd_toEndOf="@+id/button2"
+            app:layout_constraintEnd_toEndOf="@+id/newModeratorBtn"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/button2"
+            app:layout_constraintStart_toStartOf="@+id/newModeratorBtn"
             app:layout_constraintTop_toTopOf="@+id/textView10"
             app:layout_constraintVertical_bias="0.448" />
 
@@ -171,7 +171,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/logoutBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
