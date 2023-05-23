@@ -1,4 +1,4 @@
-package it.unitn.disi.fumiprovv.roommates;
+package it.unitn.disi.fumiprovv.roommates.fragments;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import it.unitn.disi.fumiprovv.roommates.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Calendario#newInstance} factory method to
+ * Use the {@link CalendarioFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Calendario extends Fragment {
+public class CalendarioFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class Calendario extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Calendario() {
+    public CalendarioFragment() {
         // Required empty public constructor
     }
 
@@ -37,8 +39,8 @@ public class Calendario extends Fragment {
      * @return A new instance of fragment Calendario.
      */
     // TODO: Rename and change types and number of parameters
-    public static Calendario newInstance(String param1, String param2) {
-        Calendario fragment = new Calendario();
+    public static CalendarioFragment newInstance(String param1, String param2) {
+        CalendarioFragment fragment = new CalendarioFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

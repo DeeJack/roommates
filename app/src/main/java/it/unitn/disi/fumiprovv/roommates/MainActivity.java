@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 if (itemId == R.id.menu_item_home) {
                     navController.navigate(R.id.homeFragment);
                 } else if(itemId == R.id.menu_item_calendario){
-                    navController.navigate(R.id.calendarioFragment);
+                    navController.navigate(R.id.action_homeFragment_to_calendarioFragment);
                 } else if(itemId == R.id.menu_item_gestioneSpese){
                     navController.navigate(R.id.homeFragment);
                 } else if(itemId == R.id.menu_item_note){
