@@ -10,6 +10,12 @@
         app:popUpTo="@id/loginFragment"
         app:popUpToInclusive="true" />
 
+    <action android:id="@+id/action_to_calendario"
+        app:destination="@id/calendarioFragment"/>
+
+    <action android:id="@+id/action_to_turnipulizia"
+        app:destination="@id/turniPuliziaFragment"/>
+
 
     <fragment
         android:id="@+id/loginFragment"
@@ -61,8 +67,11 @@
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_homeFragment_to_calendarioFragment"
+            android:id="@+id/action_homeFragment_to_calendarioFragment2"
             app:destination="@id/calendarioFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_turniPuliziaFragment"
+            app:destination="@id/turniPuliziaFragment" />
     </fragment>
     <fragment
         android:id="@+id/houseCreationFragment"
@@ -110,15 +119,22 @@
     </fragment>
     <fragment
         android:id="@+id/calendarioFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.HomeFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.CalendarioFragment"
         android:label="fragment_calendario"
         tools:layout="@layout/fragment_calendario" >
         <action
-            android:id="@+id/action_homeFragment_to_houseCreationFragment"
-            app:destination="@id/houseCreationFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_calendarioFragment_to_nuovoEvento"
+            app:destination="@id/nuovoEvento" />
     </fragment>
+    <fragment
+        android:id="@+id/turniPuliziaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TurniPuliziaFragment"
+        android:label="fragment_turnipulizia"
+        tools:layout="@layout/fragment_turnipulizia" />
+    <fragment
+        android:id="@+id/nuovoEvento"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoEvento"
+        android:label="fragment_nuovo_evento"
+        tools:layout="@layout/fragment_nuovo_evento" />
 
 </navigation>

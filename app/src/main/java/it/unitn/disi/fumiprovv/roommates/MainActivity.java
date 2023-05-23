@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 if (itemId == R.id.menu_item_home) {
                     navController.navigate(R.id.homeFragment);
                 } else if(itemId == R.id.menu_item_calendario){
-                    navController.navigate(R.id.action_homeFragment_to_calendarioFragment);
+                    navController.navigate(R.id.action_to_calendario);
                 } else if(itemId == R.id.menu_item_gestioneSpese){
                     navController.navigate(R.id.homeFragment);
                 } else if(itemId == R.id.menu_item_note){
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if(itemId == R.id.menu_item_sondaggi){
                     navController.navigate(R.id.homeFragment);
                 }else if(itemId == R.id.menu_item_turni){
-                    navController.navigate(R.id.homeFragment);
+                    navController.navigate(R.id.action_to_turnipulizia);
                 }
 
                 // Close the drawer
