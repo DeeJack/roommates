@@ -2,10 +2,13 @@ package it.unitn.disi.fumiprovv.roommates.utils;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -15,6 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 public class NavigationUtils {
     public static void navigateTo(int destinationId, View view) {
@@ -26,11 +30,11 @@ public class NavigationUtils {
         navController.navigate(destinationId, bundle);
     }
 
-    public static void conditionalLogin(NavController navController) {
-        conditionalLogin(navController, null);
+    public static void conditionalLogin(NavController navController, SharedPreferences sharedPref, HouseViewModel houseViewModel) {
+        conditionalLogin(navController, null, sharedPref, houseViewModel);
     }
 
-    public static void conditionalLogin(NavController navController, Bundle bundle) {
+    public static void conditionalLogin(NavController navController, Bundle bundle, SharedPreferences sharedPref, HouseViewModel houseViewModel) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("utenti").document(mAuth.getCurrentUser().getUid());
@@ -40,6 +44,9 @@ public class NavigationUtils {
                 if (document.exists()) {
                     String casaId = document.getString("casa");
                     if (casaId != null) {
+                        houseViewModel.setHouseId(casaId);
+                        sharedPref.edit().putString("houseId", casaId).apply();
+
                         navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle);
                     } else {
                         navController.navigate(R.id.action_loginFragment_to_houseCreationFragment, bundle);
