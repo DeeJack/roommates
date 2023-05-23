@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,6 +108,9 @@ public class RegistrationFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.registrationProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         String name = ((TextView) view.findViewById(R.id.registerNameField)).getText().toString();
 
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -114,24 +118,27 @@ public class RegistrationFragment extends Fragment {
                     Log.d(TAG, "createUserWithEmail:success");
                     FirebaseUser user = task.getUser();
 
-                    createUserOnDb(name, user.getUid(), view);
+                    createUserOnDb(name, user.getUid(), view, progressBar);
                 })
                 .addOnFailureListener(task -> {
                     Log.w(TAG, "createUserWithEmail:failure", task.getCause());
                     Toast.makeText(getContext(), "Registrazione fallit7.",
                             Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 });
     }
 
-    private void createUserOnDb(String name, String uid, View view) {
+    private void createUserOnDb(String name, String uid, View view, ProgressBar progressBar) {
         db.collection("utenti").document(uid).set(new User(name))
                 .addOnSuccessListener(task -> {
                     NavigationUtils.navigateTo(R.id.action_registrationFragment_to_houseCreationFragment, view);
+                    progressBar.setVisibility(View.GONE);
                 })
                 .addOnFailureListener(task -> {
                     Log.w(TAG, "createUserOnDb:failure", task.getCause());
                     Toast.makeText(getContext(), "Registrazione fallita (errore del db).",
                             Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 });
     }
 }
