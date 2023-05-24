@@ -121,17 +121,7 @@ public class SettingsFragment extends Fragment {
         //UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         userName.setText(mAuth.getCurrentUser().getDisplayName());
 
-        List<Roommate> roommates = new ArrayList<>();
-        // Create 3 roommates
-        Roommate roommate1 = new Roommate("Roommate 1", Timestamp.now(), false);
-        Roommate roommate2 = new Roommate("Roommate 2", Timestamp.now(), false);
-        Roommate roommate3 = new Roommate("Roommate 3", Timestamp.now(), false);
-        roommates.add(roommate1);
-        roommates.add(roommate2);
-        roommates.add(roommate3);
-
-        new ModeratorDialogFragment(roommates).show(getChildFragmentManager(), "ModeratorDialogFragment");
-
+        new ModeratorDialogFragment().show(getChildFragmentManager(), "ModeratorDialogFragment");
         return view;
     }
 
