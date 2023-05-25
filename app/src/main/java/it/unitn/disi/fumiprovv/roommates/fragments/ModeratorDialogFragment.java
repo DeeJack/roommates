@@ -11,25 +11,20 @@ import android.widget.ListView;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Roommate;
-import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 public class ModeratorDialogFragment extends DialogFragment {
@@ -79,28 +74,20 @@ public class ModeratorDialogFragment extends DialogFragment {
 
             List<Map<String, Object>> roommatesList = (List<Map<String, Object>>) document.getData().get("roommates");
             // FInd the user with the same id as the logged user
-            Optional<Map<String, Object>> currentUserOpt = roommatesList.stream()
-                    .filter(roommate -> Objects.equals(roommate.get("userId"), mAuth.getCurrentUser().getUid())).findFirst();
-            Optional<Map<String, Object>> targetUserOpt = roommatesList.stream()
-                    .filter(roommate -> Objects.equals(roommate.get("userId"), selectedRoommate.getUserId())).findFirst();
-
-            // Should be impossible unless the other uses leave the house as the dialog is already open
-            if (!currentUserOpt.isPresent() || !targetUserOpt.isPresent()) {
-                return;
-            }
-
-            Map<String, Object> currentUser = currentUserOpt.get();
-            Map<String, Object> targetUser = targetUserOpt.get();
+            roommatesList.stream()
+                    .filter(roommate -> Objects.equals(roommate.get("userId"), mAuth.getCurrentUser().getUid()))
+                    .findFirst()
+                    .ifPresent(roommate -> roommate.put("moderator", false));
+            roommatesList.stream()
+                    .filter(roommate -> Objects.equals(roommate.get("userId"), selectedRoommate.getUserId()))
+                    .findFirst()
+                    .ifPresent(roommate -> roommate.put("moderator", true));
 
             db.collection("case").document(houseViewModel.getHouseId())
-                    .update("roommates", FieldValue.arrayRemove(new Roommate(mAuth.getCurrentUser().getUid(), (Timestamp) currentUser.get("joinDate"), false)));
-            db.collection("case").document(houseViewModel.getHouseId())
-                    .update("roommates", FieldValue.arrayRemove(new Roommate((String) targetUser.get("userId"), (Timestamp) targetUser.get("joinDate"), true)));
-
-            NavigationUtils.navigateTo(R.id.action_settingsFragment_self, view);
+                    .update("roommates", roommatesList);
         });
-
         getDialog().dismiss(); // Chiudi il dialog dopo il click
+
     }
 
     public CompletableFuture<List<Roommate>> getItems() {
