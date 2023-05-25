@@ -138,4 +138,9 @@
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewNoteFragment"
         android:label="fragment_new_note"
         tools:layout="@layout/fragment_new_note" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.ContactsFragment"
+        android:label="fragment_contact"
+        tools:layout="@layout/fragment_contacts" />
 </navigation>

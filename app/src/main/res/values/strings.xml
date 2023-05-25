@@ -44,4 +44,6 @@
     <string name="delete_note_message">Vuoi eliminare la nota?</string>
     <string name="note_new_hint">Nuova nota...</string>
     <string name="new_note_btn">Salva nota</string>
+    <string name="note_new_contact_name">Nome...</string>
+    <string name="note_new_contact_number">0555 1234 12</string>
 </resources>
