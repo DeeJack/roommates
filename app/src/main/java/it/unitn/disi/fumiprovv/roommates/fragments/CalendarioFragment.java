@@ -20,11 +20,15 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 
@@ -94,7 +98,26 @@ public class CalendarioFragment extends Fragment {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 // Update the selected date in the TextView
                 String selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+                c.clear();
+                c.set(year,month,dayOfMonth, 0,0,0);
+                Long t = c.getTimeInMillis();
+                Log.d("data", t.toString());
                 selectedDateTextView.setText(selectedDate);
+                DocumentReference casa = db.collection("case").document("OKBVOT");
+                db.collection("eventi").whereEqualTo("casa", casa).whereEqualTo("data", t).get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("prendiEventi", document.getId() + " => " + document.getData());
+                                    }
+                                } else {
+                                    Log.d("prendiEventi", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
             }
         });
 
