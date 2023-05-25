@@ -55,7 +55,6 @@ public class House {
         // Generate a unique id with 6 alphanumerical characters, check with firestore if it's already taken
         String id;
         boolean isTaken;
-
         do {
             id = generateRandomId();
             isTaken = isIdTaken(id);

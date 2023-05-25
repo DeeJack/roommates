@@ -2,19 +2,34 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Event;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,8 +47,8 @@ public class NuovoEvento extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public NuovoEvento() {
         // Required empty public constructor
@@ -75,20 +90,39 @@ public class NuovoEvento extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_nuovo_evento, container, false);
         Button submitButton = view.findViewById(R.id.submitButton);
         EditText nomeEvento = (EditText) view.findViewById(R.id.nomeEvento);
-        EditText dataEvento = (EditText) view.findViewById(R.id.dataEvento);
+        DatePicker dataEvento = (DatePicker) view.findViewById(R.id.dataEvento);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Retrieve input values
                 String eventName = nomeEvento.getText().toString();
-                String eventDate = dataEvento.getText().toString();
+                int y = dataEvento.getYear();
+                int m = dataEvento.getMonth();
+                int d = dataEvento.getDayOfMonth();
+                Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+                c.set(y,m,d);
+                Long t = c.getTimeInMillis();
+
+                DocumentReference casa = db.collection("case").document("OKBVOT");
 
                 // Create a data model object
-                Event event = new Event(eventName, eventDate);
+                Event event = new Event(casa, eventName, t);
 
                 // boh aggiungi evento al db
-
-                //naviga indietro
+                db.collection("eventi")
+                        .add(event)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d("nuovoEvento", "DocumentSnapshot written with ID: " + documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("nuovoEvento", "Error adding document", e);
+                            }
+                        });
             }
         });
         return view;

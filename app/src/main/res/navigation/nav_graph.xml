@@ -135,6 +135,10 @@
         android:id="@+id/nuovoEvento"
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoEvento"
         android:label="fragment_nuovo_evento"
-        tools:layout="@layout/fragment_nuovo_evento" />
+        tools:layout="@layout/fragment_nuovo_evento" >
+        <action
+            android:id="@+id/action_nuovoEvento_to_calendarioFragment"
+            app:destination="@id/calendarioFragment" />
+    </fragment>
 
 </navigation>
