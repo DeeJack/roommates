@@ -86,11 +86,9 @@ public class ContactsFragment extends Fragment {
         ListView contactListView = view.findViewById(R.id.contactsListView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        ImageButton callButton = contactListView.findViewById(R.id.callButton);
-
         ImageButton addContactButton = view.findViewById(R.id.addContactButton);
         addContactButton.setOnClickListener(v -> {
-            NavigationUtils.navigateTo(R.id.contactFragmentLayout, view);
+            NavigationUtils.navigateTo(R.id.action_contactFragment_to_newContactFragment, view);
         });
 
         db.collection("contatti").whereEqualTo("houseId", db.collection("case").document(houseViewModel.getHouseId())).get()

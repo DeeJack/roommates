@@ -142,5 +142,14 @@
         android:id="@+id/contactFragment"
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.ContactsFragment"
         android:label="fragment_contact"
-        tools:layout="@layout/fragment_contacts" />
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_contactFragment_to_newContactFragment"
+            app:destination="@id/newContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newContactFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewContactFragment"
+        android:label="fragment_new_contact"
+        tools:layout="@layout/fragment_new_contact" />
 </navigation>
