@@ -3,18 +3,32 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
+import it.unitn.disi.fumiprovv.roommates.models.Note;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,20 +86,54 @@ public class NoteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_note, container, false);
 
         ListView notesListView = view.findViewById(R.id.notesListView);
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-
-        db.collection("notes").whereEqualTo("houseId", )
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        notesListView.setAdapter(adapter);
-
-        // Imposta il listener di click sugli elementi della lista
-        notesListView.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
-            String selectedItem = items[position];
-            // Esegui le azioni desiderate con l'elemento selezionato
-            // ...
-            dialog.dismiss(); // Chiudi il dialog dopo il click
+        ImageButton addNoteButton = view.findViewById(R.id.addNoteButton);
+        addNoteButton.setOnClickListener(v -> {
+            NavigationUtils.navigateTo(R.id.action_noteFragment_to_newNoteFragment, view);
         });
+
+        db.collection("note").whereEqualTo("houseId", db.collection("case").document(houseViewModel.getHouseId())).get()
+                .addOnCompleteListener(task -> {
+                    NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
+                    if (!task.isSuccessful()) {
+                        return;
+                    }
+                    //List<Map<String, Object>> notes = task.getResult().getDocuments().stream()
+                    //        .map(DocumentSnapshot::getData).collect(Collectors.toList());
+                    List<Note> notes = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                        //Note note = documentSnapshot.getString("userId");
+                        Note note = new Note(
+                                documentSnapshot.getId(),
+                                documentSnapshot.getDocumentReference("userId").getId(),
+                                "",
+                                 documentSnapshot.getTimestamp("creationDate"),
+                                (String) documentSnapshot.get("text")
+                        );
+                        documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
+                            if (!task1.isSuccessful()) {
+                                return;
+                            }
+                            note.setUserName((String) task1.getResult().get("name"));
+                            adapter.notifyDataSetChanged();
+                        });
+                        return note;
+                    }).collect(Collectors.toList());
+                    //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
+                    adapter.setNotes(notes);
+
+                    notesListView.setAdapter(adapter);
+                    int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
+                    notesListView.setDividerHeight(dividerHeight);
+
+                    // Imposta il listener di click sugli elementi della lista
+                    notesListView.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
+                        Note selectedItem = notes.get(position);
+                        String a = "";
+                    });
+                });
+
+
 
         return view;
     }
