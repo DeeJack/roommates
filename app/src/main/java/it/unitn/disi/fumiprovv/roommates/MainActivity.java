@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.UserViewModel;
@@ -50,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
             HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
             houseViewModel.setHouseId(houseId);
 
-            navController.navigate(R.id.settingsFragment);
+            //navController.navigate(R.id.noteFragment);
 
-            //NavigationUtils.conditionalLogin(navController, sharedPref, houseViewModel);
+            NavigationUtils.conditionalLogin(navController, sharedPref, houseViewModel);
         } else {
             //navController.navigate(R.id.loginFragment);
             // The starting fragment is already the login fragment
