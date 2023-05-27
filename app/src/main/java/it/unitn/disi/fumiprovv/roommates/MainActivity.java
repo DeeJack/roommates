@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if(itemId == R.id.menu_item_gestioneSpese){
                     navController.navigate(R.id.homeFragment);
                 } else if(itemId == R.id.menu_item_note){
-                    navController.navigate(R.id.homeFragment);
+                    navController.navigate(R.id.noteFragment);
                 } else if(itemId == R.id.menu_item_rubrica){
                     navController.navigate(R.id.homeFragment);
                 } else if(itemId == R.id.menu_item_listaSpesa){
