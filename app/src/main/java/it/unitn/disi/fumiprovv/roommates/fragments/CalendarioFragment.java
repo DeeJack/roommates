@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -40,6 +41,7 @@ import java.util.TimeZone;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Event;
 import it.unitn.disi.fumiprovv.roommates.utils.ItemAdapter;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,13 +108,17 @@ public class CalendarioFragment extends Fragment {
         ItemAdapter itemAdapter = new ItemAdapter();
         recyclerView.setAdapter(itemAdapter);
 
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 List<Event> filteredEvents = new ArrayList<>();
                 filteredEvents.clear();
 
-                DocumentReference casa = db.collection("case").document("OKBVOT");
+                DocumentReference casa = db.collection("case").document(houseViewModel.getHouseId());
+                Log.d("house id", casa.toString());
+
                 db.collection("eventi")
                         .whereEqualTo("casa", casa)
                         .whereEqualTo("giorno", dayOfMonth)
@@ -135,10 +141,11 @@ public class CalendarioFragment extends Fragment {
                                         Event temp = new Event(casa, nome, giorno, mese, anno);
 
                                         filteredEvents.add(temp);
+                                        Log.d("prova", temp.toString());
                                     }
                                     itemAdapter.setData(filteredEvents);
                                 } else {
-                                    Log.d("prendiEventi", "Error getting documents: ", task.getException());
+                                    Log.d("error", "Error getting documents: ", task.getException());
                                 }
                             }
                         });

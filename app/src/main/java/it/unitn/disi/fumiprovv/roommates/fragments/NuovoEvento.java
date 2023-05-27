@@ -105,7 +105,7 @@ public class NuovoEvento extends Fragment {
                 DocumentReference casa = db.collection("case").document("OKBVOT");
 
                 // Create a data model object
-                Event event = new Event(casa, eventName, new Long(d), new Long(m), new Long(y));
+                Event event = new Event(casa, eventName, new Long(d), new Long(m+1), new Long(y));
 
                 //aggiungi evento al db
                 db.collection("eventi")
