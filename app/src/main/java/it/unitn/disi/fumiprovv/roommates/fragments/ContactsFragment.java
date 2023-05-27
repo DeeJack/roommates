@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -81,7 +82,8 @@ public class ContactsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
-
+        ProgressBar progressBar = view.findViewById(R.id.contactProgressbar);
+        progressBar.setVisibility(View.VISIBLE);
 
         ListView contactListView = view.findViewById(R.id.contactsListView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
@@ -95,6 +97,7 @@ public class ContactsFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     ContactListAdapter adapter = new ContactListAdapter(getContext(), new ArrayList<>());
                     if (!task.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
                         return;
                     }
                     //List<Map<String, Object>> notes = task.getResult().getDocuments().stream()
@@ -127,6 +130,7 @@ public class ContactsFragment extends Fragment {
                         Contact selectedItem = contacts.get(position);
                         String a = "";
                     });
+                    progressBar.setVisibility(View.GONE);
                 });
 
         return view;
