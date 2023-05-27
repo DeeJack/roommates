@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -89,6 +90,9 @@ public class ShoppingListFragment extends Fragment {
         Button buyItemsButton = view.findViewById(R.id.buyButton);
         buyItemsButton.setOnClickListener(view1 -> buyItems(view, adapter));
 
+        ProgressBar shoppingBar = view.findViewById(R.id.shoppingListProgressbar);
+        shoppingBar.setVisibility(View.VISIBLE);
+
         db.collection("listaspesa").whereEqualTo("houseId", db.collection("case").document(houseViewModel.getHouseId())).get()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -108,8 +112,9 @@ public class ShoppingListFragment extends Fragment {
                     adapter.setItems(shoppingItems);
 
                     notesListView.setAdapter(adapter);
-                    if (getContext() == null)
+                    if (getContext() == null) {
                         return;
+                    }
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
                     notesListView.setDividerHeight(dividerHeight);
 
@@ -118,6 +123,7 @@ public class ShoppingListFragment extends Fragment {
                         ShoppingItem selectedItem = shoppingItems.get(position);
                         String a = "";
                     });
+                    shoppingBar.setVisibility(View.GONE);
                 });
 
 

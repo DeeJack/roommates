@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,8 +33,6 @@ import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.adapters.CheckboxListAdapter;
-import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
 import it.unitn.disi.fumiprovv.roommates.models.ShoppingItem;
 import it.unitn.disi.fumiprovv.roommates.models.User;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
@@ -103,6 +102,9 @@ public class BuyItemsFragment extends Fragment {
         this.adapter = new CheckboxListAdapter(getContext(), new ArrayList<>());
         ListView usersListView = view.findViewById(R.id.listViewRoommates);
 
+        ProgressBar progressBar = view.findViewById(R.id.buyItemsProgressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
         db.collection("utenti").whereEqualTo("casa", houseViewModel.getHouseId()).get()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -128,6 +130,7 @@ public class BuyItemsFragment extends Fragment {
                         User selectedItem = users.get(position);
                         String a = "";
                     });
+                    progressBar.setVisibility(View.GONE);
                 });
         ArrayList<ShoppingItem> items = (ArrayList<ShoppingItem>) bundle.getSerializable("shoppingItems");
         String[] itemsString = items.stream().map(ShoppingItem::getName).toArray(String[]::new);
@@ -181,6 +184,9 @@ public class BuyItemsFragment extends Fragment {
         expense.put("date", Timestamp.now());
         expense.put("houseId", houseViewModel.getHouseId());
 
+        ProgressBar progressBar = view.findViewById(R.id.buyItemsProgressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
         List<DocumentReference> usersPayingReferences = new ArrayList<>();
         usersPaying.forEach(user -> {
             usersPayingReferences.add(db.collection("utenti").document(user.getId()));
@@ -189,6 +195,7 @@ public class BuyItemsFragment extends Fragment {
 
         db.collection("listaspesaeffettuata").add(expense)
                 .addOnCompleteListener(task -> {
+                    progressBar.setVisibility(View.GONE);
                     if (!task.isSuccessful())
                         return;
                     requireActivity().onBackPressed();
