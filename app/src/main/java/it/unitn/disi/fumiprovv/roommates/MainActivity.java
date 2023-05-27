@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
             HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
             houseViewModel.setHouseId(houseId);
 
-            //navController.navigate(R.id.noteFragment);
+            navController.navigate(R.id.shoppingListFragment);
 
-            NavigationUtils.conditionalLogin(navController, sharedPref, houseViewModel);
+            //NavigationUtils.conditionalLogin(navController, sharedPref, houseViewModel);
         } else {
             //navController.navigate(R.id.loginFragment);
             // The starting fragment is already the login fragment

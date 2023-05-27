@@ -138,4 +138,18 @@
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewNoteFragment"
         android:label="fragment_new_note"
         tools:layout="@layout/fragment_new_note" />
+    <fragment
+        android:id="@+id/shoppingListFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.ShoppingListFragment"
+        android:label="fragment_shopping_list"
+        tools:layout="@layout/fragment_shopping_list" >
+        <action
+            android:id="@+id/action_shoppingListFragment_to_buyItemsFragment"
+            app:destination="@id/buyItemsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/buyItemsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.BuyItemsFragment"
+        android:label="fragment_buy_items"
+        tools:layout="@layout/fragment_buy_items" />
 </navigation>

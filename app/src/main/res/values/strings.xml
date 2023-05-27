@@ -44,4 +44,10 @@
     <string name="delete_note_message">Vuoi eliminare la nota?</string>
     <string name="note_new_hint">Nuova nota...</string>
     <string name="new_note_btn">Salva nota</string>
+    <string name="shopping_list_hint">Aggiungi...</string>
+    <string name="shopping_list_add">ACQUISTA</string>
+    <string name="buy_name_hint">Nome spesa...</string>
+    <string name="division_between">Da dividere tra:</string>
+    <string name="buy_amount_hint">€...</string>
+    <string name="summary_products">Riepilogo prodotti:</string>
 </resources>

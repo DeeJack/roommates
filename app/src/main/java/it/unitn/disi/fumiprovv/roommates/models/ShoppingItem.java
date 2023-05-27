@@ -1,19 +1,13 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
-public class User {
+public class ShoppingItem {
     private String id;
-    private final String name;
+    private String name;
 
-    public User(String name) {
-        this.name = name;
+    public ShoppingItem() {
     }
 
-    // Needed for Firestore
-    public User() {
-        name = "";
-    }
-
-    public User(String id, String name) {
+    public ShoppingItem(String id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -28,5 +22,9 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
