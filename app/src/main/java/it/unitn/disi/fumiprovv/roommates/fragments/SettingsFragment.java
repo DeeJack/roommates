@@ -1,5 +1,7 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -85,7 +87,7 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("settings", MODE_PRIVATE);
         boolean isDarkMode = sharedPreferences.getBoolean("isDarkMode", true);
         boolean isWhosHomeEnabled = sharedPreferences.getBoolean("isWhosHomeEnabled", false);
         SwitchCompat darkMode = view.findViewById(R.id.switchDarkMode);
@@ -125,7 +127,7 @@ public class SettingsFragment extends Fragment {
 
     // load from shared preferences
     public void save() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("settings", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         SwitchCompat darkMode = requireView().findViewById(R.id.switchDarkMode);
         SwitchCompat whosHome = requireView().findViewById(R.id.switchWhosHome);
@@ -135,6 +137,10 @@ public class SettingsFragment extends Fragment {
     }
 
     public void logout(View view) {
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+        houseViewModel.setHouseId("");
+        SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", MODE_PRIVATE);
+        sharedPref.edit().putString("houseId", "").apply();
         mAuth.signOut();
         NavigationUtils.navigateTo(R.id.action_settingsFragment_to_loginFragment, view);
     }

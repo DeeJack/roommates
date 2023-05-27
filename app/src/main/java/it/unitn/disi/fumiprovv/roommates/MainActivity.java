@@ -49,15 +49,16 @@ public class MainActivity extends AppCompatActivity {
             UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
             userViewModel.setName(mAuth.getCurrentUser().getDisplayName());
 
+            SharedPreferences sharedPref = getSharedPreferences("house", MODE_PRIVATE);
+            HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
+            //navController.navigate(R.id.noteFragment);
+            NavigationUtils.conditionalLogin(navController, sharedPref, this);
+        } else {
             // TODO: remove
             SharedPreferences sharedPref = getSharedPreferences("house", MODE_PRIVATE);
             String houseId = sharedPref.getString("houseId", "");
             HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
             houseViewModel.setHouseId(houseId);
-
-            //navController.navigate(R.id.noteFragment);
-            NavigationUtils.conditionalLogin(navController, sharedPref, houseViewModel);
-        } else {
             //navController.navigate(R.id.loginFragment);
             // The starting fragment is already the login fragment
         }
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.menu_item_note) {
                     navController.navigate(R.id.noteFragment);
                 } else if (itemId == R.id.menu_item_rubrica) {
-                    navController.navigate(R.id.homeFragment);
+                    navController.navigate(R.id.contactFragment);
                 } else if (itemId == R.id.menu_item_listaSpesa) {
                     navController.navigate(R.id.shoppingListFragment);
                 } else if (itemId == R.id.menu_item_sondaggi) {
