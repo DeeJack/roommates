@@ -1,8 +1,12 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -16,6 +20,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +82,10 @@ public class HomeFragment extends Fragment {
     }
 
     void onLogoutClick(View view) {
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+        houseViewModel.setHouseId("");
+        SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", MODE_PRIVATE);
+        sharedPref.edit().putString("houseId", "").apply();
         FirebaseAuth.getInstance().signOut();
         NavController navController = Navigation.findNavController(view);
         navController.navigate(R.id.action_homeFragment_to_loginFragment);

@@ -89,9 +89,11 @@ public class LoginFragment extends Fragment {
                     Log.d(TAG, "signInWithEmail:success");
                     progressBar.setVisibility(View.GONE);
                     NavController navController = Navigation.findNavController(view);
+
                     SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
                     HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
-                    NavigationUtils.conditionalLogin(navController, sharedPref, houseViewModel);
+
+                    NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity());
                 })
                 .addOnFailureListener(task -> {
                     Toast.makeText(getContext(), "Authentication failed.",

@@ -93,6 +93,9 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/houseCreatedFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_houseCreatedFragment_to_noteFragment"
+            app:destination="@id/noteFragment" />
     </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment"
@@ -169,4 +172,32 @@
             android:id="@+id/action_nuovoEvento_to_calendarioFragment"
             app:destination="@id/calendarioFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/shoppingListFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.ShoppingListFragment"
+        android:label="fragment_shopping_list"
+        tools:layout="@layout/fragment_shopping_list" >
+        <action
+            android:id="@+id/action_shoppingListFragment_to_buyItemsFragment"
+            app:destination="@id/buyItemsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/buyItemsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.BuyItemsFragment"
+        android:label="fragment_buy_items"
+        tools:layout="@layout/fragment_buy_items" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.ContactsFragment"
+        android:label="fragment_contact"
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_contactFragment_to_newContactFragment"
+            app:destination="@id/newContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newContactFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewContactFragment"
+        android:label="fragment_new_contact"
+        tools:layout="@layout/fragment_new_contact" />
 </navigation>

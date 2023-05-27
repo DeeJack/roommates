@@ -2,7 +2,9 @@ package it.unitn.disi.fumiprovv.roommates.models;
 
 import com.google.firebase.Timestamp;
 
-public class Note {
+import java.io.Serializable;
+
+public class Note implements Serializable {
     private String id;
     private String userId;
     private String userName;
