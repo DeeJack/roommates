@@ -101,14 +101,13 @@ public class NuovoEvento extends Fragment {
                 int d = dataEvento.getDayOfMonth();
                 Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
                 c.set(y,m,d);
-                Long t = c.getTimeInMillis();
 
                 DocumentReference casa = db.collection("case").document("OKBVOT");
 
                 // Create a data model object
-                Event event = new Event(casa, eventName, t);
+                Event event = new Event(casa, eventName, new Long(d), new Long(m), new Long(y));
 
-                // boh aggiungi evento al db
+                //aggiungi evento al db
                 db.collection("eventi")
                         .add(event)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
