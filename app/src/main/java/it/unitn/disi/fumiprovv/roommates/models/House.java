@@ -4,12 +4,13 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class House {
+public class House implements Serializable {
     private final String id;
     private final String name;
     private final List<Note> notes = new ArrayList<>();

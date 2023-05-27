@@ -1,6 +1,8 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String id;
     private final String name;
 

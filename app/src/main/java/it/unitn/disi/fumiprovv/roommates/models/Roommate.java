@@ -2,7 +2,9 @@ package it.unitn.disi.fumiprovv.roommates.models;
 
 import com.google.firebase.Timestamp;
 
-public class Roommate {
+import java.io.Serializable;
+
+public class Roommate implements Serializable {
     private final String userId;
     private final Timestamp joinDate;
     private boolean isModerator;

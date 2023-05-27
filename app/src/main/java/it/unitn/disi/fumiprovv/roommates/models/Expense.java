@@ -1,6 +1,8 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
-public class Expense {
+import java.io.Serializable;
+
+public class Expense implements Serializable {
     private String name;
     private double amount;
     private String payerId;
