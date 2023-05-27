@@ -1,10 +1,6 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +8,9 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,9 +21,7 @@ import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.adapters.ContactListAdapter;
-import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.Contact;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
@@ -34,14 +31,12 @@ import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
  * create an instance of this fragment.
  */
 public class ContactsFragment extends Fragment {
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
