@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,13 +27,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.models.Event;
+import it.unitn.disi.fumiprovv.roommates.utils.ItemAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -92,19 +99,31 @@ public class CalendarioFragment extends Fragment {
 
         CalendarView calendarView = view.findViewById(R.id.calendar_view);
         Button b = view.findViewById(R.id.button_aggiungi_evento);
-        TextView selectedDateTextView = view.findViewById(R.id.selected_date_text_view);
+        //TextView selectedDateTextView = view.findViewById(R.id.selected_date_text_view);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+        // Initialize and set up the adapter
+        ItemAdapter itemAdapter = new ItemAdapter();
+        recyclerView.setAdapter(itemAdapter);
+
+        //itemAdapter.setData(getDataFromDatabase());
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 // Update the selected date in the TextView
+
+                List<Event> filteredEvents = new ArrayList<>();
+                filteredEvents.clear();
                 String selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
                 Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
                 c.clear();
                 c.set(year,month,dayOfMonth, 0,0,0);
                 Long t = c.getTimeInMillis();
                 Log.d("data", t.toString());
-                selectedDateTextView.setText(selectedDate);
+                //selectedDateTextView.setText(selectedDate);
                 DocumentReference casa = db.collection("case").document("OKBVOT");
                 db.collection("eventi").whereEqualTo("casa", casa).whereEqualTo("data", t).get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -112,13 +131,27 @@ public class CalendarioFragment extends Fragment {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
+                                        //filteredEvents.add(new Event(document.get("casa"), document.get("nome"), document.get("data"));
+                                        Map<String, Object> data = document.getData();
+
+                                        DocumentReference casa = (DocumentReference) data.get("casa");
+                                        Long dataValue = (Long) data.get("data");
+                                        String nome = (String) data.get("nome");
+                                        Log.d("GHJGJJ", casa + " " + dataValue + " " + nome);
+                                        Event temp = new Event(casa, nome, dataValue);
+
+                                        filteredEvents.add(temp);
+
                                         Log.d("prendiEventi", document.getId() + " => " + document.getData());
+                                        itemAdapter.setData(filteredEvents);
                                     }
                                 } else {
                                     Log.d("prendiEventi", "Error getting documents: ", task.getException());
                                 }
                             }
                         });
+                Log.d("lista", filteredEvents.toString());
+
             }
         });
 
@@ -129,21 +162,32 @@ public class CalendarioFragment extends Fragment {
             }
         });
 
-        db.collection("eventi")
+        /*db.collection("eventi")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                Map<String, Object> data = document.getData();
+
+                                DocumentReference casa = (DocumentReference) data.get("casa");
+                                Long dataValue = (Long) data.get("data");
+                                String nome = (String) data.get("nome");
+                                Log.d("GHJGJJ", casa + " " + dataValue + " " + nome);
+                                Event temp = new Event(casa, nome, dataValue);
+
                                 Log.d("boh", document.getId() + " => " + document.getData());
                             }
                         } else {
                             Log.d( "boh","Error getting documents: ", task.getException());
                         }
                     }
-                });
+                });*/
 
         return view;
+    }
+
+    private void updateData(int year, int month, int dayOfMonth) {
     }
 }
