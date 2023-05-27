@@ -25,24 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp">
 
-            <RadioButton
-                android:id="@+id/option1RadioButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="opzione1"
-                android:textColor="@color/white"/>
-
-            <RadioButton
-                android:id="@+id/option2RadioButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="opzione2"
-                android:textColor="@color/white"/>
-
-            <!-- Add more RadioButton elements for additional options -->
-
         </RadioGroup>
     </LinearLayout>
 

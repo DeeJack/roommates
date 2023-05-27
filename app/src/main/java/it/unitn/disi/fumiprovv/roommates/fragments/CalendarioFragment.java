@@ -3,11 +3,8 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,7 +25,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +33,7 @@ import java.util.TimeZone;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Event;
-import it.unitn.disi.fumiprovv.roommates.utils.ItemAdapter;
+import it.unitn.disi.fumiprovv.roommates.utils.EventAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,7 +45,7 @@ public class CalendarioFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    //FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -105,8 +100,8 @@ public class CalendarioFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         // Initialize and set up the adapter
-        ItemAdapter itemAdapter = new ItemAdapter();
-        recyclerView.setAdapter(itemAdapter);
+        EventAdapter eventAdapter = new EventAdapter();
+        recyclerView.setAdapter(eventAdapter);
 
         //itemAdapter.setData(getDataFromDatabase());
 
@@ -143,7 +138,7 @@ public class CalendarioFragment extends Fragment {
                                         filteredEvents.add(temp);
 
                                         Log.d("prendiEventi", document.getId() + " => " + document.getData());
-                                        itemAdapter.setData(filteredEvents);
+                                        eventAdapter.setData(filteredEvents);
                                     }
                                 } else {
                                     Log.d("prendiEventi", "Error getting documents: ", task.getException());

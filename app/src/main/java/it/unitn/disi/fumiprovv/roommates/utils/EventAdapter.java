@@ -1,6 +1,5 @@
 package it.unitn.disi.fumiprovv.roommates.utils;
 
-import android.content.ClipData;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,11 @@ import java.util.List;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Event;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ItemViewHolder> {
     private List<Event> eventList;
 
     // Constructor
-    public ItemAdapter() {
+    public EventAdapter() {
         this.eventList = new ArrayList<>();
     }
 

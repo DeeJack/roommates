@@ -3,12 +3,24 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
+import it.unitn.disi.fumiprovv.roommates.utils.SurveyAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +37,9 @@ public class SondaggiFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    SurveyAdapter surveyAdapter;
 
     public SondaggiFragment() {
         // Required empty public constructor
@@ -61,6 +76,45 @@ public class SondaggiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sondaggi, container, false);
+        View view =  inflater.inflate(R.layout.fragment_sondaggi, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.surveysRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        surveyAdapter = new SurveyAdapter();
+        recyclerView.setAdapter(surveyAdapter);
+
+        loadSurveys();
+
+        return view;
+    }
+
+    private void loadSurveys() {
+        // Query Firestore collection for surveys
+        db.collection("sondaggi")
+                .orderBy("tempoCreazione", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        List<Sondaggio> surveyList = new ArrayList<>();
+                        for (DocumentSnapshot document : task.getResult()) {
+                            //Log.d("boh", document.toString());
+                            // Retrieve survey data and create Survey object
+                            String question = document.getString("domanda");
+                            ArrayList<String> options = (ArrayList<String>) document.get("opzioni");
+                            ArrayList<Long> votes = (ArrayList<Long>) document.get("voti");
+                            Long t = (Long) document.get("tempoCreazione");
+
+                            if (question != null && options != null) {
+                                Sondaggio survey = new Sondaggio(question, options, votes, t);
+                                surveyList.add(survey);
+                            }
+                        }
+                        // Set survey data in adapter
+                        surveyAdapter.setData(surveyList);
+                    } else {
+                        Log.d("SurveyFragment", "Error getting surveys: ", task.getException());
+                    }
+                });
     }
 }

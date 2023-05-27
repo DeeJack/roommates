@@ -16,6 +16,9 @@
     <action android:id="@+id/action_to_turnipulizia"
         app:destination="@id/turniPuliziaFragment"/>
 
+    <action android:id="@+id/action_to_sondaggi"
+        app:destination="@id/turniPuliziaFragment"/>
+
 
     <fragment
         android:id="@+id/loginFragment"
@@ -200,4 +203,9 @@
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewContactFragment"
         android:label="fragment_new_contact"
         tools:layout="@layout/fragment_new_contact" />
+    <fragment
+        android:id="@+id/sondaggiFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SondaggiFragment"
+        android:label="fragment_sondaggi"
+        tools:layout="@layout/fragment_sondaggi" />
 </navigation>
