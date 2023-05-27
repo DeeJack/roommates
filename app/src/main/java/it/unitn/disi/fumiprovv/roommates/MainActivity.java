@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,9 +33,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.UserViewModel;
 
 public class MainActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +60,17 @@ public class MainActivity extends AppCompatActivity {
                 JoinHouseViewModel sharedViewModel = new ViewModelProvider(this).get(JoinHouseViewModel.class);
                 sharedViewModel.setHouseId(code);
             }
-            NavigationUtils.conditionalLogin(navController);
+            UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+            userViewModel.setName(mAuth.getCurrentUser().getDisplayName());
+
+            // TODO: remove
+            SharedPreferences sharedPref = getSharedPreferences("house", MODE_PRIVATE);
+            String houseId = sharedPref.getString("houseId", "");
+            HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
+            houseViewModel.setHouseId(houseId);
+
+            //navController.navigate(R.id.noteFragment);
+            NavigationUtils.conditionalLogin(navController, sharedPref, houseViewModel);
         } else {
             //navController.navigate(R.id.loginFragment);
             // The starting fragment is already the login fragment

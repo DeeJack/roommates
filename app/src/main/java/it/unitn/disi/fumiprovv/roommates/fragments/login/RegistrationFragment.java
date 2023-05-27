@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -117,6 +118,9 @@ public class RegistrationFragment extends Fragment {
                 .addOnSuccessListener(task -> {
                     Log.d(TAG, "createUserWithEmail:success");
                     FirebaseUser user = task.getUser();
+                    user.updateProfile(new UserProfileChangeRequest.Builder()
+                            .setDisplayName(name)
+                            .build());
 
                     createUserOnDb(name, user.getUid(), view, progressBar);
                 })

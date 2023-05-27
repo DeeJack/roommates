@@ -48,4 +48,9 @@
     <string name="note">Note</string>
     <string name="sondaggi">Sondaggi</string>
     <string name="add_symbol">+</string>
+    <string name="share_note_title">Condividi una nota</string>
+    <string name="delete_note_title">Conferma eliminazione</string>
+    <string name="delete_note_message">Vuoi eliminare la nota?</string>
+    <string name="note_new_hint">Nuova nota...</string>
+    <string name="new_note_btn">Salva nota</string>
 </resources>
