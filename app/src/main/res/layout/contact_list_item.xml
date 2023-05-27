@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="66dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/fui_ic_anonymous_white_24dp" />
+
+        <LinearLayout
+            android:layout_width="210dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/contactNameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Idraulico" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/contactNumField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0555 1846 57" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/deleteButton"
+            android:layout_width="51dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/remove_foreground"
+            app:tint="@color/white" />
+
+        <ImageButton
+            android:id="@+id/callButton"
+            android:layout_width="49dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|fill_vertical"
+            android:layout_weight="1"
+            android:backgroundTint="@color/fui_transparent"
+            app:srcCompat="@drawable/fui_ic_phone_white_24dp" />
+    </LinearLayout>
+</LinearLayout>

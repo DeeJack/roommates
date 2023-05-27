@@ -59,4 +59,6 @@
     <string name="division_between">Da dividere tra:</string>
     <string name="buy_amount_hint">€...</string>
     <string name="summary_products">Riepilogo prodotti:</string>
+    <string name="note_new_contact_name">Nome...</string>
+    <string name="note_new_contact_number">0555 1234 12</string>
 </resources>
