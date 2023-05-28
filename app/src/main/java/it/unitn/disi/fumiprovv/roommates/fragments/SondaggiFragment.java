@@ -3,6 +3,7 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -83,6 +85,14 @@ public class SondaggiFragment extends Fragment {
         surveyAdapter = new SurveyAdapter();
         recyclerView.setAdapter(surveyAdapter);
 
+        Button b = (Button) view.findViewById(R.id.button_new_sondaggio);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_sondaggiFragment_to_nuovo_sondaggio);
+            }
+        });
+
         loadSurveys();
 
         return view;
@@ -104,9 +114,10 @@ public class SondaggiFragment extends Fragment {
                             ArrayList<String> options = (ArrayList<String>) document.get("opzioni");
                             ArrayList<Long> votes = (ArrayList<Long>) document.get("voti");
                             Long t = (Long) document.get("tempoCreazione");
+                            boolean scelta = (boolean) document.get("sceltaMultipla");
 
                             if (question != null && options != null) {
-                                Sondaggio survey = new Sondaggio(question, options, votes, t);
+                                Sondaggio survey = new Sondaggio(question, options, votes, t, scelta);
                                 surveyList.add(survey);
                             }
                         }

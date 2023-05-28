@@ -4,6 +4,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -63,10 +64,20 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.SurveyView
             optionsRadioGroup.removeAllViews(); // Clear existing radio buttons
 
             // Create and add radio buttons for each option
-            for (String option : survey.getOpzioni()) {
-                RadioButton radioButton = new RadioButton(itemView.getContext());
-                radioButton.setText(option);
-                optionsRadioGroup.addView(radioButton);
+            if (survey.isSceltaMultipla()) {
+                // Survey allows multiple choices, use checkboxes
+                for (String option : survey.getOpzioni()) {
+                    CheckBox checkBox = new CheckBox(itemView.getContext());
+                    checkBox.setText(option);
+                    optionsRadioGroup.addView(checkBox);
+                }
+            } else {
+                // Survey allows single choice, use radio buttons
+                for (String option : survey.getOpzioni()) {
+                    RadioButton radioButton = new RadioButton(itemView.getContext());
+                    radioButton.setText(option);
+                    optionsRadioGroup.addView(radioButton);
+                }
             }
         }
     }

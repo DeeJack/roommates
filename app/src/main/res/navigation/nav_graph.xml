@@ -207,5 +207,14 @@
         android:id="@+id/sondaggiFragment"
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.SondaggiFragment"
         android:label="fragment_sondaggi"
-        tools:layout="@layout/fragment_sondaggi" />
+        tools:layout="@layout/fragment_sondaggi" >
+        <action
+            android:id="@+id/action_sondaggiFragment_to_nuovo_sondaggio"
+            app:destination="@id/nuovo_sondaggio" />
+    </fragment>
+    <fragment
+        android:id="@+id/nuovo_sondaggio"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoSondaggio"
+        android:label="fragment_nuovo_sondaggio"
+        tools:layout="@layout/fragment_nuovo_sondaggio" />
 </navigation>
