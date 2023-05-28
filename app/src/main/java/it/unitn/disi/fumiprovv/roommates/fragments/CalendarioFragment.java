@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -39,6 +41,7 @@ import java.util.TimeZone;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Event;
 import it.unitn.disi.fumiprovv.roommates.utils.ItemAdapter;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,100 +97,69 @@ public class CalendarioFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_calendario, container, false);
 
         CalendarView calendarView = view.findViewById(R.id.calendar_view);
         Button b = view.findViewById(R.id.button_aggiungi_evento);
-        //TextView selectedDateTextView = view.findViewById(R.id.selected_date_text_view);
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        // Initialize and set up the adapter
         ItemAdapter itemAdapter = new ItemAdapter();
         recyclerView.setAdapter(itemAdapter);
 
-        //itemAdapter.setData(getDataFromDatabase());
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                // Update the selected date in the TextView
-
                 List<Event> filteredEvents = new ArrayList<>();
                 filteredEvents.clear();
-                String selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
-                Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-                c.clear();
-                c.set(year,month,dayOfMonth, 0,0,0);
-                Long t = c.getTimeInMillis();
-                Log.d("data", t.toString());
-                //selectedDateTextView.setText(selectedDate);
-                DocumentReference casa = db.collection("case").document("OKBVOT");
-                db.collection("eventi").whereEqualTo("casa", casa).whereEqualTo("data", t).get()
+
+                DocumentReference casa = db.collection("case").document(houseViewModel.getHouseId());
+                Log.d("house id", casa.toString());
+
+                db.collection("eventi")
+                        .whereEqualTo("casa", casa)
+                        .whereEqualTo("giorno", dayOfMonth)
+                        .whereEqualTo("mese", month+1)
+                        .whereEqualTo("anno", year)
+                        .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        //filteredEvents.add(new Event(document.get("casa"), document.get("nome"), document.get("data"));
+
                                         Map<String, Object> data = document.getData();
 
                                         DocumentReference casa = (DocumentReference) data.get("casa");
-                                        Long dataValue = (Long) data.get("data");
+                                        Long giorno = (Long) data.get("giorno");
+                                        Long mese = (Long) data.get("mese");
+                                        Long anno = (Long) data.get("anno");
                                         String nome = (String) data.get("nome");
-                                        Log.d("GHJGJJ", casa + " " + dataValue + " " + nome);
-                                        Event temp = new Event(casa, nome, dataValue);
+                                        Event temp = new Event(casa, nome, giorno, mese, anno);
 
                                         filteredEvents.add(temp);
-
-                                        Log.d("prendiEventi", document.getId() + " => " + document.getData());
-                                        itemAdapter.setData(filteredEvents);
+                                        Log.d("prova", temp.toString());
                                     }
+                                    itemAdapter.setData(filteredEvents);
                                 } else {
-                                    Log.d("prendiEventi", "Error getting documents: ", task.getException());
+                                    Log.d("error", "Error getting documents: ", task.getException());
                                 }
                             }
                         });
+
                 Log.d("lista", filteredEvents.toString());
-
+                if (filteredEvents.isEmpty()) {
+                    // Clear the adapter's data
+                    itemAdapter.setData(Collections.emptyList());
+                }
             }
         });
 
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_calendarioFragment_to_nuovoEvento);
-            }
-        });
-
-        /*db.collection("eventi")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Map<String, Object> data = document.getData();
-
-                                DocumentReference casa = (DocumentReference) data.get("casa");
-                                Long dataValue = (Long) data.get("data");
-                                String nome = (String) data.get("nome");
-                                Log.d("GHJGJJ", casa + " " + dataValue + " " + nome);
-                                Event temp = new Event(casa, nome, dataValue);
-
-                                Log.d("boh", document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d( "boh","Error getting documents: ", task.getException());
-                        }
-                    }
-                });*/
+        b.setOnClickListener(view1 -> Navigation.findNavController(view1).navigate(R.id.action_calendarioFragment_to_nuovoEvento));
 
         return view;
-    }
-
-    private void updateData(int year, int month, int dayOfMonth) {
     }
 }

@@ -10,34 +10,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Event {
     private DocumentReference casa;
     private String nome;
-    private Long data;
+    private Long giorno;
+    private Long mese;
+    private Long anno;
     // Needed for Firestore
-    public Event(DocumentReference c, String n, Long d) {
+    public Event(DocumentReference c, String n, Long g, Long m, Long a) {
         casa = c;
         nome = n;
-        data = d;
+        giorno = g;
+        mese = m;
+        anno = a;
     }
 
     public Event(){
         casa = null;
         nome = "";
-        data = new Long(0);
+        giorno = new Long(1);
+        mese = new Long(1);
+        anno = new Long(2023);
     }
 
     public String getNome() {
         return nome;
     }
 
-    public Long getData() {
-        return data;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public void setData(Long data) {
-        this.data = data;
     }
 
     public DocumentReference getCasa() {
@@ -46,5 +44,29 @@ public class Event {
 
     public void setCasa(DocumentReference casa) {
         this.casa = casa;
+    }
+
+    public Long getGiorno() {
+        return giorno;
+    }
+
+    public void setGiorno(Long giorno) {
+        this.giorno = giorno;
+    }
+
+    public Long getMese() {
+        return mese;
+    }
+
+    public void setMese(Long mese) {
+        this.mese = mese;
+    }
+
+    public Long getAnno() {
+        return anno;
+    }
+
+    public void setAnno(Long anno) {
+        this.anno = anno;
     }
 }

@@ -25,7 +25,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     // Method to set the data
     public void setData(List<Event> eventList) {
-        this.eventList = eventList;
+        this.eventList.clear();
+        this.eventList.addAll(eventList);
         notifyDataSetChanged();
     }
 
@@ -49,15 +50,18 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     // Inner ViewHolder class
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView itemText;
+        private TextView itemDataEvento;
+        private TextView itemDescrizioneEvento;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemText = itemView.findViewById(R.id.itemText);
+            itemDataEvento = itemView.findViewById(R.id.itemDataEvento);
+            itemDescrizioneEvento = itemView.findViewById(R.id.itemDescrizioneEvento);
         }
 
         public void bind(Event event) {
-            itemText.setText(event.getNome());
+            itemDataEvento.setText(event.getGiorno() + "/" + event.getMese() + "/" + event.getAnno());
+            itemDescrizioneEvento.setText(event.getNome());
         }
     }
 }
