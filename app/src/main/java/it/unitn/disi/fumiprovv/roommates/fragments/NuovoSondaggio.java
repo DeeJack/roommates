@@ -128,9 +128,8 @@ public class NuovoSondaggio extends Fragment {
                 } else {
                     sm = Boolean.FALSE;
                 }
-
-                Sondaggio survey = new Sondaggio(q, new ArrayList<String>(options), voti, new Long(currentTimeMillis), sm, db.collection("utenti").document(userId));
-
+                DocumentReference casa = db.collection("case").document("OKBVOT");
+                Sondaggio survey = new Sondaggio(q, new ArrayList<String>(options), voti, new Long(currentTimeMillis), sm, db.collection("utenti").document(userId), casa);
 
                 db.collection("sondaggi")
                         .add(survey)

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -121,7 +122,8 @@ public class SondaggiFragment extends Fragment {
                             //prendere id dell'utente attuale
 
                             if (question != null && options != null) {
-                                Sondaggio survey = new Sondaggio(question, options, votes, t, scelta, db.collection("utenti").document(userId));
+                                DocumentReference casa = db.collection("case").document("OKBVOT");
+                                Sondaggio survey = new Sondaggio(question, options, votes, t, scelta, db.collection("utenti").document(userId), casa);
                                 surveyList.add(survey);
                             }
                         }

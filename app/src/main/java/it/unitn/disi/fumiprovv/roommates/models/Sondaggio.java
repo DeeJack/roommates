@@ -13,14 +13,20 @@ public class Sondaggio {
     private Long tempoCreazione;
     private Boolean sceltaMultipla;
     private DocumentReference creatore;
+    private ArrayList<String> votanti;
+    private DocumentReference casa;
+    private Long votiTotali;
 
-    public Sondaggio(String domanda, ArrayList<String> opzioni, ArrayList<Long> voti, Long tempoCreazione, Boolean sceltaMultipla, DocumentReference creatore) {
+    public Sondaggio(String domanda, ArrayList<String> opzioni, ArrayList<Long> voti, Long tempoCreazione, Boolean sceltaMultipla, DocumentReference creatore, DocumentReference casa) {
         this.domanda = domanda;
         this.opzioni = opzioni;
         this.voti = voti;
         this.tempoCreazione = tempoCreazione;
         this.sceltaMultipla = sceltaMultipla;
         this.creatore = creatore;
+        this.votanti = new ArrayList<>();
+        this.votiTotali = new Long(0);
+        this.casa = casa;
     }
 
     public String getDomanda() {
@@ -69,5 +75,17 @@ public class Sondaggio {
 
     public void setCreatore(DocumentReference creatore) {
         this.creatore = creatore;
+    }
+
+    public ArrayList<String> getVotanti() {
+        return votanti;
+    }
+
+    public void setVotanti(ArrayList<String> votanti) {
+        this.votanti = votanti;
+    }
+
+    public void addVotante(String v) {
+        votanti.add(v);
     }
 }
