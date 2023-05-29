@@ -2,6 +2,8 @@ package it.unitn.disi.fumiprovv.roommates.models;
 
 import android.util.Pair;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.ArrayList;
 
 public class Sondaggio {
@@ -10,13 +12,15 @@ public class Sondaggio {
     private ArrayList<Long> voti;
     private Long tempoCreazione;
     private Boolean sceltaMultipla;
+    private DocumentReference creatore;
 
-    public Sondaggio(String domanda, ArrayList<String> opzioni, ArrayList<Long> voti, Long tempoCreazione, Boolean sceltaMultipla) {
+    public Sondaggio(String domanda, ArrayList<String> opzioni, ArrayList<Long> voti, Long tempoCreazione, Boolean sceltaMultipla, DocumentReference creatore) {
         this.domanda = domanda;
         this.opzioni = opzioni;
         this.voti = voti;
         this.tempoCreazione = tempoCreazione;
         this.sceltaMultipla = sceltaMultipla;
+        this.creatore = creatore;
     }
 
     public String getDomanda() {
@@ -59,10 +63,11 @@ public class Sondaggio {
         this.sceltaMultipla = sceltaMultipla;
     }
 
-    public boolean isSceltaMultipla(){
-        if (sceltaMultipla == Boolean.TRUE) {
-            return true;
-        }
-        return false;
+    public DocumentReference getCreatore() {
+        return creatore;
+    }
+
+    public void setCreatore(DocumentReference creatore) {
+        this.creatore = creatore;
     }
 }

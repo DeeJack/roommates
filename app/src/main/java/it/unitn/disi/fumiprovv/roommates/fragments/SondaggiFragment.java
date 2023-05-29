@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -22,7 +23,7 @@ import java.util.List;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
-import it.unitn.disi.fumiprovv.roommates.utils.SurveyAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.SurveyAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,8 +40,9 @@ public class SondaggiFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     SurveyAdapter surveyAdapter;
 
     public SondaggiFragment() {
@@ -115,9 +117,11 @@ public class SondaggiFragment extends Fragment {
                             ArrayList<Long> votes = (ArrayList<Long>) document.get("voti");
                             Long t = (Long) document.get("tempoCreazione");
                             boolean scelta = (boolean) document.get("sceltaMultipla");
+                            String userId = mAuth.getUid();
+                            //prendere id dell'utente attuale
 
                             if (question != null && options != null) {
-                                Sondaggio survey = new Sondaggio(question, options, votes, t, scelta);
+                                Sondaggio survey = new Sondaggio(question, options, votes, t, scelta, db.collection("utenti").document(userId));
                                 surveyList.add(survey);
                             }
                         }

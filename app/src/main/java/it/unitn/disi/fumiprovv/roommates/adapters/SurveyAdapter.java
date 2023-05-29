@@ -1,6 +1,5 @@
-package it.unitn.disi.fumiprovv.roommates.utils;
+package it.unitn.disi.fumiprovv.roommates.adapters;
 
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +63,7 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.SurveyView
             optionsRadioGroup.removeAllViews(); // Clear existing radio buttons
 
             // Create and add radio buttons for each option
-            if (survey.isSceltaMultipla()) {
+            if (survey.getSceltaMultipla()==Boolean.TRUE) {
                 // Survey allows multiple choices, use checkboxes
                 for (String option : survey.getOpzioni()) {
                     CheckBox checkBox = new CheckBox(itemView.getContext());

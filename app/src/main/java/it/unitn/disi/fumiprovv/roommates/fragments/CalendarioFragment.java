@@ -17,7 +17,6 @@ import android.widget.CalendarView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,7 +32,7 @@ import java.util.TimeZone;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Event;
-import it.unitn.disi.fumiprovv.roommates.utils.EventAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.EventAdapter;
 
 /**
  * A simple {@link Fragment} subclass.

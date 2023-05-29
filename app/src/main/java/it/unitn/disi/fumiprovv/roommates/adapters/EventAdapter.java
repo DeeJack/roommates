@@ -1,4 +1,4 @@
-package it.unitn.disi.fumiprovv.roommates.utils;
+package it.unitn.disi.fumiprovv.roommates.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
