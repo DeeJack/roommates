@@ -1,79 +1,125 @@
 package it.unitn.disi.fumiprovv.roommates.adapters;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.fragments.SpeseSpeseComuni;
-import it.unitn.disi.fumiprovv.roommates.models.Event;
 import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
-import it.unitn.disi.fumiprovv.roommates.utils.ItemAdapter;
 
-public class SpeseComuniAdapter extends RecyclerView.Adapter<SpeseComuniAdapter.SpeseComuniViewHolder> {
-    private List<SpesaComune> speseList;
+public class SpeseComuniAdapter extends BaseAdapter {
+    private final LayoutInflater inflater;
+    private final Context context;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final ArrayList<SpesaComune> checkedItems = new ArrayList<>();
+    private List<SpesaComune> items;
 
-    // Constructor
-    public SpeseComuniAdapter() {
-        this.speseList = new ArrayList<>();
+    public SpeseComuniAdapter(Context context, ArrayList<SpesaComune> items) {
+        this.items = items;
+        this.context = context;
+        this.inflater = LayoutInflater.from(context);
     }
 
-    // Method to set the data
-    public void setData(List<SpesaComune> speseList) {
-        this.speseList.clear();
-        this.speseList.addAll(speseList);
+    @Override
+    public int getCount() {
+        return items.size();
+    }
+
+    @Override
+    public SpesaComune getItem(int i) {
+        return this.items.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.spesa_comune, parent, false);
+
+            holder = new ViewHolder();
+            holder.nome = convertView.findViewById(R.id.nomeSpesaComune);
+            holder.responsabile = convertView.findViewById(R.id.responsabileSpesaComune);
+            holder.scadenza = convertView.findViewById(R.id.scadenzaSpesaComune);
+            holder.valore = convertView.findViewById(R.id.valoreSpesaComune);
+            holder.buttonPaga = convertView.findViewById(R.id.pagaSpesaComune);
+
+            /*holder.itemCheckbox = convertView.findViewById(R.id.itemCheckbox);
+            holder.deleteItemButton = convertView.findViewById(R.id.deleteItemButton);*/
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        SpesaComune item = items.get(position);
+        holder.nome.setText(item.getNome());
+        /*holder.itemCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                checkedItems.add(item);
+            } else {
+                checkedItems.remove(item);
+            }
+        });
+        holder.deleteItemButton.setOnClickListener(view -> onDeleteButtonClick(item));*/
+        holder.buttonPaga.setOnClickListener(view -> onPagaButtonClick(item));
+
+        return convertView;
+    }
+
+    public ArrayList<SpesaComune> getCheckedItems() {
+        return checkedItems;
+    }
+
+    public void setItems(List<SpesaComune> items) {
+        this.items = items;
+    }
+
+    private void onPagaButtonClick(SpesaComune spesa) {
+        // Create alert dialog to confirm pagamento
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Pagamento");
+        builder.setMessage("Confermi il pagamento?");
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            //Setta la spesa come pagata
+            /*db.collection("listaspesa").document(spesa.getId()).delete();
+            items.remove(spesa);*/
+            Log.d("Pago spesa", "pagata");
+            notifyDataSetChanged();
+        });
+        builder.setNegativeButton("Cancella", (dialog, which) -> {
+            // Do nothing
+        });
+        builder.show();
+    }
+
+    public void addItem(SpesaComune spesa) {
+        items.add(spesa);
         notifyDataSetChanged();
     }
 
-    @NonNull
-    @Override
-    public SpeseComuniAdapter.SpeseComuniViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.spesa_comune, parent, false);
-        return new SpeseComuniAdapter.SpeseComuniViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull SpeseComuniAdapter.SpeseComuniViewHolder holder, int position) {
-        SpesaComune spesa = speseList.get(position);
-        holder.bind(spesa);
-    }
-
-    @Override
-    public int getItemCount() {
-        return speseList.size();
-    }
-
-    // Inner ViewHolder class
-    public static class SpeseComuniViewHolder extends RecyclerView.ViewHolder {
-        private TextView nome;
-        private TextView valore;
-        private TextView responsabile;
-        private TextView scadenza;
-
-        public SpeseComuniViewHolder(@NonNull View itemView) {
-            super(itemView);
-            nome = itemView.findViewById(R.id.nomeSpesaComune);
-            valore = itemView.findViewById(R.id.valoreSpesaComune);
-            responsabile = itemView.findViewById(R.id.responsabileSpesaComune);
-            scadenza = itemView.findViewById(R.id.scadenzaSpesaComune);
-        }
-
-        public void bind(SpesaComune spesa) {
-            nome.setText(spesa.getNome());
-            valore.setText(spesa.getValore().toString());
-            responsabile.setText("Responsabile:" + spesa.getResponsabile());
-            scadenza.setText("boh");
-            /*itemDataEvento.setText(event.getGiorno() + "/" + event.getMese() + "/" + event.getAnno());
-            itemDescrizioneEvento.setText(event.getNome());*/
-        }
+    private static class ViewHolder {
+        TextView nome;
+        TextView scadenza;
+        TextView responsabile;
+        TextView valore;
+        Button buttonPaga;
     }
 }
+

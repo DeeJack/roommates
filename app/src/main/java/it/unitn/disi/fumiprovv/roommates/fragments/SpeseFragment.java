@@ -12,14 +12,13 @@ import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TabsFragment#newInstance} factory method to
+ * Use the {@link SpeseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabsFragment extends Fragment {
+public class SpeseFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,7 +29,7 @@ public class TabsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public TabsFragment() {
+    public SpeseFragment() {
         // Required empty public constructor
     }
 
@@ -43,8 +42,8 @@ public class TabsFragment extends Fragment {
      * @return A new instance of fragment TabsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TabsFragment newInstance(String param1, String param2) {
-        TabsFragment fragment = new TabsFragment();
+    public static SpeseFragment newInstance(String param1, String param2) {
+        SpeseFragment fragment = new SpeseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,16 +69,23 @@ public class TabsFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         NoteFragment noteFragment = NoteFragment.newInstance("", "");
         HomeFragment homeFragment = new HomeFragment();
+        SpeseComuniFragment speseComuniFragment = new SpeseComuniFragment();
+        SpeseStorico speseStoricoFragment = new SpeseStorico();
+        SpeseSituazione speseSituazioneFragment = new SpeseSituazione();
+        SpeseComuniFragment prova = new SpeseComuniFragment();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), homeFragment).commit();
+                        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), speseSituazioneFragment).commit();
                         break;
                     case 1:
-                        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), noteFragment).commit();
+                        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), prova).commit();
+                        break;
+                    case 2:
+                        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), speseStoricoFragment).commit();
                         break;
                 }
             }

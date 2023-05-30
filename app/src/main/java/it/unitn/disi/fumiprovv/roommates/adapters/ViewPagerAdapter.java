@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import it.unitn.disi.fumiprovv.roommates.fragments.SpeseSituazione;
-import it.unitn.disi.fumiprovv.roommates.fragments.SpeseSpeseComuni;
+import it.unitn.disi.fumiprovv.roommates.fragments.SpeseComuniFragment;
 import it.unitn.disi.fumiprovv.roommates.fragments.SpeseStorico;
 
 public class ViewPagerAdapter
@@ -26,7 +26,7 @@ public class ViewPagerAdapter
         if (position == 0)
             fragment = new SpeseSituazione();
         else if (position == 1)
-            fragment = new SpeseSpeseComuni();
+            fragment = new SpeseComuniFragment();
         else if (position == 2)
             fragment = new SpeseStorico();
 

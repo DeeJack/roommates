@@ -21,6 +21,8 @@
         app:destination="@id/speseSpeseComuni"/>
     <action android:id="@+id/action_to_spese2"
         app:destination="@id/tabsFragment"/>
+    <action android:id="@+id/action_to_prova"
+        app:destination="@id/provaFragment"/>
     <fragment
         android:id="@+id/loginFragment"
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.login.LoginFragment"
@@ -206,17 +208,22 @@
         tools:layout="@layout/fragment_new_contact" />
     <fragment
         android:id="@+id/speseGenerica"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseGenerica"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseGenericaDeprecato"
         android:label="fragment_spese_generica"
         tools:layout="@layout/fragment_spese_generica" />
     <fragment
         android:id="@+id/speseSpeseComuni"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseSpeseComuni"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseComuniFragmentDeprecato"
         android:label="fragment_spese_spese_comuni"
         tools:layout="@layout/fragment_spese_spese_comuni" />
     <fragment
         android:id="@+id/tabsFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TabsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseFragment"
         android:label="fragment_tabs"
         tools:layout="@layout/fragment_tabs" />
+    <fragment
+        android:id="@+id/provaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseComuniFragment"
+        android:label="fragment_prova"
+        tools:layout="@layout/fragment_prova" />
 </navigation>
