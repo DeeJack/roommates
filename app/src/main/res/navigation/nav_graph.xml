@@ -19,7 +19,8 @@
         app:destination="@id/speseGenerica"/>
     <action android:id="@+id/action_to_spese_comuni"
         app:destination="@id/speseSpeseComuni"/>
-
+    <action android:id="@+id/action_to_spese2"
+        app:destination="@id/tabsFragment"/>
     <fragment
         android:id="@+id/loginFragment"
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.login.LoginFragment"
