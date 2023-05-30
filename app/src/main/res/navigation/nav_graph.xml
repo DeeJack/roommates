@@ -200,4 +200,9 @@
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewContactFragment"
         android:label="fragment_new_contact"
         tools:layout="@layout/fragment_new_contact" />
+    <fragment
+        android:id="@+id/tabsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TabsFragment"
+        android:label="fragment_tabs"
+        tools:layout="@layout/fragment_tabs" />
 </navigation>
