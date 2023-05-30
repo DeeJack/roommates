@@ -15,12 +15,10 @@
 
     <action android:id="@+id/action_to_turnipulizia"
         app:destination="@id/turniPuliziaFragment"/>
-
     <action android:id="@+id/action_to_spese"
         app:destination="@id/speseGenerica"/>
     <action android:id="@+id/action_to_spese_comuni"
         app:destination="@id/speseSpeseComuni"/>
-
 
     <fragment
         android:id="@+id/loginFragment"
@@ -215,4 +213,9 @@
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseSpeseComuni"
         android:label="fragment_spese_spese_comuni"
         tools:layout="@layout/fragment_spese_spese_comuni" />
+    <fragment
+        android:id="@+id/tabsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TabsFragment"
+        android:label="fragment_tabs"
+        tools:layout="@layout/fragment_tabs" />
 </navigation>

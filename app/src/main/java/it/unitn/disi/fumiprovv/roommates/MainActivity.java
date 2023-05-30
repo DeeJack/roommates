@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
             SharedPreferences sharedPref = getSharedPreferences("house", MODE_PRIVATE);
             HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
-            //navController.navigate(R.id.noteFragment);
+            houseViewModel.setHouseId(sharedPref.getString("houseId", ""));
+
+            //navController.navigate(R.id.tabsFragment);
             NavigationUtils.conditionalLogin(navController, sharedPref, this);
         } else {
             // TODO: remove
