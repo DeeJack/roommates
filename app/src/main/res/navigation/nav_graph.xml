@@ -16,6 +16,11 @@
     <action android:id="@+id/action_to_turnipulizia"
         app:destination="@id/turniPuliziaFragment"/>
 
+    <action android:id="@+id/action_to_spese"
+        app:destination="@id/speseGenerica"/>
+    <action android:id="@+id/action_to_spese_comuni"
+        app:destination="@id/speseSpeseComuni"/>
+
 
     <fragment
         android:id="@+id/loginFragment"
@@ -200,4 +205,14 @@
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewContactFragment"
         android:label="fragment_new_contact"
         tools:layout="@layout/fragment_new_contact" />
+    <fragment
+        android:id="@+id/speseGenerica"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseGenerica"
+        android:label="fragment_spese_generica"
+        tools:layout="@layout/fragment_spese_generica" />
+    <fragment
+        android:id="@+id/speseSpeseComuni"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseSpeseComuni"
+        android:label="fragment_spese_spese_comuni"
+        tools:layout="@layout/fragment_spese_spese_comuni" />
 </navigation>
