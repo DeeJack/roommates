@@ -115,6 +115,8 @@ public class NoteFragment extends Fragment {
                     adapter.setNotes(notes);
 
                     notesListView.setAdapter(adapter);
+                    if (getContext() == null)
+                        return;
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
                     notesListView.setDividerHeight(dividerHeight);
 

@@ -30,7 +30,10 @@ public class NoteListAdapter extends BaseAdapter {
     public NoteListAdapter(Context context, List<Note> notes) {
         this.notes = notes;
         this.context = context;
-        this.inflater = LayoutInflater.from(context);
+        if (context != null)
+            this.inflater = LayoutInflater.from(context);
+        else
+            this.inflater = null;
     }
 
     @Override
