@@ -76,11 +76,9 @@ public class TabsFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        getChildFragmentManager().beginTransaction().remove(noteFragment).commit();
-                        getChildFragmentManager().beginTransaction().add(fragmentContainerView.getId(), homeFragment).commit();
+                        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), homeFragment).commit();
                         break;
                     case 1:
-                        getChildFragmentManager().beginTransaction().remove(homeFragment).commit();
                         getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), noteFragment).commit();
                         break;
                 }
