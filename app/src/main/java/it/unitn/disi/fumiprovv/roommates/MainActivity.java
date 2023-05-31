@@ -2,13 +2,16 @@ package it.unitn.disi.fumiprovv.roommates;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,6 +27,11 @@ import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.UserViewModel;
 
 public class MainActivity extends AppCompatActivity {
+    private DrawerLayout mDrawer;
+    private Toolbar toolbar;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle drawerToggle;
+    private TextView nameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +41,35 @@ public class MainActivity extends AppCompatActivity {
 
         View view = findViewById(R.id.activity_main);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // This will display an Up icon (<-), we will replace it with hamburger later
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Find our drawer view
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        nvDrawer = (NavigationView) findViewById(R.id.navigation_view);
+        nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.nameDrawerField);
+        // Setup drawer view
+        setupDrawerContent(nvDrawer);
+
+        drawerToggle = setupDrawerToggle();
+
+        // Setup toggle to display hamburger icon with nice animation
+        //drawerToggle.setDrawerIndicatorEnabled(true);
+        drawerToggle.syncState();
+
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawer.addDrawerListener(drawerToggle);
+
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         NavController navController = navHostFragment.getNavController();
 
         Intent intent = getIntent();
         String action = intent.getAction();
         Uri data = intent.getData();
+        setDrawerLocked(true);
 
         if (mAuth.getCurrentUser() != null) {
             if (data != null) {
@@ -65,36 +96,85 @@ public class MainActivity extends AppCompatActivity {
             // The starting fragment is already the login fragment
         }
 
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.menu_item_home) {
-                    navController.navigate(R.id.homeFragment);
-                } else if (itemId == R.id.menu_item_calendario) {
-                    navController.navigate(R.id.action_to_calendario);
-                } else if (itemId == R.id.menu_item_gestioneSpese) {
-                    navController.navigate(R.id.homeFragment);
-                } else if (itemId == R.id.menu_item_note) {
-                    navController.navigate(R.id.noteFragment);
-                } else if (itemId == R.id.menu_item_rubrica) {
-                    navController.navigate(R.id.contactFragment);
-                } else if (itemId == R.id.menu_item_listaSpesa) {
-                    navController.navigate(R.id.shoppingListFragment);
-                } else if (itemId == R.id.menu_item_sondaggi) {
-                    navController.navigate(R.id.homeFragment);
-                } else if (itemId == R.id.menu_item_turni) {
-                    navController.navigate(R.id.action_to_turnipulizia);
-                }
+    }
 
-                // Close the drawer
-                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-                drawerLayout.closeDrawer(GravityCompat.START);
-
-                return true;
-            }
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setItemIconTintList(getResources().getColorStateList(R.color.primaryTextColor));
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        navigationView.setCheckedItem(R.id.menu_item_home);
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            selectDrawerItem(menuItem, navController, navigationView);
+            return true;
         });
+    }
 
+    private void selectDrawerItem(MenuItem menuItem, NavController navController, NavigationView navigationView) {
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.menu_item_home) {
+            navController.navigate(R.id.homeFragment);
+        } else if (itemId == R.id.menu_item_calendario) {
+            navController.navigate(R.id.calendarioFragment);
+        } else if (itemId == R.id.menu_item_gestioneSpese) {
+            navController.navigate(R.id.homeFragment);
+        } else if (itemId == R.id.menu_item_note) {
+            navController.navigate(R.id.noteFragment);
+        } else if (itemId == R.id.menu_item_rubrica) {
+            navController.navigate(R.id.contactFragment);
+        } else if (itemId == R.id.menu_item_listaSpesa) {
+            navController.navigate(R.id.shoppingListFragment);
+        } else if (itemId == R.id.menu_item_sondaggi) {
+            navController.navigate(R.id.homeFragment);
+        } else if (itemId == R.id.menu_item_turni) {
+            navController.navigate(R.id.turniPuliziaFragment);
+        }
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+
+        // Close the drawer
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public void setDrawerLocked(boolean lock) {
+        if (lock) {
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            drawerToggle.setDrawerIndicatorEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        } else {
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            drawerToggle.setDrawerIndicatorEnabled(true);
+        }
+    }
+
+    public void setName(String name) {
+        nameView.setText(name);
+    }
+
+    public void showHamburger(boolean show) {
+        if (show)
+            drawerToggle.setDrawerIndicatorEnabled(true);
+        else
+            drawerToggle.setDrawerIndicatorEnabled(false);
     }
 }
