@@ -82,6 +82,9 @@ public class HomeFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setDrawerLocked(false);
         mainActivity.setName(auth.getCurrentUser().getDisplayName());
+
+        mainActivity.selectHome();
+
         return view;
     }
 

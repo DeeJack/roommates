@@ -42,4 +42,9 @@
         <item name="colorOnSecondary">@color/white</item>
         -->
     </style>
+
+    <style name="Theme.Roommates.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

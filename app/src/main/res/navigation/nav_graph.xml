@@ -13,8 +13,22 @@
     <action android:id="@+id/action_to_calendario"
         app:destination="@id/calendarioFragment"/>
 
-    <action android:id="@+id/action_to_turnipulizia"
-        app:destination="@id/turniPuliziaFragment"/>
+    <action
+        android:id="@+id/action_to_spesa"
+        app:destination="@id/shoppingListFragment"
+        app:popUpTo="@id/homeFragment" />
+
+    <action
+        android:id="@+id/action_to_rubrica"
+        app:destination="@id/contactFragment"
+        app:popUpTo="@id/homeFragment" />
+
+    <action
+        android:id="@+id/action_to_note"
+        app:destination="@id/noteFragment"
+        app:popUpTo="@id/homeFragment" />
+
+
 
 
     <fragment

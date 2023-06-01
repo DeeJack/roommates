@@ -118,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.menu_item_gestioneSpese) {
             navController.navigate(R.id.homeFragment);
         } else if (itemId == R.id.menu_item_note) {
-            navController.navigate(R.id.noteFragment);
+            navController.navigate(R.id.action_to_note);
         } else if (itemId == R.id.menu_item_rubrica) {
-            navController.navigate(R.id.contactFragment);
+            navController.navigate(R.id.action_to_rubrica);
         } else if (itemId == R.id.menu_item_listaSpesa) {
-            navController.navigate(R.id.shoppingListFragment);
+            navController.navigate(R.id.action_to_spesa);
         } else if (itemId == R.id.menu_item_sondaggi) {
             navController.navigate(R.id.homeFragment);
         } else if (itemId == R.id.menu_item_turni) {
@@ -176,5 +176,10 @@ public class MainActivity extends AppCompatActivity {
             drawerToggle.setDrawerIndicatorEnabled(true);
         else
             drawerToggle.setDrawerIndicatorEnabled(false);
+    }
+
+    public void selectHome() {
+        nvDrawer.getMenu().getItem(0).setChecked(true);
+        setTitle(nvDrawer.getMenu().getItem(0).getTitle());
     }
 }
