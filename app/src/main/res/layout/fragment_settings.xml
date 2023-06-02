@@ -20,21 +20,21 @@
             android:src="@android:drawable/ic_menu_share"
             app:layout_constraintBottom_toBottomOf="@+id/houseIdField2"
             app:layout_constraintEnd_toEndOf="@+id/leaveBtn"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/houseIdField2"
             app:layout_constraintTop_toTopOf="@+id/houseIdField2"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/houseIdField2"
-            android:layout_width="64dp"
+            android:layout_width="0dp"
             android:layout_height="22dp"
             android:layout_marginStart="192dp"
             android:text="A2915S"
             app:layout_constraintBottom_toBottomOf="@+id/textView12"
+            app:layout_constraintEnd_toStartOf="@+id/shareButton2"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/textView12"
             app:layout_constraintTop_toTopOf="@+id/textView12"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/settingsProfileImage"
@@ -117,51 +117,61 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView8"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/newModeratorContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:ellipsize="none"
-            android:text="Seleziona un nuovo moderatore:"
-            app:layout_constraintEnd_toStartOf="@+id/newModeratorBtn"
-            app:layout_constraintHorizontal_bias="0.076"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear2"
-            app:layout_wrapBehaviorInParent="horizontal_only" />
-
-        <Button
-            android:id="@+id/newModeratorBtn"
-            android:layout_width="150dp"
-            android:layout_height="55dp"
-            android:layout_marginEnd="16dp"
-            android:text="Nuovo moderatore"
-            app:layout_constraintBottom_toBottomOf="@+id/textView8"
+            android:layout_marginTop="44dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView8"
-            app:layout_constraintVertical_bias="0.527" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settingsNameField">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="none"
+                android:text="Seleziona un nuovo moderatore:"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_wrapBehaviorInParent="horizontal_only" />
+
+            <Button
+                android:id="@+id/newModeratorBtn"
+                android:layout_width="147dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="12dp"
+                android:clickable="false"
+                android:enabled="true"
+                android:text="Nuovo moderatore"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/textView8"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="40dp"
             android:text="Esci dalla casa"
-            app:layout_constraintStart_toStartOf="@+id/textView8"
-            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+            app:layout_constraintStart_toStartOf="@+id/newModeratorContainer"
+            app:layout_constraintTop_toBottomOf="@+id/newModeratorContainer" />
 
         <Button
             android:id="@+id/leaveBtn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="144dp"
+            android:layout_marginTop="28dp"
             android:text="Esci"
-            app:layout_constraintBottom_toBottomOf="@+id/textView10"
-            app:layout_constraintEnd_toEndOf="@+id/newModeratorBtn"
+            app:layout_constraintEnd_toEndOf="@+id/newModeratorContainer"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/newModeratorBtn"
-            app:layout_constraintTop_toTopOf="@+id/textView10"
-            app:layout_constraintVertical_bias="0.448" />
+            app:layout_constraintStart_toEndOf="@+id/textView10"
+            app:layout_constraintTop_toBottomOf="@+id/newModeratorContainer" />
 
         <TextView
             android:id="@+id/textView12"
@@ -178,10 +188,9 @@
             android:id="@+id/logoutBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="116dp"
             android:text="Logout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.487"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView12" />
 

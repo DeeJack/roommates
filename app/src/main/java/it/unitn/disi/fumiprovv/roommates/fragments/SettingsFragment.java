@@ -2,7 +2,6 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -116,7 +115,18 @@ public class SettingsFragment extends Fragment {
         userName.setText(mAuth.getCurrentUser().getDisplayName());
 
         Button newModerator = view.findViewById(R.id.newModeratorBtn);
-        newModerator.setOnClickListener((view1) -> openNewModeratorDialog());
+
+        db.collection("case").document(houseViewModel.getHouseId()).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        return;
+                    }
+                    DocumentSnapshot document = task.getResult();
+                    if (Boolean.TRUE.equals(document.getBoolean("moderator"))) {
+                        newModerator.setClickable(true);
+                        newModerator.setOnClickListener((view1) -> openNewModeratorDialog());
+                    }
+                });
 
         return view;
     }
