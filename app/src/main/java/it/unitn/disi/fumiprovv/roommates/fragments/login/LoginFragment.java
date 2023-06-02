@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.utils.FieldValidation;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
@@ -58,6 +59,10 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setDrawerLocked(true);
+
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         Button loginBtn = (Button) view.findViewById(R.id.loginButton);
         loginBtn.setOnClickListener((a) -> onLoginButtonClick(view));

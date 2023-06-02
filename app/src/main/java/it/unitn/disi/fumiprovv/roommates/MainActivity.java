@@ -162,10 +162,12 @@ public class MainActivity extends AppCompatActivity {
             mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             drawerToggle.setDrawerIndicatorEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         } else {
             mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             drawerToggle.setDrawerIndicatorEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
     }
 

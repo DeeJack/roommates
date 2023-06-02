@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.House;
 import it.unitn.disi.fumiprovv.roommates.models.Roommate;
@@ -80,6 +81,10 @@ public class HouseCreationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setDrawerLocked(true);
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_house_creation, container, false);
         Button joinBtn = (Button) view.findViewById(R.id.joinButton);
