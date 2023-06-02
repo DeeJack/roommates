@@ -4,18 +4,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.Roommates">
 
     <!-- Main content area -->
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        xmlns:tools="http://schemas.android.com/tools"
         tools:context=".MainActivity"
         android:id="@+id/activity_main">
 
+    <!-- The ActionBar displayed at the top -->
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
         <androidx.fragment.app.FragmentContainerView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
@@ -26,8 +34,7 @@
 
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <!-- NavigationView for the lateral menu -->
     <com.google.android.material.navigation.NavigationView
@@ -35,11 +42,14 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/nav_menu">
+        android:fitsSystemWindows="true"
+        app:menu="@menu/nav_menu"
+        app:headerLayout="@layout/nav_header"
 
-
-
-    </com.google.android.material.navigation.NavigationView>
+        app:itemIconTint="@color/primaryTextColor"
+        app:itemTextColor="@color/primaryTextColor"
+        android:theme="@style/Theme.Roommates.Asd"
+        />
 
 </androidx.drawerlayout.widget.DrawerLayout>
     <!--android:name="it.unitn.disi.fumiprovv.roommates.fragments.login.LoginFragment"-->

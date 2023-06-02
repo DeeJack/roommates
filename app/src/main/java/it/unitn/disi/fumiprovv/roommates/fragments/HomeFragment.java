@@ -4,21 +4,20 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextClock;
-import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
 
+import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
@@ -75,9 +74,17 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         FirebaseAuth auth = FirebaseAuth.getInstance();
+
         ((TextView) view.findViewById(R.id.user_name)).setText(auth.getCurrentUser().getEmail());
         Button logoutButton = view.findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(this::onLogoutClick);
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setDrawerLocked(false);
+        mainActivity.setName(auth.getCurrentUser().getDisplayName());
+
+        mainActivity.selectHome();
+
         return view;
     }
 
