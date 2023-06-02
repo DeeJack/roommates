@@ -71,7 +71,7 @@ public class SpeseComuniFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_prova, container, false);
+        View view = inflater.inflate(R.layout.fragment_spese_comuni, container, false);
         SpeseComuniAdapter adapter = new SpeseComuniAdapter(getContext(), new ArrayList<>());
 
         ListView lista = view.findViewById(R.id.provaList);

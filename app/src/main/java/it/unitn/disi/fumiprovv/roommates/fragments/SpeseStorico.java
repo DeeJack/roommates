@@ -7,8 +7,19 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.adapters.ExpenseAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.SpeseComuniAdapter;
+import it.unitn.disi.fumiprovv.roommates.models.Expense;
+import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +36,7 @@ public class SpeseStorico extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public SpeseStorico() {
         // Required empty public constructor
@@ -61,6 +73,27 @@ public class SpeseStorico extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_spese_storico, container, false);
+        View view = inflater.inflate(R.layout.fragment_spese_storico, container, false);
+        ExpenseAdapter adapter = new ExpenseAdapter(getContext(), new ArrayList<>());
+
+        ListView lista = view.findViewById(R.id.listaStoricoSpese);
+
+        db.collection("listaspesaeffettuata").get().addOnCompleteListener( task -> {
+            if (!task.isSuccessful()) {
+                return;
+            }
+            List<Expense> spese = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                Expense spesa = new Expense((String) documentSnapshot.get("nome"), (Double) documentSnapshot.get("amount"), (String) documentSnapshot.get("payer"), documentSnapshot.getTimestamp("date").toDate());
+                return spesa;
+            }).collect(Collectors.toList());
+            adapter.setItems(spese);
+
+            lista.setAdapter(adapter);
+            if (getContext() == null) {
+                return;
+            }
+        });
+
+        return view;
     }
 }
