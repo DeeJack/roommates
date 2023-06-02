@@ -33,6 +33,12 @@
         app:destination="@id/settingsFragment"
         app:popUpTo="@id/homeFragment" />
 
+    <action
+        android:id="@+id/action_to_home"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@id/homeFragment"
+        app:launchSingleTop="true"/>
+
 
 
 
