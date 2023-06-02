@@ -33,6 +33,12 @@
         app:destination="@id/settingsFragment"
         app:popUpTo="@id/homeFragment" />
 
+    <action
+        android:id="@+id/action_to_home"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@id/homeFragment"
+        app:launchSingleTop="true"/>
+
 
 
 
@@ -141,12 +147,12 @@
         <action
             android:id="@+id/action_settingsFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/settingsFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_settingsFragment_to_houseCreationFragment"
             app:destination="@id/houseCreationFragment"
-            app:popUpTo="@id/settingsFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_settingsFragment_self"

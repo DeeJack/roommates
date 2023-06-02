@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     private void selectDrawerItem(MenuItem menuItem, NavController navController, NavigationView navigationView) {
         int itemId = menuItem.getItemId();
         if (itemId == R.id.menu_item_home) {
-            navController.navigate(R.id.homeFragment);
+            navController.navigate(R.id.action_to_home);
         } else if (itemId == R.id.menu_item_calendario) {
             navController.navigate(R.id.calendarioFragment);
         } else if (itemId == R.id.menu_item_gestioneSpese) {
@@ -162,10 +162,13 @@ public class MainActivity extends AppCompatActivity {
             mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             drawerToggle.setDrawerIndicatorEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            setTitle("Roommates");
+            //getSupportActionBar().setDisplayShowTitleEnabled(false);
         } else {
             mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             drawerToggle.setDrawerIndicatorEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
     }
 

@@ -11,13 +11,17 @@ import android.widget.ListView;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,18 +48,14 @@ public class ModeratorDialogFragment extends DialogFragment {
 
         // Crea un ListView per visualizzare gli elementi
         ListView listView = new ListView(getContext());
-        getItems().thenAccept(roommates -> {
-            String[] items = roommates.stream().map(Roommate::getUserId).toArray(String[]::new);
+        getItems().thenAccept(roommates -> getNames(roommates).thenAccept(names -> {
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, items);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, names);
             listView.setAdapter(adapter);
 
             // Imposta il listener di click sugli elementi della lista
             listView.setOnItemClickListener((parent, view, position, id) -> onClickListener(roommates, position, view));
-
-            // Imposta il ListView nel dialo
-
-        });
+        }));
         builder.setView(listView);
 
         builder.setTitle("Lista di elementi");
@@ -108,6 +108,40 @@ public class ModeratorDialogFragment extends DialogFragment {
             roommatesTask.complete(roommates);
         });
         return roommatesTask;
+    }
+
+    public CompletableFuture<List<String>> getNames(List<Roommate> roommates) {
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+        CompletableFuture<List<String>> namesTask = new CompletableFuture<>();
+
+        Query query = db.collection("utenti")
+                .whereEqualTo("casa", houseViewModel.getHouseId());
+
+        Task<QuerySnapshot> querySnapshot = query.get();
+        querySnapshot.addOnCompleteListener((task) -> {
+            if (!task.isSuccessful()) {
+                namesTask.complete(new ArrayList<>());
+                return;
+            }
+            Map<String, String> namesIds = new HashMap<>();
+            for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                String name = document.getString("name");
+                namesIds.put(document.getId(), name);
+            }
+            // Sort names list based on the order of the roommates list where the id are the same
+            List<String> names = new ArrayList<>();
+            for (Roommate roommate : roommates) {
+                String userId = roommate.getUserId();
+                String name = namesIds.get(userId);
+                if (name != null) {
+                    names.add(name);
+                }
+            }
+            namesTask.complete(names);
+        });
+
+
+        return namesTask;
     }
 
 
