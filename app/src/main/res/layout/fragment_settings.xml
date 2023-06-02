@@ -119,14 +119,16 @@
 
         <TextView
             android:id="@+id/textView8"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
+            android:ellipsize="none"
             android:text="Seleziona un nuovo moderatore:"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/newModeratorBtn"
             app:layout_constraintHorizontal_bias="0.076"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear2" />
+            app:layout_constraintTop_toBottomOf="@+id/linear2"
+            app:layout_wrapBehaviorInParent="horizontal_only" />
 
         <Button
             android:id="@+id/newModeratorBtn"
