@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragments.SettingsFragment"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark"
+    tools:context=".fragments.SettingsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/settingsLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/background_dark">
 
         <ImageView
             android:id="@+id/shareButton2"
@@ -64,6 +64,7 @@
             android:layout_height="wrap_content"
             android:gravity="center|top"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:weightSum="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,6 +94,7 @@
             android:layout_weight="0.8"
             android:gravity="center|top"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:weightSum="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

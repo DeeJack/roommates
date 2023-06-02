@@ -63,4 +63,5 @@
     <string name="note_new_contact_number">0555 1234 12</string>
     <string name="drawer_open">Apri menu</string>
     <string name="drawer_close">Chiudi menu</string>
+    <string name="impostazioni">Impostazioni</string>
 </resources>

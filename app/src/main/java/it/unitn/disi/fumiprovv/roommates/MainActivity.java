@@ -127,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.homeFragment);
         } else if (itemId == R.id.menu_item_turni) {
             navController.navigate(R.id.turniPuliziaFragment);
+        } else if (itemId == R.id.menu_item_impostazioni) {
+            navController.navigate(R.id.action_to_impostazioni);
         }
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());

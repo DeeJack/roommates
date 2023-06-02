@@ -47,6 +47,11 @@
             android:icon="@drawable/sondaggi"
             android:checkable="true"
             android:title="@string/sondaggi" />
+        <item
+            android:id="@+id/menu_item_impostazioni"
+            android:icon="@drawable/settings_foreground"
+            android:checkable="true"
+            android:title="@string/impostazioni" />
     </group>
 
 </menu>
