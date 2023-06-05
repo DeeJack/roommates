@@ -1,6 +1,12 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,12 +15,15 @@ public class Expense implements Serializable {
     private double amount;
     private String payerId;
     private Date date;
+    private ArrayList<DocumentReference> paganti;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public Expense(String name, double amount, String payerId, Date date) {
+    public Expense(String name, double amount, String payerId, Date date, ArrayList<DocumentReference> paganti) {
         this.name = name;
         this.amount = amount;
         this.payerId = payerId;
         this.date = date;
+        this.paganti = paganti;
     }
 
     public Expense() {
@@ -62,5 +71,22 @@ public class Expense implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getPagantiString(){
+        String s = "Diviso tra: ";
+        for(int i=0;i<paganti.size()-1;i++) {
+            s+= paganti.get(i).toString() + ", ";
+        }
+        s += paganti.get(paganti.size()-1).toString();
+        return s;
+    }
+
+    public ArrayList<DocumentReference> getPaganti() {
+        return paganti;
+    }
+
+    public void setPaganti(ArrayList<DocumentReference> paganti) {
+        this.paganti = paganti;
     }
 }

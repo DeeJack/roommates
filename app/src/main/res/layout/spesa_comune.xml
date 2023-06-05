@@ -2,17 +2,18 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:background="@drawable/border"
-    android:layout_marginVertical="5dp"
-    android:layout_marginHorizontal="18dp">
+    android:layout_height="150dp">
 
     <!-- Customize the content of each item here -->
     <!-- Example: TextView to display the item's text -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:background="@drawable/border"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp">
 
         <ImageView
             android:layout_width="0dp"
@@ -57,17 +58,18 @@
             <TextView
                 android:id="@+id/valoreSpesaComune"
                 android:layout_width="match_parent"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="0dp"
                 android:text="50€"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:gravity="center"/>
             <Button
                 android:id="@+id/pagaSpesaComune"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="paga"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                android:gravity="center"/>
         </LinearLayout>
 
 

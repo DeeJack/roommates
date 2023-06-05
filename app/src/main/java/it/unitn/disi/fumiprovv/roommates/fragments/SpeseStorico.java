@@ -4,11 +4,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -83,7 +86,8 @@ public class SpeseStorico extends Fragment {
                 return;
             }
             List<Expense> spese = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                Expense spesa = new Expense((String) documentSnapshot.get("nome"), (Double) documentSnapshot.get("amount"), (String) documentSnapshot.get("payer"), documentSnapshot.getTimestamp("date").toDate());
+                Expense spesa = new Expense((String) documentSnapshot.get("name"), (Double) documentSnapshot.get("amount"), (String) documentSnapshot.get("payer"), documentSnapshot.getTimestamp("date").toDate(), (ArrayList<DocumentReference>) documentSnapshot.get("usersPaying"));
+                Log.d("boh", spesa.getPaganti().toString());
                 return spesa;
             }).collect(Collectors.toList());
             adapter.setItems(spese);

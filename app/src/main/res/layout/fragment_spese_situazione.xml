@@ -5,16 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SpeseSituazione">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+        android:id="@+id/situazioni"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ciao"
-            android:textSize="100dp"
-            android:textColor="@color/white"/>
+            android:orientation="vertical">
+        </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/border"/>
+        <LinearLayout
+            android:id="@+id/storicoSituazioni"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>
