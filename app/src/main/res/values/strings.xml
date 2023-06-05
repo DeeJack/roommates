@@ -65,4 +65,5 @@
     <string name="drawer_close">Chiudi menu</string>
     <string name="impostazioni">Impostazioni</string>
     <string name="delete_shopitem_message">Vuoi eliminare l\'elemento dalla lista?</string>
+    <string name="delete_contact_message">Vuoi eliminare il contatto?</string>
 </resources>
