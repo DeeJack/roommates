@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import java.util.List;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.adapters.OptionsSurveyAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -128,8 +130,21 @@ public class NuovoSondaggio extends Fragment {
                 } else {
                     sm = Boolean.FALSE;
                 }
-                DocumentReference casa = db.collection("case").document("OKBVOT");
-                Sondaggio survey = new Sondaggio(q, new ArrayList<String>(options), voti, new Long(currentTimeMillis), sm, db.collection("utenti").document(userId), casa);
+                HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+                String casa = houseViewModel.getHouseId();
+                Sondaggio survey = new Sondaggio(
+                        "id",
+                        q,
+                        new ArrayList<String>(options),
+                        voti,
+                        new Long(currentTimeMillis),
+                        sm,
+                        mAuth.getUid(),
+                        //db.collection("utenti").document(userId),
+                        casa,
+                        new ArrayList<String>(),
+                        new Long(4), //da modificare con numero di inquilini nella casa
+                        new Long(0));
 
                 db.collection("sondaggi")
                         .add(survey)

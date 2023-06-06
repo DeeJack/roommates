@@ -3,6 +3,7 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -19,12 +22,19 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.SondaggiAdapter;
+import it.unitn.disi.fumiprovv.roommates.models.Note;
 import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
 import it.unitn.disi.fumiprovv.roommates.adapters.SurveyAdapter;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,15 +88,14 @@ public class SondaggiFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_sondaggi, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.surveysRecyclerView);
+        ListView sondaggiListView = view.findViewById(R.id.sondaggiListView);
+        /*RecyclerView recyclerView = view.findViewById(R.id.surveysRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         surveyAdapter = new SurveyAdapter();
-        recyclerView.setAdapter(surveyAdapter);
+        recyclerView.setAdapter(surveyAdapter);*/
 
         Button b = (Button) view.findViewById(R.id.button_new_sondaggio);
         b.setOnClickListener(new View.OnClickListener() {
@@ -96,12 +105,49 @@ public class SondaggiFragment extends Fragment {
             }
         });
 
-        loadSurveys();
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+        String s = houseViewModel.getHouseId();
+        Log.d("houseId", s);
+
+        db.collection("sondaggi").whereEqualTo("casa", houseViewModel.getHouseId()).orderBy("tempoCreazione", Query.Direction.DESCENDING).get()
+                .addOnCompleteListener(task -> {
+                    SondaggiAdapter adapter = new SondaggiAdapter(getContext(), new ArrayList<>());
+                    if (!task.isSuccessful()) {
+                        return;
+                    }
+                    List<Sondaggio> sondaggi = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                        Sondaggio sondaggio = new Sondaggio(
+                                documentSnapshot.getId(),
+                                (String) documentSnapshot.get("domanda"),
+                                (ArrayList<String>) documentSnapshot.get("opzioni"),
+                                (ArrayList<Long>) documentSnapshot.get("voti"),
+                                (Long) documentSnapshot.get("tempoCreazione"),
+                                (Boolean) documentSnapshot.get("sceltaMultipla"),
+                                (String) documentSnapshot.get("creatore"),
+                                (String) documentSnapshot.get("casa"),
+                                (ArrayList<String>) documentSnapshot.get("votanti"),
+                                (Long) documentSnapshot.get("maxVotanti"),
+                                (Long) documentSnapshot.get("votiTotali")
+                        );
+                        /*documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
+                            if (!task1.isSuccessful()) {
+                                return;
+                            }
+                            adapter.notifyDataSetChanged();
+                        });*/
+                        return sondaggio;
+                    }).collect(Collectors.toList());
+                    adapter.setSondaggi(sondaggi);
+
+                    sondaggiListView.setAdapter(adapter);
+                    int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
+                    sondaggiListView.setDividerHeight(dividerHeight);
+                });
 
         return view;
     }
 
-    private void loadSurveys() {
+    /*private void loadSurveys() {
         // Query Firestore collection for surveys
         db.collection("sondaggi")
                 .orderBy("tempoCreazione", Query.Direction.DESCENDING)
@@ -133,5 +179,5 @@ public class SondaggiFragment extends Fragment {
                         Log.d("SurveyFragment", "Error getting surveys: ", task.getException());
                     }
                 });
-    }
+    }*/
 }
