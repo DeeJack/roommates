@@ -54,7 +54,8 @@
         <ListView
             android:id="@+id/shoppingListView"
             android:layout_width="match_parent"
-            android:layout_height="386dp">
+            android:layout_height="386dp"
+            android:divider="@color/fui_transparent">
 
         </ListView>
 
