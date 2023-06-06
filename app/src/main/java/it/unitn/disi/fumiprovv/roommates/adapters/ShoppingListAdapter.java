@@ -83,15 +83,16 @@ public class ShoppingListAdapter extends BaseAdapter {
         this.items = items;
     }
 
-    private void onDeleteButtonClick(ShoppingItem note) {
+    private void onDeleteButtonClick(ShoppingItem shoppingItem) {
         // Create alert dialog to confirm deletion
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.delete_note_title);
         builder.setMessage(R.string.delete_shopitem_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {
-            // Delete note from database
-            db.collection("listaspesa").document(note.getId()).delete();
-            items.remove(note);
+            // Delete shoppingItem from database
+            db.collection("listaspesa").document(shoppingItem.getId()).delete();
+            items.remove(shoppingItem);
+            checkedItems.remove(shoppingItem);
             notifyDataSetChanged();
         });
         builder.setNegativeButton("Cancella", (dialog, which) -> {
