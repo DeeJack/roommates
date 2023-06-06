@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -91,6 +92,14 @@ public class SpeseComuniFragment extends Fragment {
                 return;
             }
         });
+
+        Button buttonNuovaSpesaComune = view.findViewById(R.id.buttonNuovaSpesaComune);
+
+
+
+        if(true) {
+            buttonNuovaSpesaComune.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }

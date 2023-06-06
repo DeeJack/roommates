@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class SpeseComuniAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
     private final Context context;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final ArrayList<SpesaComune> checkedItems = new ArrayList<>();
     private List<SpesaComune> items;
 
@@ -70,14 +72,12 @@ public class SpeseComuniAdapter extends BaseAdapter {
 
         SpesaComune item = items.get(position);
         holder.nome.setText(item.getNome());
-        /*holder.itemCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                checkedItems.add(item);
-            } else {
-                checkedItems.remove(item);
-            }
-        });
-        holder.deleteItemButton.setOnClickListener(view -> onDeleteButtonClick(item));*/
+        holder.responsabile.setText(item.getResponsabile());
+
+        if(item.getResponsabile().equals(mAuth.getUid())) {
+            holder.buttonPaga.setVisibility(View.VISIBLE);
+        }
+
         holder.buttonPaga.setOnClickListener(view -> onPagaButtonClick(item));
 
         return convertView;
@@ -120,6 +120,7 @@ public class SpeseComuniAdapter extends BaseAdapter {
         TextView responsabile;
         TextView valore;
         Button buttonPaga;
+        Button buttonNuovaSpesaComune;
     }
 }
 

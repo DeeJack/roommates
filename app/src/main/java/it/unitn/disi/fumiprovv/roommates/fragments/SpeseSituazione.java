@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,31 +20,26 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.adapters.SituazioniAdapter;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
-import it.unitn.disi.fumiprovv.roommates.models.Roommate;
-import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
+import it.unitn.disi.fumiprovv.roommates.adapters.SpeseComuniAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.StoricoSituazioniAdapter;
+import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
+import it.unitn.disi.fumiprovv.roommates.models.StoricoSituazioni;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
@@ -106,10 +100,39 @@ public class SpeseSituazione extends Fragment {
         LinearLayout parentLayout = view.findViewById(R.id.situazioni);
 
         LinearLayout listaSituazioni = view.findViewById(R.id.situazioni);
-        LinearLayout listaStorico = view.findViewById(R.id.storicoSituazioni);
+        ListView listaStorico = view.findViewById(R.id.storicoSituazioni);
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         String houseId = houseViewModel.getHouseId();
+
+        StoricoSituazioniAdapter adapter = new StoricoSituazioniAdapter(getContext(), new ArrayList<>());
+
+        db.collection("storicoPagamentiUtenti").whereEqualTo("Casa", houseId).get().addOnCompleteListener( task -> {
+            if (!task.isSuccessful()) {
+                return;
+            }
+            List<StoricoSituazioni> storico = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                Number amount = (Number) documentSnapshot.get("Amount");
+                Double amountValue;
+                if (amount instanceof Long) {
+                    amountValue = ((Long) amount).doubleValue();
+                } else if (amount instanceof Double) {
+                    amountValue = (Double) amount;
+                } else {
+                    throw new IllegalArgumentException("Invalid amount type");
+                }
+                StoricoSituazioni item = new StoricoSituazioni((String) documentSnapshot.get("Casa"), (String) documentSnapshot.get("From"), (String) documentSnapshot.get("To"), amountValue, (Timestamp) documentSnapshot.get("Date"));
+                return item;
+            }).collect(Collectors.toList());
+            adapter.setItems((ArrayList<StoricoSituazioni>) storico);
+            Log.d("prova", storico.toString());
+
+            listaStorico.setAdapter(adapter);
+            if (getContext() == null) {
+                return;
+            }
+        });
+
         DocumentReference documentSnapshotTask = db.collection("case").document(houseId);
         documentSnapshotTask.get().addOnCompleteListener(task -> {
             DocumentSnapshot document = task.getResult();
@@ -127,14 +150,15 @@ public class SpeseSituazione extends Fragment {
                                 if (document.exists()) {
                                     String nome = document.getString("name");
                                     if(!userId.equals(mAuth.getUid())) {
-                                        View userFrame = LayoutInflater.from(getContext()).inflate(R.layout.situazione_item, null);
+                                        View userFrame = LayoutInflater.from(getContext()).inflate(R.layout.generic_item, null);
 
-                                        TextView titolo = userFrame.findViewById(R.id.titoloSituazione);
-                                        TextView descrizione = userFrame.findViewById(R.id.descrizioneSituazione);
+                                        TextView titolo = userFrame.findViewById(R.id.titoloGenericItem);
+                                        TextView descrizione = userFrame.findViewById(R.id.descrizioneGenericItem);
                                         titolo.setText(nome);
                                         descrizione.setText("Devi tot€ a " + nome);
 
-                                        Button actionButton = userFrame.findViewById(R.id.pagaSituazione);
+                                        Button actionButton = userFrame.findViewById(R.id.buttonGenericItem);
+                                        actionButton.setVisibility(View.VISIBLE);
                                         actionButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
@@ -150,6 +174,21 @@ public class SpeseSituazione extends Fragment {
                                                     String inputValue = inputEditText.getText().toString();
                                                     if (!TextUtils.isEmpty(inputValue)) {
                                                         double value = Double.parseDouble(inputValue);
+                                                        Map<String, Object> data = new HashMap<>();
+                                                        data.put("From", mAuth.getUid());
+                                                        data.put("To", document.getId());
+                                                        data.put("Amount", new Double(inputValue));
+                                                        db.collection("storicoPagamentiUtenti").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentReference documentReference) {
+                                                                Log.d("success", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Log.w("failure", "Error adding document", e);
+                                                                    }
+                                                                });
                                                         Log.d("boh", Double.toString(value));
                                                     } else {
                                                         Log.d("boh", "errore");
