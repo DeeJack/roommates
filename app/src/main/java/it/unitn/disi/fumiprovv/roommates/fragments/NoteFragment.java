@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,10 @@ public class NoteFragment extends Fragment {
             NavigationUtils.navigateTo(R.id.action_noteFragment_to_newNoteFragment, view);
         });
 
-        db.collection("note").whereEqualTo("houseId", db.collection("case").document(houseViewModel.getHouseId())).get()
+        db.collection("note").whereEqualTo("houseId", db.collection("case")
+                        .document(houseViewModel.getHouseId()))
+                .orderBy("creationDate", Query.Direction.DESCENDING)
+                .get()
                 .addOnCompleteListener(task -> {
                     NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
                     if (!task.isSuccessful()) {
