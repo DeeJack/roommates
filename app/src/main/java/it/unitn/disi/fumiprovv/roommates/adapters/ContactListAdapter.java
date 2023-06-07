@@ -87,7 +87,7 @@ public class ContactListAdapter extends BaseAdapter {
         // Create alert dialog to confirm deletion
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.delete_note_title);
-        builder.setMessage(R.string.delete_note_message);
+        builder.setMessage(R.string.delete_contact_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {
             // Delete note from database
             db.collection("contatti").document(contact.getId()).delete();

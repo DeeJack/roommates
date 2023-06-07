@@ -23,6 +23,7 @@ public class ShoppingListAdapter extends BaseAdapter {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final ArrayList<ShoppingItem> checkedItems = new ArrayList<>();
     private List<ShoppingItem> items;
+    private List<ViewHolder> itemsHolders = new ArrayList<>();
 
     public ShoppingListAdapter(Context context, ArrayList<ShoppingItem> items) {
         this.items = items;
@@ -55,6 +56,7 @@ public class ShoppingListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.itemCheckbox = convertView.findViewById(R.id.itemCheckbox);
             holder.deleteItemButton = convertView.findViewById(R.id.deleteItemButton);
+            itemsHolders.add(holder);
 
             convertView.setTag(holder);
         } else {
@@ -83,15 +85,17 @@ public class ShoppingListAdapter extends BaseAdapter {
         this.items = items;
     }
 
-    private void onDeleteButtonClick(ShoppingItem note) {
+    private void onDeleteButtonClick(ShoppingItem shoppingItem) {
         // Create alert dialog to confirm deletion
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.delete_note_title);
-        builder.setMessage(R.string.delete_note_message);
+        builder.setMessage(R.string.delete_shopitem_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {
-            // Delete note from database
-            db.collection("listaspesa").document(note.getId()).delete();
-            items.remove(note);
+            // Delete shoppingItem from database
+            db.collection("listaspesa").document(shoppingItem.getId()).delete();
+            items.remove(shoppingItem);
+            checkedItems.clear();
+            itemsHolders.forEach(holder -> holder.itemCheckbox.setChecked(false));
             notifyDataSetChanged();
         });
         builder.setNegativeButton("Cancella", (dialog, which) -> {

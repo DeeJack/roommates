@@ -37,7 +37,7 @@
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
-                android:background="?android:attr/listDivider" />
+                android:background="@android:color/transparent" />
 
             <TextView
                 android:id="@+id/contactNumField"
