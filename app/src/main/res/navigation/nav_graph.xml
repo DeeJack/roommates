@@ -15,6 +15,16 @@
 
     <action android:id="@+id/action_to_turnipulizia"
         app:destination="@id/turniPuliziaFragment"/>
+    <action android:id="@+id/action_to_home"
+        app:destination="@id/homeFragment"/>
+    <action android:id="@+id/action_to_note"
+        app:destination="@id/noteFragment"/>
+    <action android:id="@+id/action_to_rubrica"
+        app:destination="@id/contactFragment"/>
+    <action android:id="@+id/action_to_spesa"
+        app:destination="@id/tabsFragment"/>
+    <action android:id="@+id/action_to_impostazioni"
+        app:destination="@id/settingsFragment"/>
 
 
     <fragment
@@ -219,4 +229,5 @@
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoSondaggio"
         android:label="fragment_nuovo_sondaggio"
         tools:layout="@layout/fragment_nuovo_sondaggio" />
+
 </navigation>
