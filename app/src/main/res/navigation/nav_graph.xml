@@ -13,33 +13,8 @@
     <action android:id="@+id/action_to_calendario"
         app:destination="@id/calendarioFragment"/>
 
-    <action
-        android:id="@+id/action_to_spesa"
-        app:destination="@id/shoppingListFragment"
-        app:popUpTo="@id/homeFragment" />
-
-    <action
-        android:id="@+id/action_to_rubrica"
-        app:destination="@id/contactFragment"
-        app:popUpTo="@id/homeFragment" />
-
-    <action
-        android:id="@+id/action_to_note"
-        app:destination="@id/noteFragment"
-        app:popUpTo="@id/homeFragment" />
-
-    <action
-        android:id="@+id/action_to_impostazioni"
-        app:destination="@id/settingsFragment"
-        app:popUpTo="@id/homeFragment" />
-
-    <action
-        android:id="@+id/action_to_home"
-        app:destination="@id/homeFragment"
-        app:popUpTo="@id/homeFragment"
-        app:launchSingleTop="true"/>
-
-
+    <action android:id="@+id/action_to_turnipulizia"
+        app:destination="@id/turniPuliziaFragment"/>
 
 
     <fragment
@@ -147,12 +122,12 @@
         <action
             android:id="@+id/action_settingsFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@id/settingsFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_settingsFragment_to_houseCreationFragment"
             app:destination="@id/houseCreationFragment"
-            app:popUpTo="@id/homeFragment"
+            app:popUpTo="@id/settingsFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_settingsFragment_self"
@@ -230,4 +205,18 @@
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.TabsFragment"
         android:label="fragment_tabs"
         tools:layout="@layout/fragment_tabs" />
+    <fragment
+        android:id="@+id/sondaggiFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SondaggiFragment"
+        android:label="fragment_sondaggi"
+        tools:layout="@layout/fragment_sondaggi" >
+        <action
+            android:id="@+id/action_sondaggiFragment_to_nuovo_sondaggio"
+            app:destination="@id/nuovo_sondaggio" />
+    </fragment>
+    <fragment
+        android:id="@+id/nuovo_sondaggio"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoSondaggio"
+        android:label="fragment_nuovo_sondaggio"
+        tools:layout="@layout/fragment_nuovo_sondaggio" />
 </navigation>

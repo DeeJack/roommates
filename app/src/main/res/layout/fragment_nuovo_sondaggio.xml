@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.NuovoSondaggio">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/nuovaDomanda"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/border"
+            android:hint="Domanda"
+            android:padding="5dp"/>
+
+        <CheckBox
+            android:id="@+id/sceltaMultipla"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Scelta multipla"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Opzioni"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/nuovaOpzioneText"
+                android:layout_width="315dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/shopping_list_hint"
+                android:inputType="text"
+                android:textColor="@android:color/primary_text_dark"
+                android:textColorHint="@android:color/secondary_text_dark" />
+
+            <Button
+                android:id="@+id/buttonAddOption"
+                android:layout_width="7dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/add_foreground"
+                app:tint="@android:color/primary_text_dark"
+                />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listViewOptions"
+            android:layout_width="match_parent"
+            android:layout_height="386dp">
+
+        </ListView>
+        <Button
+            android:id="@+id/buttonCreaSondaggio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crea sondaggio"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</FrameLayout>
