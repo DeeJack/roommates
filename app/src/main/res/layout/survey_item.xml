@@ -20,13 +20,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="Domanda del sondaggio"
+                android:text="@string/question_placeholder"
                 android:layout_weight="9"
                 />
+
             <ImageView
+                android:id="@+id/shareSurvey"
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:src="@android:drawable/ic_menu_share"
+                app:tint="@color/primaryTextColor" />
+
+            <ImageView
+                android:id="@+id/deleteSurvey"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/turni"/>
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                app:srcCompat="@drawable/remove_foreground"
+                app:tint="@color/primaryTextColor" />
         </LinearLayout>
 
 

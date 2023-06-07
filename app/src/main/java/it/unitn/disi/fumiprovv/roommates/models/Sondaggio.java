@@ -12,16 +12,16 @@ public class Sondaggio {
     private String domanda;
     private ArrayList<String> opzioni;
     private ArrayList<Long> voti;
-    private Long tempoCreazione;
+    private long tempoCreazione;
     private Boolean sceltaMultipla;
     private String creatore;
     private ArrayList<String> votanti;
     private String casa;
-    private Long votiTotali;
+    private long votiTotali;
     private String id;
-    private Long maxVotanti;
+    private long maxVotanti;
 
-    public Sondaggio(String id, String domanda, ArrayList<String> opzioni, ArrayList<Long> voti, Long tempoCreazione, Boolean sceltaMultipla, String creatore, String casa, ArrayList<String> votanti, Long maxVotanti, Long votiTotali) {
+    public Sondaggio(String id, String domanda, ArrayList<String> opzioni, ArrayList<Long> voti, long tempoCreazione, Boolean sceltaMultipla, String creatore, String casa, ArrayList<String> votanti, long maxVotanti, long votiTotali) {
         this.id = id;
         this.domanda = domanda;
         this.opzioni = new ArrayList<String>();
@@ -66,15 +66,15 @@ public class Sondaggio {
         return tempoCreazione;
     }
 
-    public void setTempoCreazione(Long tempoCreazione) {
+    public void setTempoCreazione(long tempoCreazione) {
         this.tempoCreazione = tempoCreazione;
     }
 
-    public Boolean getSceltaMultipla() {
+    public boolean getSceltaMultipla() {
         return sceltaMultipla;
     }
 
-    public void setSceltaMultipla(Boolean sceltaMultipla) {
+    public void setSceltaMultipla(boolean sceltaMultipla) {
         this.sceltaMultipla = sceltaMultipla;
     }
 
@@ -106,11 +106,11 @@ public class Sondaggio {
         this.casa = casa;
     }
 
-    public Long getVotiTotali() {
+    public long getVotiTotali() {
         return votiTotali;
     }
 
-    public void setVotiTotali(Long votiTotali) {
+    public void setVotiTotali(long votiTotali) {
         this.votiTotali = votiTotali;
     }
 
@@ -122,29 +122,29 @@ public class Sondaggio {
         this.id = id;
     }
 
-    public Long getMaxVotanti() {
+    public long getMaxVotanti() {
         return maxVotanti;
     }
 
-    public void setMaxVotanti(Long maxVotanti) {
+    public void setMaxVotanti(long maxVotanti) {
         this.maxVotanti = maxVotanti;
     }
 
-    public ArrayList<String> getVincitori(){
-        Long massimo = trovaMassimo();
+    public ArrayList<String> getVincitori() {
+        long massimo = trovaMassimo();
         ArrayList<String> vincitori = new ArrayList<>();
-        for(int i=0;i<voti.size();i++) {
-            if(voti.get(i) == massimo) {
+        for (int i = 0; i < voti.size(); i++) {
+            if (voti.get(i) == massimo) {
                 vincitori.add(opzioni.get(i));
             }
         }
         return vincitori;
     }
 
-    public Long trovaMassimo(){
-        Long massimo = new Long(0);
-        for(int i=0;i<voti.size();i++) {
-            if(voti.get(i) > massimo) {
+    public long trovaMassimo() {
+        long massimo = 0L;
+        for (int i = 0; i < voti.size(); i++) {
+            if (voti.get(i) > massimo) {
                 massimo = voti.get(i);
             }
         }
@@ -152,7 +152,7 @@ public class Sondaggio {
     }
 
     public void addVoto(int i) {
-        voti.set(i,voti.get(i)+1);
+        voti.set(i, voti.get(i) + 1);
     }
 
     public Long getVoto(int i) {

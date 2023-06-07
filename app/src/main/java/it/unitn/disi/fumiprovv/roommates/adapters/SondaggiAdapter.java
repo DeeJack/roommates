@@ -1,5 +1,6 @@
 package it.unitn.disi.fumiprovv.roommates.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Checkable;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -41,7 +44,7 @@ public class SondaggiAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
     private final Context context;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public SondaggiAdapter(Context context, List<Sondaggio> sondaggi) {
         this.sondaggi = sondaggi;
@@ -75,6 +78,8 @@ public class SondaggiAdapter extends BaseAdapter {
             holder.buttonVota = convertView.findViewById(R.id.buttonVota);
             holder.domandaTextField = convertView.findViewById(R.id.domanda);
             holder.optionsRadioGroup = convertView.findViewById(R.id.optionsRadioGroup);
+            holder.deleteImage = convertView.findViewById(R.id.deleteSurvey);
+            holder.shareImage = convertView.findViewById(R.id.shareSurvey);
 
             convertView.setTag(holder);
         } else {
@@ -91,101 +96,123 @@ public class SondaggiAdapter extends BaseAdapter {
         String currentUserId = mAuth.getUid();
 
         ArrayList<String> vincitori = new ArrayList<String>();
-        boolean votato = false;
-        if(item.getVotiTotali() >= item.getMaxVotanti()) {
-            votato = true;
+        boolean votato = item.getVotanti().contains(currentUserId);
+        if (votato) {
             vincitori = item.getVincitori();
         }
 
-        if(isSceltaMultipla) {
-            for(int i=0;i<options.size();i++) {
+        createSurvey(convertView, holder, item, options, isSceltaMultipla, currentUserId, vincitori, votato);
+
+        if (votato) {
+            holder.buttonVota.setEnabled(false);
+        } else {
+            holder.buttonVota.setEnabled(true);
+        }
+
+        holder.buttonVota.setOnClickListener(view -> {
+            List<Integer> selectedOptions = getSelectedOptions(holder.optionsRadioGroup);
+            onButtonVotaClick(item, selectedOptions);
+        });
+
+        holder.deleteImage.setOnClickListener(view -> deleteSurvey(item));
+        holder.shareImage.setOnClickListener(view -> shareSurvey(item));
+
+        return convertView;
+    }
+
+    private void createSurvey(View convertView, ViewHolder holder, Sondaggio item, List<String> options, Boolean isSceltaMultipla, String currentUserId, ArrayList<String> vincitori, boolean votato) {
+        if (isSceltaMultipla) {
+            for (int i = 0; i < options.size(); i++) {
                 CheckBox checkBox = new CheckBox(convertView.getContext());
-                checkBox.setText(options.get(i) + " (" + item.getVoto(i) + ")");
-                if(item.getVotanti().contains(currentUserId) || votato) {
+                checkBox.setText(String.format("%s (%d)", options.get(i), item.getVoto(i)));
+                checkBox.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                if (votato) {
                     checkBox.setEnabled(false);
-                }
-                if(votato) {
-                    if(vincitori.contains(options.get(i))) {
-                        checkBox.setBackgroundColor(Color.GRAY);
-                        checkBox.setTextColor(Color.WHITE);
+                    if (vincitori.contains(options.get(i))) {
+                        checkBox.setBackgroundColor(Color.parseColor("#BB86FC"));
+                        checkBox.setTextColor(context.getColor(R.color.primaryTextColor));
                     }
                 }
                 holder.optionsRadioGroup.addView(checkBox);
             }
         } else {
-            for(int i=0;i<options.size();i++) {
+            for (int i = 0; i < options.size(); i++) {
                 RadioButton radioButton = new RadioButton(convertView.getContext());
-                radioButton.setText(options.get(i) + " (" + item.getVoto(i) + ")");
-                if(item.getVotanti().contains(currentUserId) || votato) {
+                radioButton.setText(String.format("%s (%d)", options.get(i), item.getVoto(i)));
+                radioButton.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                if (votato) {
                     radioButton.setEnabled(false);
-                    radioButton.setTextColor(Color.WHITE);
-                }
-                if(votato) {
-                    if(vincitori.contains(options.get(i))) { //ci potrebbero essere più vincitori
-                        radioButton.setBackgroundColor(Color.GRAY);
+                    radioButton.setTextColor(context.getColor(R.color.primaryTextColor));
+                    if (vincitori.contains(options.get(i))) { //ci potrebbero essere più vincitori
+                        radioButton.setBackgroundColor(Color.parseColor("#BB86FC"));
                     }
                 }
                 holder.optionsRadioGroup.addView(radioButton);
             }
         }
-
-        if(item.getVotanti().contains(currentUserId) || votato) {
-            holder.buttonVota.setEnabled(false);
-        }
-
-        holder.buttonVota.setOnClickListener(view -> {List<String> selectedOptions = getSelectedOptions(holder.optionsRadioGroup); onButtonVotaClick(item, selectedOptions);});
-
-        return convertView;
     }
 
-    private List<String> getSelectedOptions(RadioGroup optionsRadioGroup) {
-        List<String> selectedOptions = new ArrayList<>();
+    private void deleteSurvey(Sondaggio sondaggio) {
+        // Create alert dialog to confirm deletion
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.delete_note_title);
+        builder.setMessage(R.string.delete_survey_message);
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            // Delete note from database
+            db.collection("sondaggi").document(sondaggio.getId()).delete();
+            sondaggi.remove(sondaggio);
+            notifyDataSetChanged();
+        });
+        builder.setNegativeButton("Cancella", (dialog, which) -> {
+            // Do nothing
+        });
+        builder.show();
+    }
+
+    private void shareSurvey(Sondaggio item) {
+        String text = String.format("%s\nLink: %s", context.getString(R.string.share_survey),
+                "http://roommates.asd/survey?id=" + item.getId());
+
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.setType("text/plain");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+
+        Intent shareIntent = Intent.createChooser(sendIntent, context.getString(R.string.share_survey_title));
+        context.startActivity(shareIntent);
+    }
+
+    private List<Integer> getSelectedOptions(RadioGroup optionsRadioGroup) {
+        List<Integer> selectedOptions = new ArrayList<>();
         for (int i = 0; i < optionsRadioGroup.getChildCount(); i++) {
             View view = optionsRadioGroup.getChildAt(i);
-            if (view instanceof RadioButton) {
-                RadioButton radioButton = (RadioButton) view;
-                if (radioButton.isChecked()) {
-                    String selectedOption = radioButton.getText().toString();
-                    selectedOptions.add(selectedOption);
-                }
-            } else {
-                CheckBox checkBox = (CheckBox) view;
-                if(checkBox.isChecked()) {
-                    String selectedOption = checkBox.getText().toString();
-                    selectedOptions.add(selectedOption);
+            if (view instanceof Checkable) {
+                Checkable checkable = (Checkable) view;
+                if (checkable.isChecked()) {
+                    selectedOptions.add(i);
                 }
             }
         }
         return selectedOptions;
     }
 
-    private void onButtonVotaClick(Sondaggio item, List<String> selectedOptions) {
+    private void onButtonVotaClick(Sondaggio item, List<Integer> selectedOptions) {
         Log.d("click", "cliccato bottone vota");
-        if(selectedOptions.isEmpty()) {
+        if (selectedOptions.isEmpty()) {
             Log.d("vuoto", "nessuna opzione selezionata");
         } else {
             Log.d("non vuoto", selectedOptions.toString());
-            for(String option : selectedOptions) {
+            for (int option : selectedOptions) {
                 //aggiungi voto
-                int i = item.getOpzioni().indexOf(option);
-                item.addVoto(i);
+                item.addVoto(option);
             }
         }
 
-        item.setVotiTotali(item.getVotiTotali()+1);
+        item.setVotiTotali(item.getVotiTotali() + 1);
         item.addVotante(mAuth.getUid());
-        db.collection("sondaggi").document(item.getId()).set(item).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("success", "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("failure", "Error writing document", e);
-                    }
-                });
+        db.collection("sondaggi")
+                .document(item.getId()).set(item)
+                .addOnSuccessListener(aVoid -> Log.d("success", "DocumentSnapshot successfully written!"))
+                .addOnFailureListener(e -> Log.w("failure", "Error writing document", e));
         notifyDataSetChanged();
     }
 
@@ -193,20 +220,11 @@ public class SondaggiAdapter extends BaseAdapter {
         this.sondaggi = sondaggi;
     }
 
-    /*private void onShareButtonClick(String text, String id) {
-        text = String.format("%s\nLink: %s", text, "http://roommates.asd/notes?id=" + id);
-
-        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-        sendIntent.setType("text/plain");
-        sendIntent.putExtra(Intent.EXTRA_TEXT, text);
-
-        Intent shareIntent = Intent.createChooser(sendIntent, context.getString(R.string.share_note_title));
-        context.startActivity(shareIntent);
-    }*/
-
     private static class ViewHolder {
         TextView domandaTextField;
         RadioGroup optionsRadioGroup;
         Button buttonVota;
+        ImageView shareImage;
+        ImageView deleteImage;
     }
 }

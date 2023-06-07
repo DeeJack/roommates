@@ -14,8 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,8 +54,8 @@ public class NuovoSondaggio extends Fragment {
     private String mParam1;
     private String mParam2;
     private ListView listViewOptions;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public NuovoSondaggio() {
         // Required empty public constructor
@@ -101,107 +103,95 @@ public class NuovoSondaggio extends Fragment {
         CheckBox c = view.findViewById(R.id.sceltaMultipla);
         Log.d("sm", c.toString());
 
-        OptionsSurveyAdapter optionsAdapter= new OptionsSurveyAdapter(view.getContext(), surveyOptions);
+        OptionsSurveyAdapter optionsAdapter = new OptionsSurveyAdapter(view.getContext(), surveyOptions);
 
         listViewOptions.setAdapter(optionsAdapter);
 
-        buttonAddOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String option = editTextOption.getText().toString().trim();
-                if (!option.isEmpty()) {
-                    surveyOptions.add(option);
-                    optionsAdapter.notifyDataSetChanged();
-                    editTextOption.setText("");
-                }
+        buttonAddOption.setOnClickListener(v -> {
+            String option = editTextOption.getText().toString().trim();
+            if (!option.isEmpty()) {
+                surveyOptions.add(option);
+                optionsAdapter.notifyDataSetChanged();
+                editTextOption.setText("");
             }
         });
 
-        buttonNuovoSondaggio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String q = question.getText().toString().trim();
-                List<String> options = getOptionsFromListView();
-                ArrayList<Long> voti = new ArrayList<Long>();
-                for(int i=0;i<options.size();i++) {
-                    voti.add(new Long(0));
-                }
-                String userId = mAuth.getUid();
-                long currentTimeMillis = System.currentTimeMillis();
-                //CheckBox checkBox = view.findViewById(R.id.sceltaMultipla);
-                //Log.d("ciao", checkBox.toString());
-                Boolean sm;
-                if (c.isChecked()) {
-                    sm = Boolean.TRUE;
-                } else {
-                    sm = Boolean.FALSE;
-                }
-                HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
-                String casa = houseViewModel.getHouseId();
-                db.collection("case").document(casa).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        ArrayList<Object> prova = (ArrayList<Object>) task.getResult().get("roommates");
-                        Long inquilini = new Long(prova.size());
-                        Sondaggio survey = new Sondaggio(
-                                "id",
-                                q,
-                                new ArrayList<String>(options),
-                                voti,
-                                new Long(currentTimeMillis),
-                                sm,
-                                mAuth.getUid(),
-                                //db.collection("utenti").document(userId),
-                                casa,
-                                new ArrayList<String>(),
-                                inquilini,
-                                new Long(0));
+        buttonNuovoSondaggio.setOnClickListener(view1 -> {
+            String domanda = question.getText().toString().trim();
+            List<String> options = getOptionsFromListView();
+            ArrayList<Long> voti = new ArrayList<>();
+            for (int i = 0; i < options.size(); i++) {
+                voti.add(0L);
+            }
+            long currentTimeMillis = System.currentTimeMillis();
+            boolean sm = c.isChecked();
+            HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+            String casa = houseViewModel.getHouseId();
 
-                        db.collection("sondaggi")
-                                .add(survey)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Log.d("nuovoSondaggio", "DocumentSnapshot written with ID: " + documentReference.getId());
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("erroreNuovoSondaggio", "Error adding document", e);
-                                    }
-                                });
-                    }
-                });
-                /*Sondaggio survey = new Sondaggio(
+            if (options.size() == 0) {
+                Toast.makeText(getContext(), getString(R.string.no_options), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (domanda.trim().length() == 0) {
+                Toast.makeText(getContext(), getString(R.string.no_text_survey), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            db.collection("case").document(casa).get().addOnCompleteListener(task -> {
+                ArrayList<Object> prova = (ArrayList<Object>) task.getResult().get("roommates");
+                long inquilini = prova.size();
+                Sondaggio survey = new Sondaggio(
                         "id",
-                        q,
-                        new ArrayList<String>(options),
+                        domanda,
+                        new ArrayList<>(options),
                         voti,
-                        new Long(currentTimeMillis),
+                        currentTimeMillis,
                         sm,
                         mAuth.getUid(),
-                        //db.collection("utenti").document(userId),
                         casa,
-                        new ArrayList<String>(),
-                        new Long(2), //da modificare con numero di inquilini nella casa
-                        new Long(0));
+                        new ArrayList<>(),
+                        inquilini,
+                        0L);
 
                 db.collection("sondaggi")
                         .add(survey)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d("nuovoSondaggio", "DocumentSnapshot written with ID: " + documentReference.getId());
-                            }
+                        .addOnSuccessListener(documentReference -> {
+                            Log.d("nuovoSondaggio", "DocumentSnapshot written with ID: " + documentReference.getId());
+                            requireActivity().onBackPressed();
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("erroreNuovoSondaggio", "Error adding document", e);
-                            }
-                        });*/
-            }
+                        .addOnFailureListener(e -> {
+                            Log.w("erroreNuovoSondaggio", "Error adding document", e);
+                            requireActivity().onBackPressed();
+                        });
+            });
+            /*Sondaggio survey = new Sondaggio(
+                    "id",
+                    q,
+                    new ArrayList<String>(options),
+                    voti,
+                    new Long(currentTimeMillis),
+                    sm,
+                    mAuth.getUid(),
+                    //db.collection("utenti").document(userId),
+                    casa,
+                    new ArrayList<String>(),
+                    new Long(2), //da modificare con numero di inquilini nella casa
+                    new Long(0));
+
+            db.collection("sondaggi")
+                    .add(survey)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d("nuovoSondaggio", "DocumentSnapshot written with ID: " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("erroreNuovoSondaggio", "Error adding document", e);
+                        }
+                    });*/
         });
 
         return view;

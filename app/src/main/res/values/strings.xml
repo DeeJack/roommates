@@ -66,4 +66,16 @@
     <string name="impostazioni">Impostazioni</string>
     <string name="delete_shopitem_message">Vuoi eliminare l\'elemento dalla lista?</string>
     <string name="delete_contact_message">Vuoi eliminare il contatto?</string>
+    <string name="share_survey">Vota nel sondaggio!</string>
+    <string name="share_survey_title">Condividi un sondaggio</string>
+    <string name="delete_survey_message">Eliminare il sondaggio?</string>
+    <string name="no_options">Inserisci delle opzioni!</string>
+    <string name="no_text_survey">Inserisci la domanda!</string>
+    <string name="create_survey_btn">Crea sondaggio</string>
+    <string name="add">+</string>
+    <string name="survey_domanda">Domanda</string>
+    <string name="multiple_choiice">Scelta multipla</string>
+    <string name="options">Opzioni</string>
+    <string name="question_placeholder">Domanda del sondaggio</string>
+    <string name="error_placeholder">[ERROR]</string>
 </resources>

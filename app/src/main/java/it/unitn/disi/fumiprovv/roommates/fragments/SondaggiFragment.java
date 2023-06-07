@@ -1,5 +1,6 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
+import android.opengl.Visibility;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -34,6 +36,7 @@ import it.unitn.disi.fumiprovv.roommates.adapters.SondaggiAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.Note;
 import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
 import it.unitn.disi.fumiprovv.roommates.adapters.SurveyAdapter;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
@@ -89,45 +92,41 @@ public class SondaggiFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_sondaggi, container, false);
+        View view = inflater.inflate(R.layout.fragment_sondaggi, container, false);
 
         ListView sondaggiListView = view.findViewById(R.id.sondaggiListView);
-        /*RecyclerView recyclerView = view.findViewById(R.id.surveysRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        surveyAdapter = new SurveyAdapter();
-        recyclerView.setAdapter(surveyAdapter);*/
+        ProgressBar surveyProgressbar = view.findViewById(R.id.surveyProgressbar);
 
-        Button b = (Button) view.findViewById(R.id.button_new_sondaggio);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_sondaggiFragment_to_nuovo_sondaggio);
-            }
-        });
+        Button newSurveyButton = (Button) view.findViewById(R.id.button_new_sondaggio);
+        newSurveyButton.setOnClickListener(view1 -> NavigationUtils.navigateTo(R.id.action_sondaggiFragment_to_nuovo_sondaggio, view));
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         String s = houseViewModel.getHouseId();
         Log.d("houseId", s);
 
-        db.collection("sondaggi").whereEqualTo("casa", houseViewModel.getHouseId()).orderBy("tempoCreazione", Query.Direction.DESCENDING).get()
+        db.collection("sondaggi")
+                .whereEqualTo("casa", houseViewModel.getHouseId())
+                .orderBy("tempoCreazione", Query.Direction.DESCENDING)
+                .get()
                 .addOnCompleteListener(task -> {
                     SondaggiAdapter adapter = new SondaggiAdapter(getContext(), new ArrayList<>());
                     if (!task.isSuccessful()) {
+                        surveyProgressbar.setVisibility(View.GONE);
                         return;
                     }
                     List<Sondaggio> sondaggi = task.getResult().getDocuments().stream().map(documentSnapshot -> {
                         Sondaggio sondaggio = new Sondaggio(
                                 documentSnapshot.getId(),
-                                (String) documentSnapshot.get("domanda"),
+                                documentSnapshot.getString("domanda"),
                                 (ArrayList<String>) documentSnapshot.get("opzioni"),
                                 (ArrayList<Long>) documentSnapshot.get("voti"),
-                                (Long) documentSnapshot.get("tempoCreazione"),
-                                (Boolean) documentSnapshot.get("sceltaMultipla"),
-                                (String) documentSnapshot.get("creatore"),
-                                (String) documentSnapshot.get("casa"),
+                                documentSnapshot.getLong("tempoCreazione"),
+                                documentSnapshot.getBoolean("sceltaMultipla"),
+                                documentSnapshot.getString("creatore"),
+                                documentSnapshot.getString("casa"),
                                 (ArrayList<String>) documentSnapshot.get("votanti"),
-                                (Long) documentSnapshot.get("maxVotanti"),
-                                (Long) documentSnapshot.get("votiTotali")
+                                documentSnapshot.getLong("maxVotanti"),
+                                documentSnapshot.getLong("votiTotali")
                         );
                         /*documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful()) {
@@ -142,6 +141,7 @@ public class SondaggiFragment extends Fragment {
                     sondaggiListView.setAdapter(adapter);
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
                     sondaggiListView.setDividerHeight(dividerHeight);
+                    surveyProgressbar.setVisibility(View.GONE);
                 });
 
         return view;

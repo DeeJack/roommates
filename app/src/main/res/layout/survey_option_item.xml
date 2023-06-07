@@ -14,13 +14,16 @@
             android:id="@+id/opzioneText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.8"
             android:padding="8dp"
-            android:text="ciao"/>
+            android:text="@string/error_placeholder" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonDeleteOption"/>
+        <ImageView
+            android:id="@+id/buttonDeleteOption"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/remove_foreground"
+            app:tint="@color/primaryTextColor" />
 
         <!--<ImageView
             android:layout_width="49dp"

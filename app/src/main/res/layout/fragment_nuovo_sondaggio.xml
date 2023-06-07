@@ -18,19 +18,21 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/border"
-            android:hint="Domanda"
-            android:padding="5dp"/>
+            android:hint="@string/survey_domanda"
+            android:padding="5dp"
+            android:autofillHints="none"
+            android:inputType="text" />
 
         <CheckBox
             android:id="@+id/sceltaMultipla"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="Scelta multipla"/>
+            android:text="@string/multiple_choiice"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Opzioni"/>
+            android:text="@string/options"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,23 +41,24 @@
 
             <EditText
                 android:id="@+id/nuovaOpzioneText"
-                android:layout_width="315dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.95"
                 android:ems="10"
                 android:hint="@string/shopping_list_hint"
                 android:inputType="text"
-                android:textColor="@android:color/primary_text_dark"
+                android:textColor="@color/primaryTextColor"
                 android:textColorHint="@android:color/secondary_text_dark" />
 
             <Button
                 android:id="@+id/buttonAddOption"
-                android:layout_width="7dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/add_foreground"
-                app:tint="@android:color/primary_text_dark"
-                />
+                android:layout_weight="0.05"
+                android:background="@android:color/transparent"
+                android:text="@string/add"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="24sp" />
 
         </LinearLayout>
 
@@ -65,12 +68,13 @@
             android:layout_height="386dp">
 
         </ListView>
+
         <Button
             android:id="@+id/buttonCreaSondaggio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Crea sondaggio"
-            android:layout_gravity="center"/>
+            android:text="@string/create_survey_btn"
+            android:layout_gravity="center" />
 
     </LinearLayout>
 
