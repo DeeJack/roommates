@@ -25,6 +25,7 @@ import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
 import it.unitn.disi.fumiprovv.roommates.adapters.TurniAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.Note;
 import it.unitn.disi.fumiprovv.roommates.models.Turno;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
@@ -124,6 +125,8 @@ public class TurniPuliziaFragment extends Fragment {
 
             turniNextWeekList.setAdapter(adapter);
         });
+
+        view.findViewById(R.id.buttonNuovoTurno).setOnClickListener(v -> NavigationUtils.navigateTo(R.id.action_turniPuliziaFragment_to_nuovoTurnoPulizia, view));
 
         return view;
     }
