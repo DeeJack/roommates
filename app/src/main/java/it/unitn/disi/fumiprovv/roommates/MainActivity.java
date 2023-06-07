@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.menu_item_listaSpesa) {
             navController.navigate(R.id.action_to_spesa);
         } else if (itemId == R.id.menu_item_sondaggi) {
-            navController.navigate(R.id.homeFragment);
+            navController.navigate(R.id.action_to_sondaggi);
         } else if (itemId == R.id.menu_item_turni) {
             navController.navigate(R.id.turniPuliziaFragment);
         } else if (itemId == R.id.menu_item_impostazioni) {
