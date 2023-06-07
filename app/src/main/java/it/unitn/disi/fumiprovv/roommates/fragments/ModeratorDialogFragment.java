@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.fragment.app.DialogFragment;
@@ -34,10 +35,12 @@ import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 public class ModeratorDialogFragment extends DialogFragment {
     private final FirebaseFirestore db;
     private final FirebaseAuth mAuth;
+    private final Button newModeratorButton;
 
-    public ModeratorDialogFragment() {
+    public ModeratorDialogFragment(Button newModeratorButton) {
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
+        this.newModeratorButton = newModeratorButton;
     }
 
     @Override
@@ -65,6 +68,9 @@ public class ModeratorDialogFragment extends DialogFragment {
     public void onClickListener(List<Roommate> roommates, int position, View view) {
         Roommate selectedRoommate = roommates.get(position);
 
+        if (Objects.equals(selectedRoommate.getUserId(), mAuth.getCurrentUser().getUid()))
+            return;
+
         // Get the house id from the viewModel
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         // Look for the document with that id in the DB
@@ -85,6 +91,9 @@ public class ModeratorDialogFragment extends DialogFragment {
 
             db.collection("case").document(houseViewModel.getHouseId())
                     .update("roommates", roommatesList);
+            if (newModeratorButton != null) {
+                newModeratorButton.setEnabled(false);
+            }
         });
         getDialog().dismiss(); // Chiudi il dialog dopo il click
 

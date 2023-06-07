@@ -144,7 +144,7 @@
                 android:layout_height="64dp"
                 android:layout_marginStart="12dp"
                 android:clickable="false"
-                android:enabled="true"
+                android:enabled="false"
                 android:text="Nuovo moderatore"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"

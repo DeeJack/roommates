@@ -44,6 +44,7 @@ public class SettingsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private Button newModerator;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -114,25 +115,30 @@ public class SettingsFragment extends Fragment {
         //UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         userName.setText(mAuth.getCurrentUser().getDisplayName());
 
-        Button newModerator = view.findViewById(R.id.newModeratorBtn);
+        newModerator = view.findViewById(R.id.newModeratorBtn);
 
         db.collection("case").document(houseViewModel.getHouseId()).get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (!task.isSuccessful()) {
                         return;
                     }
                     DocumentSnapshot document = task.getResult();
-                    if (Boolean.TRUE.equals(document.getBoolean("moderator"))) {
-                        newModerator.setClickable(true);
-                        newModerator.setOnClickListener((view1) -> openNewModeratorDialog());
+                    List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
+                    for (Map<String, Object> roommate : roommates) {
+                        if (Objects.equals(roommate.get("userId"), mAuth.getCurrentUser().getUid()) &&
+                                Boolean.TRUE.equals(roommate.get("moderator"))) {
+                            newModerator.setEnabled(true);
+                            newModerator.setOnClickListener((view1) -> openNewModeratorDialog());
+                        }
                     }
+
                 });
 
         return view;
     }
 
     private void openNewModeratorDialog() {
-        new ModeratorDialogFragment().show(getChildFragmentManager(), "ModeratorDialogFragment");
+        new ModeratorDialogFragment(newModerator).show(getChildFragmentManager(), "ModeratorDialogFragment");
     }
 
     // load from shared preferences
