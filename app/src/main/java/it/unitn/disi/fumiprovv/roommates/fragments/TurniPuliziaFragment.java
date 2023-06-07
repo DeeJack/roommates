@@ -3,12 +3,29 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.TurniAdapter;
+import it.unitn.disi.fumiprovv.roommates.models.Note;
+import it.unitn.disi.fumiprovv.roommates.models.Turno;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +42,7 @@ public class TurniPuliziaFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public TurniPuliziaFragment() {
         // Required empty public constructor
@@ -61,6 +79,52 @@ public class TurniPuliziaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_turnipulizia, container, false);
+        View view = inflater.inflate(R.layout.fragment_turnipulizia, container, false);
+
+        ListView turniThisWeekList = view.findViewById(R.id.listThisWeekCleaning);
+        ListView turniNextWeekList = view.findViewById(R.id.listNextWeekCleaning);
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+
+        db.collection("turniPulizia").whereEqualTo("casa", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
+            TurniAdapter adapter = new TurniAdapter(getContext(), new ArrayList<Turno>(), true);
+            if (!task.isSuccessful()) {
+                return;
+            }
+            List<Turno> turni = task.getResult().getDocuments().stream().map( documentSnapshot -> {
+                Turno turno = new Turno(
+                        (String) documentSnapshot.getId(),
+                        (String) documentSnapshot.get("nome"),
+                        (Long) documentSnapshot.get("settimanaInizio"),
+                        (Long) documentSnapshot.get("annoInizio"),
+                        (ArrayList<String>) documentSnapshot.get("utenti")
+                        );
+                return turno;
+            }).collect(Collectors.toList());
+            adapter.setTurni(turni);
+
+            turniThisWeekList.setAdapter(adapter);
+        });
+
+        db.collection("turniPulizia").whereEqualTo("casa", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
+            TurniAdapter adapter = new TurniAdapter(getContext(), new ArrayList<Turno>(), false);
+            if (!task.isSuccessful()) {
+                return;
+            }
+            List<Turno> turni = task.getResult().getDocuments().stream().map( documentSnapshot -> {
+                Turno turno = new Turno(
+                        (String) documentSnapshot.getId(),
+                        (String) documentSnapshot.get("nome"),
+                        (Long) documentSnapshot.get("settimanaInizio"),
+                        (Long) documentSnapshot.get("annoInizio"),
+                        (ArrayList<String>) documentSnapshot.get("utenti")
+                );
+                return turno;
+            }).collect(Collectors.toList());
+            adapter.setTurni(turni);
+
+            turniNextWeekList.setAdapter(adapter);
+        });
+
+        return view;
     }
 }
