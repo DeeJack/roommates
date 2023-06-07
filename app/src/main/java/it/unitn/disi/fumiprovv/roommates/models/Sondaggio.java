@@ -4,6 +4,8 @@ import android.util.Pair;
 
 import com.google.firebase.firestore.DocumentReference;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 
 public class Sondaggio {
@@ -128,19 +130,32 @@ public class Sondaggio {
         this.maxVotanti = maxVotanti;
     }
 
-    public String getVincitore(){
+    public ArrayList<String> getVincitori(){
+        Long massimo = trovaMassimo();
+        ArrayList<String> vincitori = new ArrayList<>();
+        for(int i=0;i<voti.size();i++) {
+            if(voti.get(i) == massimo) {
+                vincitori.add(opzioni.get(i));
+            }
+        }
+        return vincitori;
+    }
+
+    public Long trovaMassimo(){
         Long massimo = new Long(0);
-        String res = "";
         for(int i=0;i<voti.size();i++) {
             if(voti.get(i) > massimo) {
                 massimo = voti.get(i);
-                res = opzioni.get(i);
             }
         }
-        return res;
+        return massimo;
     }
 
     public void addVoto(int i) {
         voti.set(i,voti.get(i)+1);
+    }
+
+    public Long getVoto(int i) {
+        return this.voti.get(i);
     }
 }

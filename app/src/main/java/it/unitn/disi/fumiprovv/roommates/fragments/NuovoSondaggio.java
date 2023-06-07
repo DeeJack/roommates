@@ -17,10 +17,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.checkerframework.checker.units.qual.A;
@@ -95,6 +98,8 @@ public class NuovoSondaggio extends Fragment {
         listViewOptions = view.findViewById(R.id.listViewOptions);
         ArrayList<String> surveyOptions = new ArrayList<String>();
         Button buttonNuovoSondaggio = view.findViewById(R.id.buttonCreaSondaggio);
+        CheckBox c = view.findViewById(R.id.sceltaMultipla);
+        Log.d("sm", c.toString());
 
         OptionsSurveyAdapter optionsAdapter= new OptionsSurveyAdapter(view.getContext(), surveyOptions);
 
@@ -123,16 +128,52 @@ public class NuovoSondaggio extends Fragment {
                 }
                 String userId = mAuth.getUid();
                 long currentTimeMillis = System.currentTimeMillis();
-                CheckBox checkBox = view.findViewById(R.id.sceltaMultipla);
+                //CheckBox checkBox = view.findViewById(R.id.sceltaMultipla);
+                //Log.d("ciao", checkBox.toString());
                 Boolean sm;
-                if (checkBox.isChecked()) {
+                if (c.isChecked()) {
                     sm = Boolean.TRUE;
                 } else {
                     sm = Boolean.FALSE;
                 }
                 HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
                 String casa = houseViewModel.getHouseId();
-                Sondaggio survey = new Sondaggio(
+                db.collection("case").document(casa).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        ArrayList<Object> prova = (ArrayList<Object>) task.getResult().get("roommates");
+                        Long inquilini = new Long(prova.size());
+                        Sondaggio survey = new Sondaggio(
+                                "id",
+                                q,
+                                new ArrayList<String>(options),
+                                voti,
+                                new Long(currentTimeMillis),
+                                sm,
+                                mAuth.getUid(),
+                                //db.collection("utenti").document(userId),
+                                casa,
+                                new ArrayList<String>(),
+                                inquilini,
+                                new Long(0));
+
+                        db.collection("sondaggi")
+                                .add(survey)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d("nuovoSondaggio", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("erroreNuovoSondaggio", "Error adding document", e);
+                                    }
+                                });
+                    }
+                });
+                /*Sondaggio survey = new Sondaggio(
                         "id",
                         q,
                         new ArrayList<String>(options),
@@ -143,7 +184,7 @@ public class NuovoSondaggio extends Fragment {
                         //db.collection("utenti").document(userId),
                         casa,
                         new ArrayList<String>(),
-                        new Long(4), //da modificare con numero di inquilini nella casa
+                        new Long(2), //da modificare con numero di inquilini nella casa
                         new Long(0));
 
                 db.collection("sondaggi")
@@ -159,7 +200,7 @@ public class NuovoSondaggio extends Fragment {
                             public void onFailure(@NonNull Exception e) {
                                 Log.w("erroreNuovoSondaggio", "Error adding document", e);
                             }
-                        });
+                        });*/
             }
         });
 

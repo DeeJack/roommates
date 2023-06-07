@@ -90,35 +90,39 @@ public class SondaggiAdapter extends BaseAdapter {
         Boolean isSceltaMultipla = item.getSceltaMultipla();
         String currentUserId = mAuth.getUid();
 
+        ArrayList<String> vincitori = new ArrayList<String>();
         boolean votato = false;
         if(item.getVotiTotali() >= item.getMaxVotanti()) {
             votato = true;
+            vincitori = item.getVincitori();
         }
 
         if(isSceltaMultipla) {
-            for(String option : options) {
+            for(int i=0;i<options.size();i++) {
                 CheckBox checkBox = new CheckBox(convertView.getContext());
-                checkBox.setText(option);
+                checkBox.setText(options.get(i) + " (" + item.getVoto(i) + ")");
                 if(item.getVotanti().contains(currentUserId) || votato) {
-                    //checkBox.setEnabled(false);
+                    checkBox.setEnabled(false);
                 }
                 if(votato) {
-                    if(option.equals(item.getVincitore())) {
-                        checkBox.setBackgroundColor(Color.RED);
+                    if(vincitori.contains(options.get(i))) {
+                        checkBox.setBackgroundColor(Color.GRAY);
+                        checkBox.setTextColor(Color.WHITE);
                     }
                 }
                 holder.optionsRadioGroup.addView(checkBox);
             }
         } else {
-            for(String option : options) {
+            for(int i=0;i<options.size();i++) {
                 RadioButton radioButton = new RadioButton(convertView.getContext());
-                radioButton.setText(option);
+                radioButton.setText(options.get(i) + " (" + item.getVoto(i) + ")");
                 if(item.getVotanti().contains(currentUserId) || votato) {
-                    //radioButton.setEnabled(false);
+                    radioButton.setEnabled(false);
+                    radioButton.setTextColor(Color.WHITE);
                 }
                 if(votato) {
-                    if(option.equals(item.getVincitore())) {
-                        radioButton.setBackgroundColor(Color.RED);
+                    if(vincitori.contains(options.get(i))) { //ci potrebbero essere più vincitori
+                        radioButton.setBackgroundColor(Color.GRAY);
                     }
                 }
                 holder.optionsRadioGroup.addView(radioButton);
@@ -126,13 +130,7 @@ public class SondaggiAdapter extends BaseAdapter {
         }
 
         if(item.getVotanti().contains(currentUserId) || votato) {
-            //holder.buttonVota.setEnabled(false);
-        }
-
-        if(votato) {
-            //mostra voto vincente
-            Log.d("vincitore", item.getVincitore());
-            //here i want to change the background of the item with the text item.getVincitore()
+            holder.buttonVota.setEnabled(false);
         }
 
         holder.buttonVota.setOnClickListener(view -> {List<String> selectedOptions = getSelectedOptions(holder.optionsRadioGroup); onButtonVotaClick(item, selectedOptions);});
