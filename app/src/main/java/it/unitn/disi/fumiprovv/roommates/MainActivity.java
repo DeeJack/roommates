@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
             userViewModel.setName(mAuth.getCurrentUser().getDisplayName());
 
-            NavigationUtils.conditionalLogin(navController, sharedPref, this);
+            NavigationUtils.conditionalLogin(navController, sharedPref, this, intent);
         } else {
             // The starting fragment is already the login fragment
         }

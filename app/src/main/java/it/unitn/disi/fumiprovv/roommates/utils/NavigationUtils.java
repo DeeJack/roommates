@@ -4,7 +4,9 @@ import static android.content.ContentValues.TAG;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +21,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.concurrent.CompletableFuture;
+
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
@@ -32,11 +36,17 @@ public class NavigationUtils {
         navController.navigate(destinationId, bundle);
     }
 
-    public static void conditionalLogin(NavController navController, SharedPreferences sharedPref, ViewModelStoreOwner owner) {
-        conditionalLogin(navController, null, sharedPref, owner);
+    /**
+     * @return A completable future which returns true if the user has a house, false otherwise.
+     */
+    public static void conditionalLogin(NavController navController, SharedPreferences sharedPref,
+                                        ViewModelStoreOwner owner, Intent intent) {
+        conditionalLogin(navController, null, sharedPref, owner, intent);
     }
 
-    public static void conditionalLogin(NavController navController, Bundle bundle, SharedPreferences sharedPref, ViewModelStoreOwner owner) {
+    public static void conditionalLogin(
+            NavController navController, Bundle bundle, SharedPreferences sharedPref,
+            ViewModelStoreOwner owner, Intent intent) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("utenti").document(mAuth.getCurrentUser().getUid());
@@ -45,19 +55,21 @@ public class NavigationUtils {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     String casaId = document.getString("casa");
+                    HouseViewModel houseViewModel = new ViewModelProvider(owner).get(HouseViewModel.class);
                     if (casaId != null) {
-                        HouseViewModel houseViewModel = new ViewModelProvider(owner).get(HouseViewModel.class);
                         houseViewModel.setHouseId(casaId);
                         sharedPref.edit().putString("houseId", casaId).apply();
 
                         navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle);
+                        if (intent != null) {
+                            handleIntent(intent, navController);
+                        }
+
                     } else {
-                        HouseViewModel houseViewModel = new ViewModelProvider(owner).get(HouseViewModel.class);
                         houseViewModel.setHouseId("");
                         sharedPref.edit().putString("houseId", "").apply();
                         navController.navigate(R.id.action_loginFragment_to_houseCreationFragment, bundle);
                     }
-                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
                     Log.d(TAG, "No such document");
                 }
@@ -65,5 +77,27 @@ public class NavigationUtils {
                 Log.d(TAG, "get failed with ", task.getException());
             }
         });
+    }
+
+    private static boolean handleIntent(Intent intent, NavController navController) {
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        boolean result = false;
+
+        if (data != null) { // Clicked on a deep link
+            String path = data.getPath();
+            if (path.equals("/survey")) { // Clicked on a roommates.asd/survey... link
+                Bundle bundle = new Bundle();
+                bundle.putString("id", data.getQueryParameter("id"));
+                result = true;
+                navController.navigate(R.id.action_to_sondaggi, bundle);
+            } else if (path.equals("/notes")) { // Note link
+                Bundle bundle = new Bundle();
+                bundle.putString("id", data.getQueryParameter("id"));
+                result = true;
+                navController.navigate(R.id.action_to_note, bundle);
+            }
+        }
+        return result;
     }
 }

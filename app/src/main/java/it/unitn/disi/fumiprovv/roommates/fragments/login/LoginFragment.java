@@ -98,7 +98,7 @@ public class LoginFragment extends Fragment {
                     SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
                     HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
 
-                    NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity());
+                    NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity(), null);
                 })
                 .addOnFailureListener(task -> {
                     Toast.makeText(getContext(), "Authentication failed.",
