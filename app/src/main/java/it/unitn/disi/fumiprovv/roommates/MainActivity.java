@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.menu_item_sondaggi) {
             navController.navigate(R.id.homeFragment);
         } else if (itemId == R.id.menu_item_turni) {
-            navController.navigate(R.id.turniPuliziaFragment);
+            navController.navigate(R.id.turniProvaFragment);
         } else if (itemId == R.id.menu_item_impostazioni) {
             navController.navigate(R.id.action_to_impostazioni);
         }

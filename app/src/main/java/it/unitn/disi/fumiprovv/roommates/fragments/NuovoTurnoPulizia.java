@@ -96,8 +96,10 @@ public class NuovoTurnoPulizia extends Fragment {
 
         ArrayList<String> userNames = new ArrayList<>();
         ArrayList<String> userIds = new ArrayList<>();
+        userIds.add("uno");
+        userIds.add("due");
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, userNames);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, userIds);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userSpinner.setAdapter(spinnerAdapter);
 
@@ -107,7 +109,7 @@ public class NuovoTurnoPulizia extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, selectedUsers);
         userListView.setAdapter(adapter);
 
-        String houseId = houseViewModel.getHouseId();
+        /*String houseId = houseViewModel.getHouseId();
         if (houseId != null) {
             DocumentReference houseRef = db.collection("case").document(houseId);
             houseRef.get().addOnSuccessListener(documentSnapshot -> {
@@ -136,18 +138,18 @@ public class NuovoTurnoPulizia extends Fragment {
             }).addOnFailureListener(e -> {
                 Log.d("error", "Failed to retrieve users from the house: " + e.getMessage());
             });
-        }
+        }*/
 
         buttonAggiungi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(userNames.size()>0) {
+                if(userIds.size()>0) {
                     String selectedUser = (String) userSpinner.getSelectedItem().toString();
                     Log.d("user", selectedUser);
                     selectedUsers.add(selectedUser);
-                    userNames.remove(selectedUser);
+                    userIds.remove(selectedUser);
                     if(userNames.size()>0)
-                        userSpinner.setPrompt(userNames.get(0));
+                        userSpinner.setPrompt(userIds.get(0));
                     adapter.notifyDataSetChanged();
                     spinnerAdapter.notifyDataSetChanged();
                 }

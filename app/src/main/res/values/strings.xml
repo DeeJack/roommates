@@ -69,4 +69,5 @@
     <string name="this_week">Questa settimana</string>
     <string name="next_week">Prossima settimana</string>
     <string name="prompt_spinner_new_turno">Aggiungi gli utenti in ordine</string>
+    <string name="share_turno_title">Condividi un turno di pulizia</string>
 </resources>

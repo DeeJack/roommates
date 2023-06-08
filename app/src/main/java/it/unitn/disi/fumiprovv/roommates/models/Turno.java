@@ -11,6 +11,7 @@ public class Turno {
     private String house;
     private Long yearLast;
     private Long weekLast;
+    private ArrayList<String> userNames;
 
     public Turno(String name, Long weekInizio, Long yearStart, ArrayList<String> users, String house, Long yearLast, Long weekLast) {
         this.name = name;
@@ -20,6 +21,7 @@ public class Turno {
         this.house = house;
         this.yearLast = yearLast;
         this.weekLast = weekLast;
+        userNames = new ArrayList<>();
     }
 
     public String getId() {
@@ -84,5 +86,27 @@ public class Turno {
 
     public void setWeekLast(Long weekLast) {
         this.weekLast = weekLast;
+    }
+
+    @Override
+    public String toString() {
+        return "Turno{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", weekStart=" + weekStart +
+                ", yearStart=" + yearStart +
+                ", users=" + users +
+                ", house='" + house + '\'' +
+                ", yearLast=" + yearLast +
+                ", weekLast=" + weekLast +
+                '}';
+    }
+
+    public void addUserName(String name) {
+        this.userNames.add(name);
+    }
+
+    public String getUserNames(){
+        return userNames.toString();
     }
 }

@@ -73,13 +73,13 @@ public class TurniAdapter extends BaseAdapter {
 
             convertView.setTag(holder);
         } else {
-
             holder = (TurniAdapter.ViewHolder) convertView.getTag();
         }
 
         holder.info.removeAllViews();
 
         Turno item = turni.get(position);
+        Log.d("turno", item.toString());
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -96,28 +96,25 @@ public class TurniAdapter extends BaseAdapter {
         int index = 0;
         Long userIndex = (weeksPassed - 1) % userIds.size();
         index = Math.toIntExact(userIndex);
-        Log.d("index", index + "");
-        if(thisWeek) {
-            holder.luogo.setText("this week");
-        } else {
+        if(!thisWeek) {
             index = index+1;
             if(index == userIds.size())
                 index = 0;
-            holder.luogo.setText("next week");
-            Log.d("index2", index + "");
         }
 
         String currentUser = userIds.get(index);
+        Log.d("index", index + " " + currentUser + " " + item.getName() + " " + thisWeek);
         Log.d("currentUser", currentUser);
         holder.utente.setText(currentUser);
 
-        if (!userNames.containsKey(currentUser)) {
+        /*if (!userNames.containsKey(currentUser)) {
             db.collection("utenti").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         String nome = (String) task.getResult().get("name");
                         userNames.put(currentUser, nome);
+                        Log.d("aiuto", nome + " " + currentUser);
                         holder.utente.setText(nome);
                     }
                 }
@@ -125,13 +122,13 @@ public class TurniAdapter extends BaseAdapter {
         } else {
             String nome = userNames.get(currentUser);
             holder.utente.setText(nome);
-        }
+        }*/
 
         /*db.collection("utenti").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 String nome = (String) task.getResult().get("name");
-                Log.d("currentUserName", nome);
+                Log.d("currentUserName", nome + " " + currentUser);
                 holder.utente.setText(nome);
                 //notifyDataSetChanged();
             }
@@ -152,8 +149,8 @@ public class TurniAdapter extends BaseAdapter {
             } else {
                 Button b = new Button(convertView.getContext());
                 b.setText("completa");
-                b.setOnClickListener(v -> onCompletaButtonClick(item, currentWeek, holder));
                 holder.info.addView(b);
+                b.setOnClickListener(v -> onCompletaButtonClick(item, currentWeek, holder));
             }
         } else {
             Log.d("currentWeek", currentWeek + "");
@@ -188,6 +185,7 @@ public class TurniAdapter extends BaseAdapter {
         documentRef.update("weekLast", newWeekLast)
                 .addOnSuccessListener(aVoid -> {
                     // Update successful
+                    Log.d("completa", "successo");
                     holder.info.removeAllViews();
 
                     TextView t = new TextView(context);
@@ -201,9 +199,7 @@ public class TurniAdapter extends BaseAdapter {
                     // Error occurred
                     Log.d("error", "Failed to update the 'weekLast' field: " + e.getMessage());
                 });
-
     }
-
 
     public void setTurni(List<Turno> turni) {
         this.turni = turni;
