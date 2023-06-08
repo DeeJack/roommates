@@ -86,45 +86,52 @@ public class TurniPuliziaFragment extends Fragment {
         ListView turniNextWeekList = view.findViewById(R.id.listNextWeekCleaning);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        db.collection("turniPulizia").whereEqualTo("casa", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
-            TurniAdapter adapter = new TurniAdapter(getContext(), new ArrayList<Turno>(), true);
+        db.collection("turniPulizia").whereEqualTo("house", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
+            TurniAdapter adapter1 = new TurniAdapter(getContext(), new ArrayList<Turno>(), true);
+            TurniAdapter adapter2 = new TurniAdapter(getContext(), new ArrayList<Turno>(), false);
             if (!task.isSuccessful()) {
                 return;
             }
             List<Turno> turni = task.getResult().getDocuments().stream().map( documentSnapshot -> {
                 Turno turno = new Turno(
-                        (String) documentSnapshot.getId(),
-                        (String) documentSnapshot.get("nome"),
-                        (Long) documentSnapshot.get("settimanaInizio"),
-                        (Long) documentSnapshot.get("annoInizio"),
-                        (ArrayList<String>) documentSnapshot.get("utenti")
+                        (String) documentSnapshot.get("name"),
+                        (Long) documentSnapshot.get("weekStart"),
+                        (Long) documentSnapshot.get("yearStart"),
+                        (ArrayList<String>) documentSnapshot.get("users"),
+                        (String) documentSnapshot.get("house"),
+                        (Long) documentSnapshot.get("yearLast"),
+                        (Long) documentSnapshot.get("weekLast")
                         );
+                turno.setId((String) documentSnapshot.getId());
                 return turno;
             }).collect(Collectors.toList());
-            adapter.setTurni(turni);
+            adapter1.setTurni(turni);
+            adapter2.setTurni(turni);
 
-            turniThisWeekList.setAdapter(adapter);
+            turniThisWeekList.setAdapter(adapter1);
+            turniNextWeekList.setAdapter(adapter2);
         });
 
-        db.collection("turniPulizia").whereEqualTo("casa", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
+        /*db.collection("turniPulizia").whereEqualTo("casa", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
             TurniAdapter adapter = new TurniAdapter(getContext(), new ArrayList<Turno>(), false);
             if (!task.isSuccessful()) {
                 return;
             }
             List<Turno> turni = task.getResult().getDocuments().stream().map( documentSnapshot -> {
                 Turno turno = new Turno(
-                        (String) documentSnapshot.getId(),
                         (String) documentSnapshot.get("nome"),
                         (Long) documentSnapshot.get("settimanaInizio"),
                         (Long) documentSnapshot.get("annoInizio"),
-                        (ArrayList<String>) documentSnapshot.get("utenti")
+                        (ArrayList<String>) documentSnapshot.get("utenti"),
+                        (String) documentSnapshot.get("casa")
                 );
+                turno.setId((String) documentSnapshot.getId());
                 return turno;
             }).collect(Collectors.toList());
             adapter.setTurni(turni);
 
             turniNextWeekList.setAdapter(adapter);
-        });
+        });*/
 
         view.findViewById(R.id.buttonNuovoTurno).setOnClickListener(v -> NavigationUtils.navigateTo(R.id.action_turniPuliziaFragment_to_nuovoTurnoPulizia, view));
 

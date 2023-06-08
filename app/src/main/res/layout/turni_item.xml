@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:background="@drawable/border"
-        android:padding="5dp"
+        android:padding="10dp"
         android:layout_margin="5dp"
         >
 
@@ -22,22 +22,30 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/utenteTurno"
+                android:id="@+id/userTurno"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Marco"/>
+                android:layout_height="wrap_content" />
             <TextView
-                android:id="@+id/luogoTurno"
+                android:id="@+id/placeTurno"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cucina"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <Button
+        <!--<Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:text="Completa"/>
+            android:text="Completa"/>-->
+        <LinearLayout
+            android:id="@+id/infoTurno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="10dp"
+            android:orientation="horizontal">
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

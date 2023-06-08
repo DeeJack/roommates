@@ -66,4 +66,7 @@
     <string name="impostazioni">Impostazioni</string>
     <string name="delete_shopitem_message">Vuoi eliminare l\'elemento dalla lista?</string>
     <string name="delete_contact_message">Vuoi eliminare il contatto?</string>
+    <string name="this_week">Questa settimana</string>
+    <string name="next_week">Prossima settimana</string>
+    <string name="prompt_spinner_new_turno">Aggiungi gli utenti in ordine</string>
 </resources>

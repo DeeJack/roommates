@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <EditText
+            android:id="@+id/placeTurno"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
@@ -29,6 +30,7 @@
                 android:id="@+id/userSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:prompt="@string/prompt_spinner_new_turno"
                 />
             <Button
                 android:layout_width="wrap_content"
@@ -42,6 +44,14 @@
             android:id="@+id/selectedUsersList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/creaTurnoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="nuovo turno"/>
     </LinearLayout>
+
+
 
 </FrameLayout>

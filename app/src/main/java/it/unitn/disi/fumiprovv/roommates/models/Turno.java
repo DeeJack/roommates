@@ -1,54 +1,25 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
-import com.google.android.gms.common.util.ArrayUtils;
-
 import java.util.ArrayList;
 
 public class Turno {
     private String id;
-    private String luogo;
-    private Long weekInizio;
-    private Long annoInizio;
-    private ArrayList<String> utenti;
+    private String name;
+    private Long weekStart;
+    private Long yearStart;
+    private ArrayList<String> users;
+    private String house;
+    private Long yearLast;
+    private Long weekLast;
 
-    public Turno(String id, String luogo, Long weekInizio, Long annoInizio, ArrayList<String> utenti) {
-        this.id = id;
-        this.luogo = luogo;
-        this.weekInizio = weekInizio;
-        this.annoInizio = annoInizio;
-        this.utenti = utenti;
-    }
-
-    public String getLuogo() {
-        return luogo;
-    }
-
-    public void setLuogo(String luogo) {
-        this.luogo = luogo;
-    }
-
-    public Long getWeekInizio() {
-        return weekInizio;
-    }
-
-    public void setWeekInizio(Long weekInizio) {
-        this.weekInizio = weekInizio;
-    }
-
-    public Long getAnnoInizio() {
-        return annoInizio;
-    }
-
-    public void setAnnoInizio(Long annoInizio) {
-        this.annoInizio = annoInizio;
-    }
-
-    public ArrayList<String> getUtenti() {
-        return utenti;
-    }
-
-    public void setUtenti(ArrayList<String> utenti) {
-        this.utenti = utenti;
+    public Turno(String name, Long weekInizio, Long yearStart, ArrayList<String> users, String house, Long yearLast, Long weekLast) {
+        this.name = name;
+        this.weekStart = weekInizio;
+        this.yearStart = yearStart;
+        this.users = users;
+        this.house = house;
+        this.yearLast = yearLast;
+        this.weekLast = weekLast;
     }
 
     public String getId() {
@@ -57,5 +28,61 @@ public class Turno {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getWeekStart() {
+        return weekStart;
+    }
+
+    public void setWeekStart(Long weekStart) {
+        this.weekStart = weekStart;
+    }
+
+    public Long getYearStart() {
+        return yearStart;
+    }
+
+    public void setYearStart(Long yearStart) {
+        this.yearStart = yearStart;
+    }
+
+    public ArrayList<String> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<String> users) {
+        this.users = users;
+    }
+
+    public String getHouse() {
+        return house;
+    }
+
+    public void setHouse(String house) {
+        this.house = house;
+    }
+
+    public Long getYearLast() {
+        return yearLast;
+    }
+
+    public void setYearLast(Long yearLast) {
+        this.yearLast = yearLast;
+    }
+
+    public Long getWeekLast() {
+        return weekLast;
+    }
+
+    public void setWeekLast(Long weekLast) {
+        this.weekLast = weekLast;
     }
 }
