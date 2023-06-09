@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -90,8 +91,35 @@ public class SpeseStorico extends Fragment {
                 return;
             }
             List<Expense> spese = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                Expense spesa = new Expense((String) documentSnapshot.get("name"), (Double) documentSnapshot.get("amount"), (String) documentSnapshot.get("payer"), documentSnapshot.getTimestamp("date").toDate(), (ArrayList<DocumentReference>) documentSnapshot.get("usersPaying"));
+                Expense spesa = new Expense(
+                        (String) documentSnapshot.get("name"),
+                        (Double) documentSnapshot.get("amount"),
+                        (String) documentSnapshot.get("payer"),
+                        documentSnapshot.getTimestamp("date").toDate(),
+                        (ArrayList<DocumentReference>) documentSnapshot.get("usersPaying"));
                 Log.d("boh", spesa.getPaganti().toString());
+                db.collection("utenti").document(documentSnapshot.getString("payer")).get().addOnCompleteListener(task1 -> {
+                    if (!task1.isSuccessful()) {
+                        return;
+                    }
+                    String nome = task1.getResult().getString("name");
+                    for(DocumentReference d : (ArrayList<DocumentReference>) documentSnapshot.get("usersPaying")) {
+                        d.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    String fieldValue = documentSnapshot.getString("name");
+                                    Log.d("boh", fieldValue);
+                                    spesa.addUserName(fieldValue);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    }
+                    spesa.setUserNamePayer(nome);
+                    adapter.notifyDataSetChanged();
+                });
+
                 return spesa;
             }).collect(Collectors.toList());
             adapter.setItems(spese);

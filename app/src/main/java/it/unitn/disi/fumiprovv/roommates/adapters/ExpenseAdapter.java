@@ -67,30 +67,14 @@ public class ExpenseAdapter extends BaseAdapter {
 
         Expense item = items.get(position);
         holder.nome.setText(item.getName());
-        //prendere nome dell'utente che ha pagato
-        DocumentReference userRef = db.collection("utenti").document(item.getPayerId());
-        userRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot userSnapshot = task.getResult();
-                if (userSnapshot.exists()) {
-                    // Retrieve the value of the "name" field
-                    String name = userSnapshot.getString("name");
-                    holder.pagatoDa.setText("Pagato da: " + name);
-                } else {
-                    System.out.println("User not found");
-                    holder.pagatoDa.setText("Pagato da: user not found");
-                }
-            } else {
-                System.out.println("Failed to retrieve user: " + task.getException());
-            }
-        });
+        holder.pagatoDa.setText("Pagato da: " + item.getUserNamePayer());
 
         holder.data.setText(item.getDataString());
         holder.valore.setText("Amount: " + Double.toString(item.getAmount()) + "€");
 
         //TO DO
         //retrieve nomi degli utenti che hanno pagato
-        holder.paganti.setText(item.getPagantiString());
+        holder.paganti.setText(item.getUserNames().toString());
 
         return convertView;
     }

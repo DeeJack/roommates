@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Expense implements Serializable {
     private String name;
@@ -17,6 +18,8 @@ public class Expense implements Serializable {
     private Date date;
     private ArrayList<DocumentReference> paganti;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String userNamePayer;
+    private List<String> userNames;
 
     public Expense(String name, double amount, String payerId, Date date, ArrayList<DocumentReference> paganti) {
         this.name = name;
@@ -24,6 +27,7 @@ public class Expense implements Serializable {
         this.payerId = payerId;
         this.date = date;
         this.paganti = paganti;
+        this.userNames = new ArrayList<>();
     }
 
     public Expense() {
@@ -88,5 +92,21 @@ public class Expense implements Serializable {
 
     public void setPaganti(ArrayList<DocumentReference> paganti) {
         this.paganti = paganti;
+    }
+
+    public void setUserNamePayer(String nome) {
+        this.userNamePayer = nome;
+    }
+
+    public String getUserNamePayer() {
+        return this.userNamePayer;
+    }
+
+    public void addUserName(String fieldValue) {
+        this.userNames.add(fieldValue);
+    }
+
+    public List<String> getUserNames(){
+        return this.userNames;
     }
 }

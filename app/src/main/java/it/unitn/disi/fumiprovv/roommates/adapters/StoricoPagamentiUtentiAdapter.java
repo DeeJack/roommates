@@ -5,33 +5,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.models.Pagamento;
+import it.unitn.disi.fumiprovv.roommates.models.PagamentoUtente;
 
-public class StoricoPagamentiAdapter extends BaseAdapter {
+public class StoricoPagamentiUtentiAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
     private final Context context;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private List<Pagamento> storicList;
+    private List<PagamentoUtente> storicList;
 
-    public StoricoPagamentiAdapter(Context context, List<Pagamento> storicList) {
+    public StoricoPagamentiUtentiAdapter(Context context, List<PagamentoUtente> storicList) {
         this.storicList = storicList;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -43,7 +36,7 @@ public class StoricoPagamentiAdapter extends BaseAdapter {
     }
 
     @Override
-    public Pagamento getItem(int i) {
+    public PagamentoUtente getItem(int i) {
         return storicList.get(i);
     }
 
@@ -52,7 +45,7 @@ public class StoricoPagamentiAdapter extends BaseAdapter {
         return i;
     }
 
-    public void setItems(List<Pagamento> items) {
+    public void setItems(List<PagamentoUtente> items) {
         this.storicList = items;
     }
 
@@ -72,7 +65,7 @@ public class StoricoPagamentiAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Pagamento item = storicList.get(position);
+        PagamentoUtente item = storicList.get(position);
 
         holder.titolo.setText(item.getUserNameFrom() + " -> " + item.getUserNameTo());
 

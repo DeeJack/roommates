@@ -20,17 +20,17 @@ import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.adapters.SituazioniAdapter;
-import it.unitn.disi.fumiprovv.roommates.adapters.StoricoPagamentiAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.StoricoPagamentiUtentiAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.Debt;
-import it.unitn.disi.fumiprovv.roommates.models.Pagamento;
+import it.unitn.disi.fumiprovv.roommates.models.PagamentoUtente;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SpeseSituazioneProva#newInstance} factory method to
+ * Use the {@link SpeseSituazioneFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SpeseSituazioneProva extends Fragment {
+public class SpeseSituazioneFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,7 +43,7 @@ public class SpeseSituazioneProva extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-    public SpeseSituazioneProva() {
+    public SpeseSituazioneFragment() {
         // Required empty public constructor
     }
 
@@ -53,11 +53,11 @@ public class SpeseSituazioneProva extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SpeseSituazioneProva.
+     * @return A new instance of fragment SpeseSituazioneFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SpeseSituazioneProva newInstance(String param1, String param2) {
-        SpeseSituazioneProva fragment = new SpeseSituazioneProva();
+    public static SpeseSituazioneFragment newInstance(String param1, String param2) {
+        SpeseSituazioneFragment fragment = new SpeseSituazioneFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -78,7 +78,7 @@ public class SpeseSituazioneProva extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_spese_situazione_prova, container, false);
+        View view = inflater.inflate(R.layout.fragment_spese_situazione, container, false);
 
         ListView listSituazioni = view.findViewById(R.id.situazioniListView);
         ListView listStorico = view.findViewById(R.id.situazioniStoricoListView);
@@ -139,12 +139,12 @@ public class SpeseSituazioneProva extends Fragment {
         db.collection("storicoPagamentiUtenti").whereEqualTo("house", houseViewModel.getHouseId())
                 .get()
                 .addOnCompleteListener(task -> {
-                    StoricoPagamentiAdapter adapterStorico = new StoricoPagamentiAdapter(getContext(), new ArrayList<>());
+                    StoricoPagamentiUtentiAdapter adapterStorico = new StoricoPagamentiUtentiAdapter(getContext(), new ArrayList<>());
                     if (!task.isSuccessful()) {
                         return;
                     }
-                    List<Pagamento> pagamenti = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                        Pagamento pagamento = new Pagamento(
+                    List<PagamentoUtente> pagamenti = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                        PagamentoUtente pagamento = new PagamentoUtente(
                                 documentSnapshot.getString("house"),
                                 documentSnapshot.getString("from"),
                                 documentSnapshot.getString("to"),

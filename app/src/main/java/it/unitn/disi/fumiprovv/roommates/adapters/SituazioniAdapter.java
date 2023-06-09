@@ -107,7 +107,7 @@ public class SituazioniAdapter extends BaseAdapter {
 
     private void onSegnaPagatoButtonClick(Debt debt) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Pagamento");
+        builder.setTitle("PagamentoUtente");
         builder.setMessage("Inserisci la cifra che ti è stata pagata da " + debt.getUserNameTo());
 
         // Create EditText programmatically and set it as the dialog's view

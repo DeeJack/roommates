@@ -1,9 +1,8 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-public class Pagamento {
+public class PagamentoUtente {
     private String casa;
     private String from;
     private String to;
@@ -12,7 +11,7 @@ public class Pagamento {
     private String userNameTo;
     private String userNameFrom;
 
-    public Pagamento(String casa, String from, String to, Double amount, com.google.firebase.Timestamp date) {
+    public PagamentoUtente(String casa, String from, String to, Double amount, com.google.firebase.Timestamp date) {
         this.casa = casa;
         this.from = from;
         this.to = to;

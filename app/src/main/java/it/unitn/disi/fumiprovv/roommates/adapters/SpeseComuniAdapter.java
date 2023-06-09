@@ -94,7 +94,7 @@ public class SpeseComuniAdapter extends BaseAdapter {
     private void onPagaButtonClick(SpesaComune spesa) {
         // Create alert dialog to confirm pagamento
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Pagamento");
+        builder.setTitle("PagamentoUtente");
         builder.setMessage("Confermi il pagamento?");
         builder.setPositiveButton("Ok", (dialog, which) -> {
             //Setta la spesa come pagata

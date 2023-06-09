@@ -72,7 +72,7 @@ public class SpeseFragment extends Fragment {
         SpeseComuniFragment speseComuniFragment = new SpeseComuniFragment();
         SpeseStorico speseStoricoFragment = new SpeseStorico();
         //SpeseSituazione speseSituazioneFragment = new SpeseSituazione();
-        SpeseSituazioneProva speseSituazioneProva = new SpeseSituazioneProva();
+        SpeseSituazioneFragment speseSituazioneFragment = new SpeseSituazioneFragment();
         SpeseComuniFragment prova = new SpeseComuniFragment();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
@@ -80,7 +80,7 @@ public class SpeseFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), speseSituazioneProva).commit();
+                        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), speseSituazioneFragment).commit();
                         break;
                     case 1:
                         getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), prova).commit();
