@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -32,12 +31,12 @@ import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.UserViewModel;
 
 public class MainActivity extends AppCompatActivity {
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private TextView nameView;
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +78,16 @@ public class MainActivity extends AppCompatActivity {
 
         View view = findViewById(R.id.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // This will display an Up icon (<-), we will replace it with hamburger later
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Find our drawer view
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        nvDrawer = (NavigationView) findViewById(R.id.navigation_view);
-        nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.nameDrawerField);
+        mDrawer = findViewById(R.id.drawer_layout);
+        nvDrawer = findViewById(R.id.navigation_view);
+        nameView = nvDrawer.getHeaderView(0).findViewById(R.id.nameDrawerField);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
@@ -141,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.menu_item_home) {
             navController.navigate(R.id.action_to_home);
         } else if (itemId == R.id.menu_item_calendario) {
-            navController.navigate(R.id.calendarioFragment);
+            navController.navigate(R.id.action_to_calendario);
         } else if (itemId == R.id.menu_item_gestioneSpese) {
             navController.navigate(R.id.homeFragment);
         } else if (itemId == R.id.menu_item_note) {
@@ -153,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.menu_item_sondaggi) {
             navController.navigate(R.id.action_to_sondaggi);
         } else if (itemId == R.id.menu_item_turni) {
-            navController.navigate(R.id.turniProvaFragment);
+            navController.navigate(R.id.action_to_turnipulizia);
         } else if (itemId == R.id.menu_item_impostazioni) {
             navController.navigate(R.id.action_to_impostazioni);
         }
@@ -204,10 +203,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showHamburger(boolean show) {
-        if (show)
-            drawerToggle.setDrawerIndicatorEnabled(true);
-        else
-            drawerToggle.setDrawerIndicatorEnabled(false);
+        drawerToggle.setDrawerIndicatorEnabled(show);
     }
 
     public void selectHome() {

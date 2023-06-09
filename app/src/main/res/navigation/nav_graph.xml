@@ -11,10 +11,13 @@
         app:popUpToInclusive="true" />
 
     <action android:id="@+id/action_to_calendario"
-        app:destination="@id/calendarioFragment"/>
+        app:destination="@id/calendarioFragment"
+        app:popUpTo="@id/homeFragment"/>
 
     <action android:id="@+id/action_to_turnipulizia"
-        app:destination="@id/turniPuliziaFragment"/>
+        app:destination="@id/turniPuliziaFragment"
+        app:popUpTo="@id/homeFragment"/>
+
     <action android:id="@+id/action_to_turni2"
         app:destination="@id/turniProvaFragment"/>
 

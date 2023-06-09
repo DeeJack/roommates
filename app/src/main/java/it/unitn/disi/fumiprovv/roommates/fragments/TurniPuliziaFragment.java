@@ -87,7 +87,7 @@ public class TurniPuliziaFragment extends Fragment {
 
         //navigazione a nuovo turno di pulizia
         addTurniButton.setOnClickListener(v -> {
-            NavigationUtils.navigateTo(R.id.action_turniProvaFragment_to_newTurnoProva, view);
+            NavigationUtils.navigateTo(R.id.action_turniPuliziaFragment_to_nuovoTurnoPulizia, view);
         });
 
         db.collection("turniPulizia").whereEqualTo("house", houseViewModel.getHouseId())
