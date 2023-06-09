@@ -55,6 +55,8 @@ public class NewTurnoProva extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<String> selectedUsers = new ArrayList<>();
     ArrayList<String> userIds = new ArrayList<>();
+    HashMap<String, String> userNamesIds = new HashMap<>();
+    ArrayList<String> idDaAggiungere = new ArrayList<>();
 
     public NewTurnoProva() {
         // Required empty public constructor
@@ -118,7 +120,7 @@ public class NewTurnoProva extends Fragment {
         Map<String, Object> newTurno = new HashMap<>();
         newTurno.put("house", houseViewModel.getHouseId());
         newTurno.put("name", ((EditText) getView().findViewById(R.id.turnoNameField)).getText().toString());
-        newTurno.put("users", selectedUsers);
+        newTurno.put("users", idDaAggiungere);
         newTurno.put("weekStart", currentWeek);
         newTurno.put("yearStart", currentYear);
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
@@ -144,7 +146,7 @@ public class NewTurnoProva extends Fragment {
 
         ArrayList<String> userNames = new ArrayList<>();
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, userIds);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, userNames);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
@@ -166,6 +168,8 @@ public class NewTurnoProva extends Fragment {
                                 documentSnapshot.getId(),
                                 documentSnapshot.getString("name")
                         );
+                        userNamesIds.put(user.getName(), user.getId());
+                        userIds.add(user.getId());
                         return user.getName();
                     }).collect(Collectors.toList());
                     //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
@@ -189,8 +193,10 @@ public class NewTurnoProva extends Fragment {
                 if(userIds.size()>0) {
                     String selectedUser = (String) spinner.getSelectedItem().toString();
                     Log.d("user", selectedUser);
+                    idDaAggiungere.add(userNamesIds.get(selectedUser));
                     selectedUsers.add(selectedUser);
                     userIds.remove(selectedUser);
+                    userNames.remove(selectedUser);
                     if(userNames.size()>0)
                         spinner.setPrompt(userIds.get(0));
                     adapter.notifyDataSetChanged();

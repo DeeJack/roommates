@@ -112,7 +112,20 @@ public class TurniProvaFragment extends Fragment {
                                 documentSnapshot.getLong("weekLast")
                         );
                         turno.setId(documentSnapshot.getId());
-                        Log.d("turnoaaa", turno.toString());
+                        Log.d("turnoaaa", turno.getUsers().toString());
+                        for(String id : turno.getUsers()) {
+                            Log.d("turnobbb", id);
+                            db.collection("utenti").document(id).get().addOnCompleteListener(task1 -> {
+                                if(!task1.isSuccessful()) {
+                                    return;
+                                }
+                                String nome = task1.getResult().getString("name");
+                                Log.d("turnoccc", nome);
+                                turno.addUserName(id, nome);
+                                Log.d("turnoddd", turno.getUserNameAt(id));
+                                adapter.notifyDataSetChanged();
+                            });
+                        }
                         /*for(String id: turno.getUsers()) {
                             documentSnapshot.getDocumentReference(id).get().addOnCompleteListener(task1 -> {
                                 if (!task1.isSuccessful()) {

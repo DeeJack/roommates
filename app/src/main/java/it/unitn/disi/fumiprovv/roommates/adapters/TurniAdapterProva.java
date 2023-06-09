@@ -113,20 +113,10 @@ public class TurniAdapterProva extends BaseAdapter {
         Long userIndex = (weeksPassed - 1) % userIds.size();
         index = Math.toIntExact(userIndex);
 
-        /*db.collection("utenti").document(userIds.get(index)).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                String s = task.getResult().getString("name");
-                holder.turnoUserField.setText(s);
-                Log.d("nomeUtente", s);
-            }
-        });*/
-
-        //a sto punto metterei i nomi utenti nel Turno
-
-        holder.turnoUserField.setText(userIds.get(index));
-
-        Log.d("tuttiNomi", item.getUserNames());
+        holder.turnoUserField.setText(item.getUserNameAt(item.getId()));
+        String id = userIds.get(index);
+        String nome = item.getUserNameAt(id);
+        holder.turnoUserField.setText(nome);
 
         String currentUser = mAuth.getUid();
 
@@ -172,7 +162,6 @@ public class TurniAdapterProva extends BaseAdapter {
     }
 
     private void onCompleteButtonClick(Turno turno) {
-        Log.d("click", "completo il turno");
         turno.setWeekLast(currentWeek);
         db.collection("turniPulizia").document(turno.getId()).set(turno).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

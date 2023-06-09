@@ -1,6 +1,8 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Turno {
     private String id;
@@ -12,6 +14,7 @@ public class Turno {
     private Long yearLast;
     private Long weekLast;
     private ArrayList<String> userNames;
+    private Map<String, String> userNames2;
 
     public Turno(String name, Long weekInizio, Long yearStart, ArrayList<String> users, String house, Long yearLast, Long weekLast) {
         this.name = name;
@@ -22,6 +25,7 @@ public class Turno {
         this.yearLast = yearLast;
         this.weekLast = weekLast;
         userNames = new ArrayList<>();
+        userNames2 = new HashMap<>();
     }
 
     public String getId() {
@@ -108,5 +112,16 @@ public class Turno {
 
     public String getUserNames(){
         return userNames.toString();
+    }
+    public String getUserNames2(){
+        return userNames2.toString();
+    }
+
+    public void addUserName(String id, String name) {
+        userNames2.put(id,name);
+    }
+
+    public String getUserNameAt(String id) {
+        return userNames2.get(id);
     }
 }
