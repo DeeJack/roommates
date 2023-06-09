@@ -116,8 +116,8 @@ public class NewTurnoPuliziaFragment extends Fragment {
             HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            Long currentWeek = new Long(calendar.get(Calendar.WEEK_OF_YEAR));
-            Long currentYear = new Long(calendar.get(Calendar.YEAR));
+            Long currentWeek = Long.valueOf(calendar.get(Calendar.WEEK_OF_YEAR));
+            Long currentYear = Long.valueOf(calendar.get(Calendar.YEAR));
             Map<String, Object> newTurno = new HashMap<>();
             newTurno.put("house", houseViewModel.getHouseId());
             newTurno.put("name", ((EditText) getView().findViewById(R.id.turnoNameField)).getText().toString());
