@@ -135,7 +135,6 @@ public class NewTurnoPuliziaFragment extends Fragment {
                         }
                     });
         } else {
-            Log.d("errore", "Inserire dati");
             Toast toast = new Toast(getContext());
             toast.setText("inserire tutti i dati");
             toast.setDuration(Toast.LENGTH_SHORT);
