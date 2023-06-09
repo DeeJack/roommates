@@ -16,14 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -39,10 +36,10 @@ import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NewTurnoProva#newInstance} factory method to
+ * Use the {@link NewTurnoPuliziaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewTurnoProva extends Fragment {
+public class NewTurnoPuliziaFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +55,7 @@ public class NewTurnoProva extends Fragment {
     HashMap<String, String> userNamesIds = new HashMap<>();
     ArrayList<String> idDaAggiungere = new ArrayList<>();
 
-    public NewTurnoProva() {
+    public NewTurnoPuliziaFragment() {
         // Required empty public constructor
     }
 
@@ -68,11 +65,11 @@ public class NewTurnoProva extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NewTurnoProva.
+     * @return A new instance of fragment NewTurnoPuliziaFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewTurnoProva newInstance(String param1, String param2) {
-        NewTurnoProva fragment = new NewTurnoProva();
+    public static NewTurnoPuliziaFragment newInstance(String param1, String param2) {
+        NewTurnoPuliziaFragment fragment = new NewTurnoPuliziaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -139,7 +136,7 @@ public class NewTurnoProva extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_new_turno_prova, container, false);
+        View view = inflater.inflate(R.layout.fragment_new_turno_pulizia, container, false);
 
         Spinner spinner = view.findViewById(R.id.userSpinner);
         ImageView buttonNewUser = view.findViewById(R.id.addUserToTurnoButton);

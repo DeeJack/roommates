@@ -174,7 +174,7 @@
         android:id="@+id/turniPuliziaFragment"
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.TurniPuliziaFragment"
         android:label="fragment_turnipulizia"
-        tools:layout="@layout/fragment_turnipulizia" >
+        tools:layout="@layout/fragment_turni_pulizia" >
         <action
             android:id="@+id/action_turniPuliziaFragment_to_nuovoTurnoPulizia"
             app:destination="@id/nuovoTurnoPulizia" />
@@ -237,14 +237,14 @@
         tools:layout="@layout/fragment_nuovo_sondaggio" />
     <fragment
         android:id="@+id/nuovoTurnoPulizia"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoTurnoPulizia"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewTurnoPuliziaFragment"
         android:label="fragment_nuovo_turno_pulizia"
-        tools:layout="@layout/fragment_nuovo_turno_pulizia" />
+        tools:layout="@layout/fragment_new_turno_pulizia" />
     <fragment
         android:id="@+id/turniProvaFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TurniProvaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TurniPuliziaFragment"
         android:label="fragment_turni_prova"
-        tools:layout="@layout/fragment_turni_prova" >
+        tools:layout="@layout/fragment_turni_pulizia" >
         <action
             android:id="@+id/action_turniProvaFragment_to_nuovoTurnoPulizia"
             app:destination="@id/nuovoTurnoPulizia" />
@@ -254,7 +254,7 @@
     </fragment>
     <fragment
         android:id="@+id/newTurnoProva"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewTurnoProva"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewTurnoPuliziaFragment"
         android:label="NewTurnoProva" />
 
 </navigation>

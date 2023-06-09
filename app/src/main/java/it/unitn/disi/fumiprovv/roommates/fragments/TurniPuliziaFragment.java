@@ -10,21 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
-import it.unitn.disi.fumiprovv.roommates.adapters.TurniAdapter;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
+import it.unitn.disi.fumiprovv.roommates.adapters.TurniAdapterProva;
 import it.unitn.disi.fumiprovv.roommates.models.Turno;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
@@ -41,10 +37,11 @@ public class TurniPuliziaFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public TurniPuliziaFragment() {
         // Required empty public constructor
@@ -81,60 +78,77 @@ public class TurniPuliziaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_turnipulizia, container, false);
+        View view = inflater.inflate(R.layout.fragment_turni_pulizia, container, false);
 
-        ListView turniThisWeekList = view.findViewById(R.id.listThisWeekCleaning);
-        ListView turniNextWeekList = view.findViewById(R.id.listNextWeekCleaning);
+        ListView turniListView = view.findViewById(R.id.turniListView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        db.collection("turniPulizia").whereEqualTo("house", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
-            TurniAdapter adapter1 = new TurniAdapter(getContext(), new ArrayList<Turno>(), true);
-            TurniAdapter adapter2 = new TurniAdapter(getContext(), new ArrayList<Turno>(), false);
-            if (!task.isSuccessful()) {
-                return;
-            }
-            List<Turno> turni = task.getResult().getDocuments().stream().map( documentSnapshot -> {
-                Turno turno = new Turno(
-                        (String) documentSnapshot.get("name"),
-                        (Long) documentSnapshot.get("weekStart"),
-                        (Long) documentSnapshot.get("yearStart"),
-                        (ArrayList<String>) documentSnapshot.get("users"),
-                        (String) documentSnapshot.get("house"),
-                        (Long) documentSnapshot.get("yearLast"),
-                        (Long) documentSnapshot.get("weekLast")
-                        );
-                turno.setId((String) documentSnapshot.getId());
-                return turno;
-            }).collect(Collectors.toList());
-            adapter1.setTurni(turni);
-            adapter2.setTurni(turni);
+        ImageButton addTurniButton = view.findViewById(R.id.addTurniButton);
 
-            turniThisWeekList.setAdapter(adapter1);
-            turniNextWeekList.setAdapter(adapter2);
+        //navigazione a nuovo turno di pulizia
+        addTurniButton.setOnClickListener(v -> {
+            NavigationUtils.navigateTo(R.id.action_turniProvaFragment_to_newTurnoProva, view);
         });
 
-        /*db.collection("turniPulizia").whereEqualTo("casa", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
-            TurniAdapter adapter = new TurniAdapter(getContext(), new ArrayList<Turno>(), false);
-            if (!task.isSuccessful()) {
-                return;
-            }
-            List<Turno> turni = task.getResult().getDocuments().stream().map( documentSnapshot -> {
-                Turno turno = new Turno(
-                        (String) documentSnapshot.get("nome"),
-                        (Long) documentSnapshot.get("settimanaInizio"),
-                        (Long) documentSnapshot.get("annoInizio"),
-                        (ArrayList<String>) documentSnapshot.get("utenti"),
-                        (String) documentSnapshot.get("casa")
-                );
-                turno.setId((String) documentSnapshot.getId());
-                return turno;
-            }).collect(Collectors.toList());
-            adapter.setTurni(turni);
+        db.collection("turniPulizia").whereEqualTo("house", houseViewModel.getHouseId())
+                .get()
+                .addOnCompleteListener(task -> {
+                    //NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
+                    TurniAdapterProva adapter = new TurniAdapterProva(getContext(), new ArrayList<>());
+                    if (!task.isSuccessful()) {
+                        return;
+                    }
+                    List<Turno> turni = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                        Turno turno = new Turno(
+                                documentSnapshot.getString("name"),
+                                documentSnapshot.getLong("weekStart"),
+                                documentSnapshot.getLong("yearStart"),
+                                (ArrayList<String>) documentSnapshot.get("users"),
+                                documentSnapshot.getString("house"),
+                                documentSnapshot.getLong("yearLast"),
+                                documentSnapshot.getLong("weekLast")
+                        );
+                        turno.setId(documentSnapshot.getId());
+                        Log.d("turnoaaa", turno.getUsers().toString());
+                        for(String id : turno.getUsers()) {
+                            Log.d("turnobbb", id);
+                            db.collection("utenti").document(id).get().addOnCompleteListener(task1 -> {
+                                if(!task1.isSuccessful()) {
+                                    return;
+                                }
+                                String nome = task1.getResult().getString("name");
+                                Log.d("turnoccc", nome);
+                                turno.addUserName(id, nome);
+                                Log.d("turnoddd", turno.getUserNameAt(id));
+                                adapter.notifyDataSetChanged();
+                            });
+                        }
+                        /*for(String id: turno.getUsers()) {
+                            documentSnapshot.getDocumentReference(id).get().addOnCompleteListener(task1 -> {
+                                if (!task1.isSuccessful()) {
+                                    return;
+                                }
+                                turno.addUserName((String) task1.getResult().get("name"));
+                                adapter.notifyDataSetChanged();
+                            });
+                        }*/
 
-            turniNextWeekList.setAdapter(adapter);
-        });*/
+                        return turno;
+                    }).collect(Collectors.toList());
+                    adapter.setTurni(turni);
 
-        view.findViewById(R.id.buttonNuovoTurno).setOnClickListener(v -> NavigationUtils.navigateTo(R.id.action_turniPuliziaFragment_to_nuovoTurnoPulizia, view));
+                    turniListView.setAdapter(adapter);
+                    if (getContext() == null)
+                        return;
+                    int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
+                    turniListView.setDividerHeight(dividerHeight);
+
+                    // Imposta il listener di click sugli elementi della lista
+                    turniListView.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
+                        Turno selectedItem = turni.get(position);
+                        String a = "";
+                    });
+                });
 
         return view;
     }
