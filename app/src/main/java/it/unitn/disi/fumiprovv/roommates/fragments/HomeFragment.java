@@ -4,10 +4,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -16,9 +18,18 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.UserAdapter;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
@@ -36,6 +47,7 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FirebaseFirestore db;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -66,6 +78,7 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -75,7 +88,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
-        ((TextView) view.findViewById(R.id.user_name)).setText(auth.getCurrentUser().getEmail());
+        //((TextView) view.findViewById(R.id.user_name)).setText(auth.getCurrentUser().getEmail());
         Button logoutButton = view.findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(this::onLogoutClick);
 
@@ -84,6 +97,30 @@ public class HomeFragment extends Fragment {
         mainActivity.setName(auth.getCurrentUser().getDisplayName());
 
         mainActivity.selectHome();
+
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+
+        ArrayList<String> listUtenti = new ArrayList<>();
+        ListView utentiListView = view.findViewById(R.id.usersListView);
+
+        db.collection("case").document(houseViewModel.getHouseId()).get()
+                .addOnCompleteListener(task -> {
+                    UserAdapter adapter = new UserAdapter(getContext(), new ArrayList<>());
+                    if (!task.isSuccessful()) {
+                        return;
+                    }
+                    DocumentSnapshot document = task.getResult();
+                    List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
+                    for (Map<String, Object> roommate : roommates) {
+                        //prendo nome utente
+                        db.collection("utenti").document((String)roommate.get("userId")).get().addOnCompleteListener(task1 -> {
+                            String nome = task1.getResult().getString("name");
+                            adapter.addUser(nome);
+                            adapter.notifyDataSetChanged();
+                        });
+                    }
+                    utentiListView.setAdapter(adapter);
+                });
 
         return view;
     }
