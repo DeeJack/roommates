@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.adapters.TurniAdapterProva;
+import it.unitn.disi.fumiprovv.roommates.adapters.TurniPuliziaAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.Turno;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
@@ -94,7 +94,7 @@ public class TurniPuliziaFragment extends Fragment {
                 .get()
                 .addOnCompleteListener(task -> {
                     //NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
-                    TurniAdapterProva adapter = new TurniAdapterProva(getContext(), new ArrayList<>());
+                    TurniPuliziaAdapter adapter = new TurniPuliziaAdapter(getContext(), new ArrayList<>());
                     if (!task.isSuccessful()) {
                         return;
                     }

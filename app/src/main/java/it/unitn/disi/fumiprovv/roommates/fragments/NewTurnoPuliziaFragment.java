@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -109,27 +110,38 @@ public class NewTurnoPuliziaFragment extends Fragment {
     }
 
     private void addTurnoToDb() {
-        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        Long currentWeek = new Long(calendar.get(Calendar.WEEK_OF_YEAR));
-        Long currentYear = new Long(calendar.get(Calendar.YEAR));
-        Map<String, Object> newTurno = new HashMap<>();
-        newTurno.put("house", houseViewModel.getHouseId());
-        newTurno.put("name", ((EditText) getView().findViewById(R.id.turnoNameField)).getText().toString());
-        newTurno.put("users", idDaAggiungere);
-        newTurno.put("weekStart", currentWeek);
-        newTurno.put("yearStart", currentYear);
-        calendar.add(Calendar.WEEK_OF_YEAR, -1);
-        newTurno.put("weekLast", calendar.get(Calendar.WEEK_OF_YEAR));
-        newTurno.put("yearLast", calendar.get(Calendar.YEAR));
+        EditText editText = getView().findViewById(R.id.turnoNameField); // Replace with your EditText ID
+        String userInput = editText.getText().toString().trim();
+        if(idDaAggiungere.size()>0 && !userInput.isEmpty() ) {
+            HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            Long currentWeek = new Long(calendar.get(Calendar.WEEK_OF_YEAR));
+            Long currentYear = new Long(calendar.get(Calendar.YEAR));
+            Map<String, Object> newTurno = new HashMap<>();
+            newTurno.put("house", houseViewModel.getHouseId());
+            newTurno.put("name", ((EditText) getView().findViewById(R.id.turnoNameField)).getText().toString());
+            newTurno.put("users", idDaAggiungere);
+            newTurno.put("weekStart", currentWeek);
+            newTurno.put("yearStart", currentYear);
+            calendar.add(Calendar.WEEK_OF_YEAR, -1);
+            newTurno.put("weekLast", calendar.get(Calendar.WEEK_OF_YEAR));
+            newTurno.put("yearLast", calendar.get(Calendar.YEAR));
 
-        db.collection("turniPulizia").add(newTurno)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        requireActivity().onBackPressed();
-                    }
-                });
+            db.collection("turniPulizia").add(newTurno)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            requireActivity().onBackPressed();
+                        }
+                    });
+        } else {
+            Log.d("errore", "Inserire dati");
+            Toast toast = new Toast(getContext());
+            toast.setText("inserire tutti i dati");
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
     }
 
     @Override
@@ -160,7 +172,6 @@ public class NewTurnoPuliziaFragment extends Fragment {
                         return;
                     }
                     List<String> users = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                        //Note note = documentSnapshot.getString("userId");
                         User user = new User(
                                 documentSnapshot.getId(),
                                 documentSnapshot.getString("name")
@@ -169,19 +180,11 @@ public class NewTurnoPuliziaFragment extends Fragment {
                         userIds.add(user.getId());
                         return user.getName();
                     }).collect(Collectors.toList());
-                    //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
                     spinnerAdapter.addAll(users);
-                    //adapter.setItems(users);
 
                     userListView.setAdapter(adapter);
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
                     userListView.setDividerHeight(dividerHeight);
-
-                    // Imposta il listener di click sugli elementi della lista
-                    userListView.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
-                        String selectedItem = users.get(position);
-                        String a = "";
-                    });
                 });
 
         buttonNewUser.setOnClickListener(new View.OnClickListener() {

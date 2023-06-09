@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,20 +22,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
 import it.unitn.disi.fumiprovv.roommates.models.Turno;
-import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
-public class TurniAdapterProva extends BaseAdapter {
+public class TurniPuliziaAdapter extends BaseAdapter {
     private List<Turno> turni;
     private final LayoutInflater inflater;
     private final Context context;
@@ -45,7 +38,7 @@ public class TurniAdapterProva extends BaseAdapter {
     private Long currentWeek;
     private Long currentYear;
 
-    public TurniAdapterProva(Context context, List<Turno> turni) {
+    public TurniPuliziaAdapter(Context context, List<Turno> turni) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         currentWeek = new Long(calendar.get(Calendar.WEEK_OF_YEAR));
@@ -75,12 +68,12 @@ public class TurniAdapterProva extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TurniAdapterProva.ViewHolder holder;
+        TurniPuliziaAdapter.ViewHolder holder;
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.turni_list_item, parent, false);
 
-            holder = new TurniAdapterProva.ViewHolder();
+            holder = new TurniPuliziaAdapter.ViewHolder();
             holder.luogoTextField = convertView.findViewById(R.id.luogoTextField);
             holder.turnoUserField = convertView.findViewById(R.id.turnoUserField);
             holder.turnoDeleteButton = convertView.findViewById(R.id.turnoDeleteButton);
@@ -89,7 +82,7 @@ public class TurniAdapterProva extends BaseAdapter {
 
             convertView.setTag(holder);
         } else {
-            holder = (TurniAdapterProva.ViewHolder) convertView.getTag();
+            holder = (TurniPuliziaAdapter.ViewHolder) convertView.getTag();
         }
 
         holder.turnoInfo.removeAllViews();
