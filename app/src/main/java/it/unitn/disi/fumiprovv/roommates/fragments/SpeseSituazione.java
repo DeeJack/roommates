@@ -36,10 +36,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.adapters.SpeseComuniAdapter;
-import it.unitn.disi.fumiprovv.roommates.adapters.StoricoSituazioniAdapter;
-import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
-import it.unitn.disi.fumiprovv.roommates.models.StoricoSituazioni;
+import it.unitn.disi.fumiprovv.roommates.adapters.StoricoPagamentiAdapter;
+import it.unitn.disi.fumiprovv.roommates.models.Pagamento;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
@@ -105,13 +103,13 @@ public class SpeseSituazione extends Fragment {
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         String houseId = houseViewModel.getHouseId();
 
-        StoricoSituazioniAdapter adapter = new StoricoSituazioniAdapter(getContext(), new ArrayList<>());
+        StoricoPagamentiAdapter adapter = new StoricoPagamentiAdapter(getContext(), new ArrayList<>());
 
         db.collection("storicoPagamentiUtenti").whereEqualTo("Casa", houseId).get().addOnCompleteListener( task -> {
             if (!task.isSuccessful()) {
                 return;
             }
-            List<StoricoSituazioni> storico = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+            List<Pagamento> storico = task.getResult().getDocuments().stream().map(documentSnapshot -> {
                 Number amount = (Number) documentSnapshot.get("Amount");
                 Double amountValue;
                 if (amount instanceof Long) {
@@ -121,10 +119,10 @@ public class SpeseSituazione extends Fragment {
                 } else {
                     throw new IllegalArgumentException("Invalid amount type");
                 }
-                StoricoSituazioni item = new StoricoSituazioni((String) documentSnapshot.get("Casa"), (String) documentSnapshot.get("From"), (String) documentSnapshot.get("To"), amountValue, (Timestamp) documentSnapshot.get("Date"));
+                Pagamento item = new Pagamento((String) documentSnapshot.get("Casa"), (String) documentSnapshot.get("From"), (String) documentSnapshot.get("To"), amountValue, (Timestamp) documentSnapshot.get("Date"));
                 return item;
             }).collect(Collectors.toList());
-            adapter.setItems((ArrayList<StoricoSituazioni>) storico);
+            adapter.setItems((ArrayList<Pagamento>) storico);
             Log.d("prova", storico.toString());
 
             listaStorico.setAdapter(adapter);

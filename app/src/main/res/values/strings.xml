@@ -61,4 +61,7 @@
     <string name="summary_products">Riepilogo prodotti:</string>
     <string name="note_new_contact_name">Nome...</string>
     <string name="note_new_contact_number">0555 1234 12</string>
+    <string name="situazioneText">Situazione</string>
+    <string name="storicoSituazioneText">Storico</string>
+    <string name="segna_pagato">Segna come pagato</string>
 </resources>

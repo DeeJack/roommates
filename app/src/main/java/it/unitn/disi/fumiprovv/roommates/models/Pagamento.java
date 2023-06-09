@@ -1,23 +1,18 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
-import android.util.Log;
-
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-public class StoricoSituazioni {
+public class Pagamento {
     private String casa;
     private String from;
     private String to;
     private Double amount;
     private com.google.firebase.Timestamp date;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String userNameTo;
+    private String userNameFrom;
 
-    public StoricoSituazioni(String casa, String from, String to, Double amount, com.google.firebase.Timestamp date) {
+    public Pagamento(String casa, String from, String to, Double amount, com.google.firebase.Timestamp date) {
         this.casa = casa;
         this.from = from;
         this.to = to;
@@ -65,4 +60,19 @@ public class StoricoSituazioni {
         this.date = date;
     }
 
+    public String getUserNameTo() {
+        return userNameTo;
+    }
+
+    public void setUserNameTo(String userNameTo) {
+        this.userNameTo = userNameTo;
+    }
+
+    public String getUserNameFrom() {
+        return userNameFrom;
+    }
+
+    public void setUserNameFrom(String userNameFrom) {
+        this.userNameFrom = userNameFrom;
+    }
 }

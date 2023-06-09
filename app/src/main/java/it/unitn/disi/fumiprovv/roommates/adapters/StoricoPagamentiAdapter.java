@@ -1,7 +1,6 @@
 package it.unitn.disi.fumiprovv.roommates.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +22,16 @@ import java.util.Date;
 import java.util.List;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
-import it.unitn.disi.fumiprovv.roommates.models.StoricoSituazioni;
+import it.unitn.disi.fumiprovv.roommates.models.Pagamento;
 
-public class StoricoSituazioniAdapter extends BaseAdapter {
+public class StoricoPagamentiAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
     private final Context context;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private ArrayList<StoricoSituazioni> storicList;
+    private List<Pagamento> storicList;
 
-    public StoricoSituazioniAdapter(Context context, ArrayList<StoricoSituazioni> storicList) {
+    public StoricoPagamentiAdapter(Context context, List<Pagamento> storicList) {
         this.storicList = storicList;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -45,7 +43,7 @@ public class StoricoSituazioniAdapter extends BaseAdapter {
     }
 
     @Override
-    public StoricoSituazioni getItem(int i) {
+    public Pagamento getItem(int i) {
         return storicList.get(i);
     }
 
@@ -54,7 +52,7 @@ public class StoricoSituazioniAdapter extends BaseAdapter {
         return i;
     }
 
-    public void setItems(ArrayList<StoricoSituazioni> items) {
+    public void setItems(List<Pagamento> items) {
         this.storicList = items;
     }
 
@@ -63,32 +61,20 @@ public class StoricoSituazioniAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.generic_item, parent, false);
+            convertView = inflater.inflate(R.layout.situazioni_list_item, parent, false);
 
             holder = new ViewHolder();
-            holder.titolo = convertView.findViewById(R.id.titoloGenericItem);
-            holder.descrizione = convertView.findViewById(R.id.descrizioneGenericItem);
-            holder.buttonPaga = convertView.findViewById(R.id.buttonGenericItem);
+            holder.titolo = convertView.findViewById(R.id.situazioneUserField);
+            holder.descrizione = convertView.findViewById(R.id.amountTextField);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        StoricoSituazioni item = storicList.get(position);
-        db.collection("utenti").document(item.getFrom()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                holder.titolo.setText(task.getResult().get("name").toString() + " -> ");
-            }
-        });
+        Pagamento item = storicList.get(position);
 
-        db.collection("utenti").document(item.getTo()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                holder.titolo.append(task.getResult().get("name").toString());
-            }
-        });
+        holder.titolo.setText(item.getUserNameFrom() + " -> " + item.getUserNameTo());
 
         Timestamp t = item.getDate();
         Date d = t.toDate();
@@ -103,14 +89,11 @@ public class StoricoSituazioniAdapter extends BaseAdapter {
 
         holder.descrizione.setText("Pagati " + item.getAmount().toString() + "€ in data " + data);
 
-        //holder.buttonPaga.setOnClickListener(view -> onPagaButtonClick(item));
-
         return convertView;
     }
 
     private static class ViewHolder {
         TextView titolo;
         TextView descrizione;
-        Button buttonPaga;
     }
 }

@@ -3,6 +3,7 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import it.unitn.disi.fumiprovv.roommates.adapters.ExpenseAdapter;
 import it.unitn.disi.fumiprovv.roommates.adapters.SpeseComuniAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.Expense;
 import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,7 +83,9 @@ public class SpeseStorico extends Fragment {
 
         ListView lista = view.findViewById(R.id.listaStoricoSpese);
 
-        db.collection("listaspesaeffettuata").get().addOnCompleteListener( task -> {
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+
+        db.collection("listaspesaeffettuata").whereEqualTo("houseId", houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
             if (!task.isSuccessful()) {
                 return;
             }
