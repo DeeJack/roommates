@@ -1,12 +1,6 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,13 +8,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -46,15 +44,14 @@ public class NewTurnoPuliziaFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<String> selectedUsers = new ArrayList<>();
     ArrayList<String> userIds = new ArrayList<>();
     HashMap<String, String> userNamesIds = new HashMap<>();
     ArrayList<String> idDaAggiungere = new ArrayList<>();
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public NewTurnoPuliziaFragment() {
         // Required empty public constructor
@@ -112,7 +109,7 @@ public class NewTurnoPuliziaFragment extends Fragment {
     private void addTurnoToDb() {
         EditText editText = getView().findViewById(R.id.turnoNameField); // Replace with your EditText ID
         String userInput = editText.getText().toString().trim();
-        if(idDaAggiungere.size()>0 && !userInput.isEmpty() ) {
+        if (idDaAggiungere.size() > 0 && !userInput.isEmpty()) {
             HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
@@ -189,14 +186,14 @@ public class NewTurnoPuliziaFragment extends Fragment {
         buttonNewUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(userIds.size()>0) {
+                if (spinner.getSelectedItem() != null && userIds.size() > 0) {
                     String selectedUser = (String) spinner.getSelectedItem().toString();
                     Log.d("user", selectedUser);
                     idDaAggiungere.add(userNamesIds.get(selectedUser));
                     selectedUsers.add(selectedUser);
                     userIds.remove(selectedUser);
                     userNames.remove(selectedUser);
-                    if(userNames.size()>0)
+                    if (userNames.size() > 0)
                         spinner.setPrompt(userIds.get(0));
                     adapter.notifyDataSetChanged();
                     spinnerAdapter.notifyDataSetChanged();
