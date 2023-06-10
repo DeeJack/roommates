@@ -10,4 +10,5 @@
 
     <color name="background_dark">#212121</color>
     <color name="primaryTextColor">@color/white</color>
+    <color name="darker">#303030</color>
 </resources>

@@ -53,4 +53,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.Roommates.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="backgroundColor">@color/purple_500</item>
+        <item name="android:colorBackground">@color/purple_500</item>
+        <item name="android:background">@color/purple_500</item>
+    </style>
 </resources>
