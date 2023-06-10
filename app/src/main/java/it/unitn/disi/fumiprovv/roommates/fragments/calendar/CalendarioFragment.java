@@ -1,4 +1,4 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.calendar;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +14,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -43,7 +42,7 @@ public class CalendarioFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -234,8 +233,5 @@ public class CalendarioFragment extends Fragment {
                         Log.d("error", "Error getting documents: ", task.getException());
                     }
                 });
-    }
-
-    private void updateData(int year, int month, int dayOfMonth) {
     }
 }

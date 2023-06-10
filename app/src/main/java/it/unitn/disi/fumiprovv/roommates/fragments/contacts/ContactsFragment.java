@@ -1,47 +1,44 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.contacts;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
+import it.unitn.disi.fumiprovv.roommates.adapters.ContactListAdapter;
+import it.unitn.disi.fumiprovv.roommates.models.Contact;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NoteFragment#newInstance} factory method to
+ * Use the {@link ContactsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NoteFragment extends Fragment {
+public class ContactsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public NoteFragment() {
+    public ContactsFragment() {
         // Required empty public constructor
     }
 
@@ -51,11 +48,11 @@ public class NoteFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NoteFragment.
+     * @return A new instance of fragment ContactsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NoteFragment newInstance(String param1, String param2) {
-        NoteFragment fragment = new NoteFragment();
+    public static ContactsFragment newInstance(String param1, String param2) {
+        ContactsFragment fragment = new ContactsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -76,61 +73,54 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_note, container, false);
+        View view = inflater.inflate(R.layout.fragment_contacts, container, false);
+        ProgressBar progressBar = view.findViewById(R.id.contactProgressbar);
+        progressBar.setVisibility(View.VISIBLE);
 
-        ListView notesListView = view.findViewById(R.id.notesListView);
+        ListView contactListView = view.findViewById(R.id.contactsListView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        Button addNoteButton = view.findViewById(R.id.addNoteButton);
-        addNoteButton.setOnClickListener(v -> {
-            NavigationUtils.navigateTo(R.id.action_noteFragment_to_newNoteFragment, view);
-        });
+        Button addContactButton = view.findViewById(R.id.addContactButton);
+        addContactButton.setOnClickListener(v ->
+                NavigationUtils.navigateTo(R.id.action_contactFragment_to_newContactFragment, view));
 
-        db.collection("note").whereEqualTo("houseId", db.collection("case")
-                        .document(houseViewModel.getHouseId()))
-                .orderBy("creationDate", Query.Direction.DESCENDING)
-                .get()
+        db.collection("contatti").whereEqualTo("houseId", db.collection("case").document(houseViewModel.getHouseId())).get()
                 .addOnCompleteListener(task -> {
-                    NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
+                    ContactListAdapter adapter = new ContactListAdapter(getContext(), new ArrayList<>());
                     if (!task.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
                         return;
                     }
                     //List<Map<String, Object>> notes = task.getResult().getDocuments().stream()
                     //        .map(DocumentSnapshot::getData).collect(Collectors.toList());
-                    List<Note> notes = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                    List<Contact> contacts = task.getResult().getDocuments().stream().map(documentSnapshot -> {
                         //Note note = documentSnapshot.getString("userId");
-                        Note note = new Note(
+                        //                        documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
+//                            if (!task1.isSuccessful()) {
+//                                return;
+//                            }
+//                            contact.setUserName((String) task1.getResult().get("name"));
+//                            adapter.notifyDataSetChanged();
+//                        });
+                        return new Contact(
                                 documentSnapshot.getId(),
-                                documentSnapshot.getDocumentReference("userId").getId(),
-                                "",
-                                documentSnapshot.getTimestamp("creationDate"),
-                                (String) documentSnapshot.get("text")
+                                documentSnapshot.getString("name"),
+                                documentSnapshot.getString("number")
                         );
-                        documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
-                            if (!task1.isSuccessful()) {
-                                return;
-                            }
-                            note.setUserName((String) task1.getResult().get("name"));
-                            adapter.notifyDataSetChanged();
-                        });
-                        return note;
                     }).collect(Collectors.toList());
                     //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
-                    adapter.setNotes(notes);
+                    adapter.setContacts(contacts);
 
-                    notesListView.setAdapter(adapter);
-                    if (getContext() == null)
-                        return;
+                    contactListView.setAdapter(adapter);
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
-                    notesListView.setDividerHeight(dividerHeight);
+                    contactListView.setDividerHeight(dividerHeight);
 
                     // Imposta il listener di click sugli elementi della lista
-                    notesListView.setOnItemClickListener((parent, view1, position, id) -> {
-                        Note selectedItem = notes.get(position);
-                        String a = "";
-                    });
+                    //contactListView.setOnItemClickListener((parent, view1, position, id) -> {
+                    //    Contact selectedItem = contacts.get(position);
+                    //});
+                    progressBar.setVisibility(View.GONE);
                 });
-
 
         return view;
     }

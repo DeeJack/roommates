@@ -89,7 +89,6 @@ public class HouseCreationFragment extends Fragment {
         createBtn.setOnClickListener((a) -> onCreateButtonClick(view));
         JoinHouseViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(JoinHouseViewModel.class);
         if (sharedViewModel.isHouseIdValid()) {
-            String code = sharedViewModel.getHouseId();
             ((TextView) view.findViewById(R.id.joinHouseField)).setText(sharedViewModel.getHouseId());
         }
         return view;

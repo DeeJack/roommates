@@ -1,4 +1,4 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.settings;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -31,7 +31,6 @@ import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Roommate;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
-import it.unitn.disi.fumiprovv.roommates.viewmodels.UserViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,7 +105,7 @@ public class SettingsFragment extends Fragment {
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         ImageView shareBtn = view.findViewById(R.id.shareButton2);
-        shareBtn.setOnClickListener((view1) -> openShareDialog(view, houseViewModel.getHouseId()));
+        shareBtn.setOnClickListener((view1) -> openShareDialog(houseViewModel.getHouseId()));
 
         TextView houseId = view.findViewById(R.id.houseIdField2);
         houseId.setText(houseViewModel.getHouseId());
@@ -163,7 +162,6 @@ public class SettingsFragment extends Fragment {
 
     private void leaveHouse(View view) {
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
-        UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         DocumentReference documentSnapshotTask = db.collection("case").document(houseViewModel.getHouseId());
         documentSnapshotTask.get().addOnCompleteListener(task -> {
             DocumentSnapshot document = task.getResult();
@@ -189,7 +187,7 @@ public class SettingsFragment extends Fragment {
 
     }
 
-    public void openShareDialog(View view, String houseId) {
+    public void openShareDialog(String houseId) {
         String text = getString(R.string.share_code_text)
                 .replace("{code}", houseId)
                 .replace("{link}", "http://roommates.asd/join?code=" + houseId)

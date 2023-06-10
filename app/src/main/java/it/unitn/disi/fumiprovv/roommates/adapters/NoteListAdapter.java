@@ -62,7 +62,7 @@ public class NoteListAdapter extends BaseAdapter {
             holder.noteNameField = convertView.findViewById(R.id.noteNameField);
             holder.noteTextField = convertView.findViewById(R.id.noteTextField);
             holder.noteShareButton = convertView.findViewById(R.id.noteShareBtn);
-            holder.noteDeleteButton= convertView.findViewById(R.id.noteDeleteBtn);
+            holder.noteDeleteButton = convertView.findViewById(R.id.noteDeleteBtn);
 
             convertView.setTag(holder);
         } else {

@@ -1,18 +1,15 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.duties;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,7 +35,7 @@ public class TurniPuliziaFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -87,9 +84,8 @@ public class TurniPuliziaFragment extends Fragment {
         Button addTurniButton = view.findViewById(R.id.addTurniButton);
 
         //navigazione a nuovo turno di pulizia
-        addTurniButton.setOnClickListener(v -> {
-            NavigationUtils.navigateTo(R.id.action_turniPuliziaFragment_to_nuovoTurnoPulizia, view);
-        });
+        addTurniButton.setOnClickListener(v ->
+                NavigationUtils.navigateTo(R.id.action_turniPuliziaFragment_to_nuovoTurnoPulizia, view));
 
         db.collection("turniPulizia").whereEqualTo("house", houseViewModel.getHouseId())
                 .get()
@@ -111,10 +107,10 @@ public class TurniPuliziaFragment extends Fragment {
                         );
                         turno.setId(documentSnapshot.getId());
                         Log.d("turnoaaa", turno.getUsers().toString());
-                        for(String id : turno.getUsers()) {
+                        for (String id : turno.getUsers()) {
                             Log.d("turnobbb", id);
                             db.collection("utenti").document(id).get().addOnCompleteListener(task1 -> {
-                                if(!task1.isSuccessful()) {
+                                if (!task1.isSuccessful()) {
                                     return;
                                 }
                                 String nome = task1.getResult().getString("name");
@@ -145,10 +141,9 @@ public class TurniPuliziaFragment extends Fragment {
                     turniListView.setDividerHeight(dividerHeight);
 
                     // Imposta il listener di click sugli elementi della lista
-                    turniListView.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
-                        Turno selectedItem = turni.get(position);
-                        String a = "";
-                    });
+                    //turniListView.setOnItemClickListener((parent, view1, position, id) -> {
+                    //    Turno selectedItem = turni.get(position);
+                    //});
                 });
 
         return view;

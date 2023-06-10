@@ -1,11 +1,5 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
-import android.util.Pair;
-
-import com.google.firebase.firestore.DocumentReference;
-
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
 
 public class Sondaggio {

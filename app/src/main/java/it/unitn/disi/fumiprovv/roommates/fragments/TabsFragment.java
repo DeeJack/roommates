@@ -1,18 +1,17 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+
 import com.google.android.material.tabs.TabLayout;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
+import it.unitn.disi.fumiprovv.roommates.fragments.notes.NoteFragment;
 
 /**
  * A simple {@link Fragment} subclass.

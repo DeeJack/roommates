@@ -1,21 +1,13 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -24,11 +16,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
 import it.unitn.disi.fumiprovv.roommates.adapters.UserAdapter;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
@@ -100,7 +90,6 @@ public class HomeFragment extends Fragment {
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        ArrayList<String> listUtenti = new ArrayList<>();
         ListView utentiListView = view.findViewById(R.id.usersListView);
 
         db.collection("case").document(houseViewModel.getHouseId()).get()
@@ -113,7 +102,7 @@ public class HomeFragment extends Fragment {
                     List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
                     for (Map<String, Object> roommate : roommates) {
                         //prendo nome utente
-                        db.collection("utenti").document((String)roommate.get("userId")).get().addOnCompleteListener(task1 -> {
+                        db.collection("utenti").document((String) roommate.get("userId")).get().addOnCompleteListener(task1 -> {
                             String nome = task1.getResult().getString("name");
                             adapter.addUser(nome);
                             adapter.notifyDataSetChanged();
@@ -128,15 +117,5 @@ public class HomeFragment extends Fragment {
                 });
 
         return view;
-    }
-
-    void onLogoutClick(View view) {
-        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
-        houseViewModel.setHouseId("");
-        SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", MODE_PRIVATE);
-        sharedPref.edit().putString("houseId", "").apply();
-        FirebaseAuth.getInstance().signOut();
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.action_homeFragment_to_loginFragment);
     }
 }

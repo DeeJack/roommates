@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Event;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ItemViewHolder> {
-    private List<Event> eventList;
+    private final List<Event> eventList;
 
     // Constructor
     public EventAdapter() {
@@ -49,8 +50,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ItemViewHold
 
     // Inner ViewHolder class
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView itemDataEvento;
-        private TextView itemDescrizioneEvento;
+        private final TextView itemDataEvento;
+        private final TextView itemDescrizioneEvento;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,7 +60,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ItemViewHold
         }
 
         public void bind(Event event) {
-            itemDataEvento.setText(event.getGiorno() + "/" + event.getMese() + "/" + event.getAnno());
+            itemDataEvento.setText(String.format(Locale.getDefault(),
+                    "%d/%d/%d", event.getGiorno(), event.getMese(), event.getAnno()));
             itemDescrizioneEvento.setText(event.getNome());
         }
     }

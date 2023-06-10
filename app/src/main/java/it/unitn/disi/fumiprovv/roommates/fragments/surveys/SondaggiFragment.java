@@ -1,41 +1,29 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.surveys;
 
-import android.opengl.Visibility;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
 import it.unitn.disi.fumiprovv.roommates.adapters.SondaggiAdapter;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
-import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
 import it.unitn.disi.fumiprovv.roommates.adapters.SurveyAdapter;
+import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
@@ -54,8 +42,8 @@ public class SondaggiFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     SurveyAdapter surveyAdapter;
 
@@ -97,7 +85,7 @@ public class SondaggiFragment extends Fragment {
         ListView sondaggiListView = view.findViewById(R.id.sondaggiListView);
         ProgressBar surveyProgressbar = view.findViewById(R.id.surveyProgressbar);
 
-        Button newSurveyButton = (Button) view.findViewById(R.id.button_new_sondaggio);
+        Button newSurveyButton = view.findViewById(R.id.button_new_sondaggio);
         newSurveyButton.setOnClickListener(view1 -> NavigationUtils.navigateTo(R.id.action_sondaggiFragment_to_nuovo_sondaggio, view));
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);

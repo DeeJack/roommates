@@ -1,10 +1,9 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.shoppinglist;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,7 +37,7 @@ public class ShoppingListFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -102,11 +101,10 @@ public class ShoppingListFragment extends Fragment {
                     //        .map(DocumentSnapshot::getData).collect(Collectors.toList());
                     List<ShoppingItem> shoppingItems = task.getResult().getDocuments().stream().map(documentSnapshot -> {
                         //Note note = documentSnapshot.getString("userId");
-                        ShoppingItem shoppingItem = new ShoppingItem(
+                        return new ShoppingItem(
                                 documentSnapshot.getId(),
                                 (String) documentSnapshot.get("name")
                         );
-                        return shoppingItem;
                     }).collect(Collectors.toList());
                     //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
                     adapter.setItems(shoppingItems);
@@ -119,10 +117,9 @@ public class ShoppingListFragment extends Fragment {
                     notesListView.setDividerHeight(dividerHeight);
 
                     // Imposta il listener di click sugli elementi della lista
-                    notesListView.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
-                        ShoppingItem selectedItem = shoppingItems.get(position);
-                        String a = "";
-                    });
+                    //notesListView.setOnItemClickListener((parent, view1, position, id) -> {
+                    //    ShoppingItem selectedItem = shoppingItems.get(position);
+                    //});
                     shoppingBar.setVisibility(View.GONE);
                 });
 
@@ -133,12 +130,11 @@ public class ShoppingListFragment extends Fragment {
     private void buyItems(View view, ShoppingListAdapter adapter) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("shoppingItems", adapter.getCheckedItems());
-        ArrayList<ShoppingItem> items = adapter.getCheckedItems();
         NavigationUtils.navigateTo(R.id.action_shoppingListFragment_to_buyItemsFragment, view, bundle);
     }
 
     public void addItem(View view, ShoppingListAdapter adapter) {
-        EditText itemName = (EditText) view.findViewById(R.id.itemNameField);
+        EditText itemName = view.findViewById(R.id.itemNameField);
         String name = itemName.getText().toString();
         if (name.equals("")) {
             return;

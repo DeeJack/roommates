@@ -1,22 +1,17 @@
 package it.unitn.disi.fumiprovv.roommates;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -84,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         View view = findViewById(R.id.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
@@ -92,10 +87,10 @@ public class MainActivity extends AppCompatActivity {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Find our drawer view
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        nvDrawer = (NavigationView) findViewById(R.id.navigation_view);
+        mDrawer = findViewById(R.id.drawer_layout);
+        nvDrawer = findViewById(R.id.navigation_view);
         //nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.nameDrawerField);
-        nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.helloUserField);
+        nameView = nvDrawer.getHeaderView(0).findViewById(R.id.helloUserField);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
@@ -218,10 +213,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showHamburger(boolean show) {
-        if (show)
-            drawerToggle.setDrawerIndicatorEnabled(true);
-        else
-            drawerToggle.setDrawerIndicatorEnabled(false);
+        drawerToggle.setDrawerIndicatorEnabled(show);
     }
 
     public void selectHome() {

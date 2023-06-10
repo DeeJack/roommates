@@ -14,35 +14,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Turno;
 
 public class TurniPuliziaAdapter extends BaseAdapter {
-    private List<Turno> turni;
     private final LayoutInflater inflater;
     private final Context context;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private Long currentWeek;
-    private Long currentYear;
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final Long currentWeek;
+    private final Long currentYear;
+    private List<Turno> turni;
 
     public TurniPuliziaAdapter(Context context, List<Turno> turni) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        currentWeek = new Long(calendar.get(Calendar.WEEK_OF_YEAR));
-        currentYear = new Long(calendar.get(Calendar.YEAR));
+        currentWeek = (long) calendar.get(Calendar.WEEK_OF_YEAR);
+        currentYear = (long) calendar.get(Calendar.YEAR);
         this.turni = turni;
         this.context = context;
         if (context != null)
@@ -90,21 +86,17 @@ public class TurniPuliziaAdapter extends BaseAdapter {
         Turno item = turni.get(position);
         String luogo = item.getName();
         holder.luogoTextField.setText(luogo);
-        ArrayList<String> userIds= item.getUsers();
-        boolean boh = false;
+        ArrayList<String> userIds = item.getUsers();
         holder.turnoDeleteButton.setOnClickListener(view -> onDeleteButtonClick(item));
 
-        Long weekLast = item.getWeekLast();
-        Long yearLast = item.getYearLast();
-        Long weekStart = item.getWeekStart();
-        Long yearStart = item.getYearStart();
+        long weekStart = item.getWeekStart();
+        long yearStart = item.getYearStart();
 
         //calcola indice
-        Long weeksPassed = ((currentYear - yearStart) * 52) + currentWeek - weekStart + 1;
+        long weeksPassed = ((currentYear - yearStart) * 52) + currentWeek - weekStart + 1;
 
-        int index = 0;
-        Long userIndex = (weeksPassed - 1) % userIds.size();
-        index = Math.toIntExact(userIndex);
+        long userIndex = (weeksPassed - 1) % userIds.size();
+        int index = Math.toIntExact(userIndex);
 
         holder.turnoUserField.setText(item.getUserNameAt(item.getId()));
         String id = userIds.get(index);
@@ -113,7 +105,7 @@ public class TurniPuliziaAdapter extends BaseAdapter {
 
         String currentUser = mAuth.getUid();
 
-        if(false) { //se non sono moderatore nascondo il pulsante per eliminare i turni
+        if (false) { //se non sono moderatore nascondo il pulsante per eliminare i turni
             holder.turnoShareButton.setVisibility(View.INVISIBLE);
         } else {
             holder.turnoShareButton.setOnClickListener(view -> onShareButtonClick("Nuovo turno: " + item.getName(), item.getId()));
@@ -121,47 +113,41 @@ public class TurniPuliziaAdapter extends BaseAdapter {
 
         boolean completato = (item.getWeekLast().equals(currentWeek) && item.getYearLast().equals(currentYear));
 
-        if(currentUser.equals(userIds.get(index))) { //sono la persona del turno
-            if(!completato) {
+        if (Objects.equals(currentUser, userIds.get(index))) { //sono la persona del turno
+            if (!completato) {
                 //aggiungo pulsante per completare
                 Button b = new Button(convertView.getContext());
-                b.setText("Completa");
+                b.setText(R.string.complete);
                 b.setOnClickListener(view -> onCompleteButtonClick(item));
                 holder.turnoInfo.addView(b);
             } else {
                 //scritta "completato"
                 TextView t = new TextView(convertView.getContext());
-                t.setText("Completato");
+                t.setText(R.string.completed);
                 t.setTextColor(Color.GREEN);
                 holder.turnoInfo.addView(t);
             }
         } else {
-            if(completato) {
+            TextView t = new TextView(convertView.getContext());
+            if (completato) {
                 //scritta "completato"
-                TextView t = new TextView(convertView.getContext());
-                t.setText("Completato");
+                t.setText(R.string.completed);
                 t.setTextColor(Color.GREEN);
-                holder.turnoInfo.addView(t);
 
             } else {
                 //scritta non completato
-                TextView t = new TextView(convertView.getContext());
-                t.setText("Da completare");
+                t.setText(R.string.to_complete);
                 t.setTextColor(Color.RED);
-                holder.turnoInfo.addView(t);
             }
+            holder.turnoInfo.addView(t);
         }
         return convertView;
     }
 
     private void onCompleteButtonClick(Turno turno) {
         turno.setWeekLast(currentWeek);
-        db.collection("turniPulizia").document(turno.getId()).set(turno).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                notifyDataSetChanged();
-            }
-        });
+        db.collection("turniPulizia").document(turno.getId()).set(turno)
+                .addOnCompleteListener(task -> notifyDataSetChanged());
     }
 
     public void setTurni(List<Turno> turni) {
@@ -199,16 +185,13 @@ public class TurniPuliziaAdapter extends BaseAdapter {
     private void retrieveUserName(ArrayList<String> userIds, int index, TextView turnoUserField) {
         if (index < userIds.size()) {
             String userId = userIds.get(index);
-            db.collection("utenti").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        String userName = task.getResult().getString("name");
-                        Log.d("nomeUtente", userName);
-                        turnoUserField.setText(userName);
-                        int nextIndex = index + 1;
-                        retrieveUserName(userIds, nextIndex, turnoUserField);
-                    }
+            db.collection("utenti").document(userId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    String userName = task.getResult().getString("name");
+                    Log.d("nomeUtente", userName);
+                    turnoUserField.setText(userName);
+                    int nextIndex = index + 1;
+                    retrieveUserName(userIds, nextIndex, turnoUserField);
                 }
             });
         }

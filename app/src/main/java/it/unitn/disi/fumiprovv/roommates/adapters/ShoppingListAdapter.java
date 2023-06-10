@@ -23,7 +23,7 @@ public class ShoppingListAdapter extends BaseAdapter {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final ArrayList<ShoppingItem> checkedItems = new ArrayList<>();
     private List<ShoppingItem> items;
-    private List<ViewHolder> itemsHolders = new ArrayList<>();
+    private final List<ViewHolder> itemsHolders = new ArrayList<>();
 
     public ShoppingListAdapter(Context context, ArrayList<ShoppingItem> items) {
         this.items = items;

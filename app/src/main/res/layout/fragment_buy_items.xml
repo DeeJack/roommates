@@ -5,7 +5,7 @@
     android:id="@+id/buyItemsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.BuyItemsFragment" >
+    tools:context=".fragments.shoppinglist.BuyItemsFragment" >
 
     <EditText
         android:id="@+id/buyNameField"

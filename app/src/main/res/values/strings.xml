@@ -85,4 +85,7 @@
     <string name="failed_registration">Registrazione fallita.</string>
     <string name="error_empty_house_id">Inserisci un codice valido.</string>
     <string name="error_create_house">Errore nella creazione della casa. Riprova.</string>
+    <string name="complete">Completa</string>
+    <string name="completed">Completato</string>
+    <string name="to_complete">Da completare</string>
 </resources>

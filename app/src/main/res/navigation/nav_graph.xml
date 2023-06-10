@@ -152,7 +152,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SettingsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" >
         <action
@@ -173,7 +173,7 @@
     </fragment>
     <fragment
         android:id="@+id/noteFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NoteFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.notes.NoteFragment"
         android:label="fragment_note"
         tools:layout="@layout/fragment_note" >
         <action
@@ -182,12 +182,12 @@
     </fragment>
     <fragment
         android:id="@+id/newNoteFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewNoteFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.notes.NewNoteFragment"
         android:label="fragment_new_note"
         tools:layout="@layout/fragment_new_note" />
     <fragment
         android:id="@+id/calendarioFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.CalendarioFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.calendar.CalendarioFragment"
         android:label="fragment_calendario"
         tools:layout="@layout/fragment_calendario" >
         <action
@@ -196,7 +196,7 @@
     </fragment>
     <fragment
         android:id="@+id/turniPuliziaFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TurniPuliziaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.duties.TurniPuliziaFragment"
         android:label="fragment_turnipulizia"
         tools:layout="@layout/fragment_turni_pulizia" >
         <action
@@ -205,7 +205,7 @@
     </fragment>
     <fragment
         android:id="@+id/nuovoEvento"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoEvento"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.calendar.NuovoEvento"
         android:label="fragment_nuovo_evento"
         tools:layout="@layout/fragment_nuovo_evento" >
         <action
@@ -214,7 +214,7 @@
     </fragment>
     <fragment
         android:id="@+id/shoppingListFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.ShoppingListFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.shoppinglist.ShoppingListFragment"
         android:label="fragment_shopping_list"
         tools:layout="@layout/fragment_shopping_list" >
         <action
@@ -223,12 +223,12 @@
     </fragment>
     <fragment
         android:id="@+id/buyItemsFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.BuyItemsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.shoppinglist.BuyItemsFragment"
         android:label="fragment_buy_items"
         tools:layout="@layout/fragment_buy_items" />
     <fragment
         android:id="@+id/contactFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.ContactsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.contacts.ContactsFragment"
         android:label="fragment_contact"
         tools:layout="@layout/fragment_contacts" >
         <action
@@ -237,7 +237,7 @@
     </fragment>
     <fragment
         android:id="@+id/newContactFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewContactFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.contacts.NewContactFragment"
         android:label="fragment_new_contact"
         tools:layout="@layout/fragment_new_contact" />
     <fragment
@@ -247,7 +247,7 @@
         tools:layout="@layout/fragment_tabs" />
     <fragment
         android:id="@+id/sondaggiFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SondaggiFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.surveys.SondaggiFragment"
         android:label="fragment_sondaggi"
         tools:layout="@layout/fragment_sondaggi" >
         <action
@@ -256,17 +256,17 @@
     </fragment>
     <fragment
         android:id="@+id/nuovo_sondaggio"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoSondaggio"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.surveys.NuovoSondaggio"
         android:label="fragment_nuovo_sondaggio"
         tools:layout="@layout/fragment_nuovo_sondaggio" />
     <fragment
         android:id="@+id/nuovoTurnoPulizia"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewTurnoPuliziaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.duties.NewTurnoPuliziaFragment"
         android:label="fragment_nuovo_turno_pulizia"
         tools:layout="@layout/fragment_new_turno_pulizia" />
     <fragment
         android:id="@+id/turniProvaFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TurniPuliziaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.duties.TurniPuliziaFragment"
         android:label="fragment_turni_prova"
         tools:layout="@layout/fragment_turni_pulizia" >
         <action
@@ -278,7 +278,7 @@
     </fragment>
     <fragment
         android:id="@+id/newTurnoProva"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewTurnoPuliziaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.duties.NewTurnoPuliziaFragment"
         android:label="NewTurnoProva" />
 
 </navigation>

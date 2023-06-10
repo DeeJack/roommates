@@ -1,4 +1,4 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.shoppinglist;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -112,11 +111,10 @@ public class BuyItemsFragment extends Fragment {
                     }
                     List<User> users = task.getResult().getDocuments().stream().map(documentSnapshot -> {
                         //Note note = documentSnapshot.getString("userId");
-                        User user = new User(
+                        return new User(
                                 documentSnapshot.getId(),
                                 documentSnapshot.getString("name")
                         );
-                        return user;
                     }).collect(Collectors.toList());
                     //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
                     adapter.setItems(users);
@@ -126,10 +124,9 @@ public class BuyItemsFragment extends Fragment {
                     usersListView.setDividerHeight(dividerHeight);
 
                     // Imposta il listener di click sugli elementi della lista
-                    usersListView.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
-                        User selectedItem = users.get(position);
-                        String a = "";
-                    });
+                    //usersListView.setOnItemClickListener((parent, view1, position, id) -> {
+                    //    User selectedItem = users.get(position);
+                    //});
                     progressBar.setVisibility(View.GONE);
                 });
         ArrayList<ShoppingItem> items = (ArrayList<ShoppingItem>) bundle.getSerializable("shoppingItems");
@@ -150,12 +147,8 @@ public class BuyItemsFragment extends Fragment {
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.menuAddButton:
-                        buyItems();
-                        break;
-                    default:
-                        break;
+                if (menuItem.getItemId() == R.id.menuAddButton) {
+                    buyItems();
                 }
                 return true;
             }
@@ -167,7 +160,7 @@ public class BuyItemsFragment extends Fragment {
         if (view == null || adapter == null)
             return;
         String name = ((EditText) view.findViewById(R.id.buyNameField)).getText().toString();
-        double amount = 0;
+        double amount;
         try {
             amount = Double.parseDouble(((EditText) view.findViewById(R.id.buyAmountField)).getText().toString());
         } catch (Exception e) {
@@ -188,9 +181,8 @@ public class BuyItemsFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         List<DocumentReference> usersPayingReferences = new ArrayList<>();
-        usersPaying.forEach(user -> {
-            usersPayingReferences.add(db.collection("utenti").document(user.getId()));
-        });
+        usersPaying.forEach(user ->
+                usersPayingReferences.add(db.collection("utenti").document(user.getId())));
         expense.put("usersPaying", usersPayingReferences);
 
         db.collection("listaspesaeffettuata").add(expense)

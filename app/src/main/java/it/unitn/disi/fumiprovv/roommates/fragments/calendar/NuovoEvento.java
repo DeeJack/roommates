@@ -1,4 +1,4 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.calendar;
 
 import android.os.Bundle;
 import android.util.Log;

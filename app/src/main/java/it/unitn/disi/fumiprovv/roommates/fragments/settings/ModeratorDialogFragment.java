@@ -1,10 +1,8 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.settings;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -45,8 +43,6 @@ public class ModeratorDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         // Crea un ListView per visualizzare gli elementi
@@ -57,7 +53,7 @@ public class ModeratorDialogFragment extends DialogFragment {
             listView.setAdapter(adapter);
 
             // Imposta il listener di click sugli elementi della lista
-            listView.setOnItemClickListener((parent, view, position, id) -> onClickListener(roommates, position, view));
+            listView.setOnItemClickListener((parent, view, position, id) -> onClickListener(roommates, position));
         }));
         builder.setView(listView);
 
@@ -65,7 +61,7 @@ public class ModeratorDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void onClickListener(List<Roommate> roommates, int position, View view) {
+    public void onClickListener(List<Roommate> roommates, int position) {
         Roommate selectedRoommate = roommates.get(position);
 
         if (Objects.equals(selectedRoommate.getUserId(), mAuth.getCurrentUser().getUid()))
