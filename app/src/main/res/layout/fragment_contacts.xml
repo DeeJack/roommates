@@ -15,18 +15,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/addContactButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/fui_transparent"
-        android:src="@drawable/add_circle_foreground"
+        android:text="@string/add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.954"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tint="@color/white" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="10dp"/>
 
     <ProgressBar
         android:id="@+id/contactProgressbar"

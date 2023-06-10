@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -35,8 +35,8 @@ public class ContactsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -83,7 +83,7 @@ public class ContactsFragment extends Fragment {
         ListView contactListView = view.findViewById(R.id.contactsListView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        ImageButton addContactButton = view.findViewById(R.id.addContactButton);
+        Button addContactButton = view.findViewById(R.id.addContactButton);
         addContactButton.setOnClickListener(v -> {
             NavigationUtils.navigateTo(R.id.action_contactFragment_to_newContactFragment, view);
         });
@@ -121,7 +121,7 @@ public class ContactsFragment extends Fragment {
                     contactListView.setDividerHeight(dividerHeight);
 
                     // Imposta il listener di click sugli elementi della lista
-                    contactListView.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
+                    contactListView.setOnItemClickListener((parent, view1, position, id) -> {
                         Contact selectedItem = contacts.get(position);
                         String a = "";
                     });
