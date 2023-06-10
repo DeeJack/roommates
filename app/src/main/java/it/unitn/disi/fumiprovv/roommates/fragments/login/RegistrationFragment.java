@@ -3,9 +3,6 @@ package it.unitn.disi.fumiprovv.roommates.fragments.login;
 import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +12,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import it.unitn.disi.fumiprovv.roommates.R;
@@ -35,15 +32,12 @@ import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
  * create an instance of this fragment.
  */
 public class RegistrationFragment extends Fragment {
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "email";
     private static final String ARG_PARAM2 = "param2"; // No pass for security reasons
-
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -82,7 +76,7 @@ public class RegistrationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
-        Button registrationBtn = (Button) view.findViewById(R.id.registrationButton);
+        Button registrationBtn = view.findViewById(R.id.registrationButton);
         registrationBtn.setOnClickListener((a) -> onRegistrationButtonClick(view));
         return view;
     }
@@ -109,7 +103,7 @@ public class RegistrationFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.registrationProgressBar);
+        ProgressBar progressBar = view.findViewById(R.id.registrationProgressBar);
         progressBar.setVisibility(View.VISIBLE);
 
         String name = ((TextView) view.findViewById(R.id.registerNameField)).getText().toString();
@@ -126,7 +120,7 @@ public class RegistrationFragment extends Fragment {
                 })
                 .addOnFailureListener(task -> {
                     Log.w(TAG, "createUserWithEmail:failure", task.getCause());
-                    Toast.makeText(getContext(), "Registrazione fallit7.",
+                    Toast.makeText(getContext(), getString(R.string.failed_registration),
                             Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 });
