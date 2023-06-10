@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/statusCircle"
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/add_circle_background"
-            app:tint="@color/purple_500" />
+            app:tint="@color/purple_500" />-->
 
         <TextView
             android:id="@+id/userNameField"

@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
         // Find our drawer view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         nvDrawer = (NavigationView) findViewById(R.id.navigation_view);
-        nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.nameDrawerField);
+        //nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.nameDrawerField);
+        nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.helloUserField);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setName(String name) {
-        nameView.setText(name);
+        nameView.setText("Hello " + name);
     }
 
     public void showHamburger(boolean show) {

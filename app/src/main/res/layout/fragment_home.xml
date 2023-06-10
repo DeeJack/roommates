@@ -14,20 +14,14 @@
             android:id="@+id/usersListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="10dp"/>
         <View
             android:id="@+id/linea"
             app:layout_constraintBottom_toBottomOf="@id/usersListView"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/white"/>
-        <Button
-            android:id="@+id/logoutButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="53dp"
-            android:text="Logout"
-            app:layout_constraintTop_toBottomOf="@id/linea" />
 
         <!--<TextView
             android:id="@+id/user_name"

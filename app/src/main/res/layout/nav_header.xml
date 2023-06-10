@@ -2,19 +2,75 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="192dp"
-    android:background="?attr/colorPrimaryDark"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/purple_500"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
     android:gravity="bottom">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/fui_transparent">
+
+        <ImageView
+            android:id="@+id/imageUser"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@color/fui_transparent"
+            android:src="@drawable/account_circle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/helloUserField"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:background="@color/fui_transparent"
+            android:text="Hello"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fui_transparent">
+
+        <ImageView
+            android:id="@+id/imageUser"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@color/fui_transparent"
+            android:src="@drawable/account_circle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/fui_transparent"
+            android:text="Hello"
+            android:layout_margin="5dp"
+            android:textColor="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageUser" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
+    <!--<TextView
         android:id="@+id/nameDrawerField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/fui_transparent"
         android:text="Header"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white" />-->
 
 </LinearLayout>

@@ -89,8 +89,8 @@ public class HomeFragment extends Fragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         //((TextView) view.findViewById(R.id.user_name)).setText(auth.getCurrentUser().getEmail());
-        Button logoutButton = view.findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(this::onLogoutClick);
+        //Button logoutButton = view.findViewById(R.id.logoutButton);
+        //logoutButton.setOnClickListener(this::onLogoutClick);
 
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setDrawerLocked(false);
@@ -119,7 +119,12 @@ public class HomeFragment extends Fragment {
                             adapter.notifyDataSetChanged();
                         });
                     }
+
                     utentiListView.setAdapter(adapter);
+                    if (getContext() == null)
+                        return;
+                    int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
+                    utentiListView.setDividerHeight(dividerHeight);
                 });
 
         return view;
