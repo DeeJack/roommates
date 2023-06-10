@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -31,12 +32,12 @@ import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.UserViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private TextView nameView;
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +79,17 @@ public class MainActivity extends AppCompatActivity {
 
         View view = findViewById(R.id.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // This will display an Up icon (<-), we will replace it with hamburger later
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Find our drawer view
-        mDrawer = findViewById(R.id.drawer_layout);
-        nvDrawer = findViewById(R.id.navigation_view);
-        nameView = nvDrawer.getHeaderView(0).findViewById(R.id.nameDrawerField);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        nvDrawer = (NavigationView) findViewById(R.id.navigation_view);
+        //nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.nameDrawerField);
+        nameView = (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.helloUserField);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
@@ -199,11 +201,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setName(String name) {
-        nameView.setText(name);
+        nameView.setText("Hello " + name);
     }
 
     public void showHamburger(boolean show) {
-        drawerToggle.setDrawerIndicatorEnabled(show);
+        if (show)
+            drawerToggle.setDrawerIndicatorEnabled(true);
+        else
+            drawerToggle.setDrawerIndicatorEnabled(false);
     }
 
     public void selectHome() {
