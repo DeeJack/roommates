@@ -10,12 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
@@ -79,12 +81,15 @@ public class SpeseSituazioneFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_spese_situazione, container, false);
+        ProgressBar progressBar = view.findViewById(R.id.situazioneProgressbar);
+        progressBar.setVisibility(View.VISIBLE);
 
         ListView listSituazioni = view.findViewById(R.id.situazioniListView);
         ListView listStorico = view.findViewById(R.id.situazioniStoricoListView);
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         String currentUser = mAuth.getUid();
+        AtomicInteger completedTasks = new AtomicInteger();
 
         db.collection("debiti").whereEqualTo("house", houseViewModel.getHouseId())
                 .whereEqualTo("idFrom", currentUser)
@@ -92,6 +97,7 @@ public class SpeseSituazioneFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     SituazioniAdapter adapterSituazioni = new SituazioniAdapter(getContext(), new ArrayList<>());
                     if (!task.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
                         return;
                     }
                     List<Debt> debiti = task.getResult().getDocuments().stream().map(documentSnapshot -> {
@@ -114,6 +120,10 @@ public class SpeseSituazioneFragment extends Fragment {
                                     String nome = task1.getResult().getString("name");
                                     debito.setUserNameFrom(nome);
                                     adapterSituazioni.notifyDataSetChanged();
+                            completedTasks.set(completedTasks.get()+1);
+                            if(completedTasks.get() == 6) {
+                                progressBar.setVisibility(View.GONE);
+                            }
                         });
                         db.collection("utenti").document(idTo).get().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful()) {
@@ -122,6 +132,10 @@ public class SpeseSituazioneFragment extends Fragment {
                             String nome = task1.getResult().getString("name");
                             debito.setUserNameTo(nome);
                             adapterSituazioni.notifyDataSetChanged();
+                            completedTasks.set(completedTasks.get()+1);
+                            if(completedTasks.get() == 6) {
+                                progressBar.setVisibility(View.GONE);
+                            }
                         });
                         return debito;
                     }).collect(Collectors.toList());
@@ -134,6 +148,11 @@ public class SpeseSituazioneFragment extends Fragment {
                         return;
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
                     listSituazioni.setDividerHeight(dividerHeight);
+
+                    completedTasks.set(completedTasks.get()+1);
+                    if(completedTasks.get() == 6) {
+                        progressBar.setVisibility(View.GONE);
+                    }
                 });
 
         db.collection("storicoPagamentiUtenti").whereEqualTo("house", houseViewModel.getHouseId())
@@ -141,6 +160,7 @@ public class SpeseSituazioneFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     StoricoPagamentiUtentiAdapter adapterStorico = new StoricoPagamentiUtentiAdapter(getContext(), new ArrayList<>());
                     if (!task.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
                         return;
                     }
                     List<PagamentoUtente> pagamenti = task.getResult().getDocuments().stream().map(documentSnapshot -> {
@@ -156,11 +176,16 @@ public class SpeseSituazioneFragment extends Fragment {
 
                         db.collection("utenti").document(idFrom).get().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful()) {
+                                progressBar.setVisibility(View.GONE);
                                 return;
                             }
                             String nome = task1.getResult().getString("name");
                             pagamento.setUserNameFrom(nome);
                             adapterStorico.notifyDataSetChanged();
+                            completedTasks.set(completedTasks.get()+1);
+                            if(completedTasks.get() == 6) {
+                                progressBar.setVisibility(View.GONE);
+                            }
                         });
                         db.collection("utenti").document(idTo).get().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful()) {
@@ -169,6 +194,10 @@ public class SpeseSituazioneFragment extends Fragment {
                             String nome = task1.getResult().getString("name");
                             pagamento.setUserNameTo(nome);
                             adapterStorico.notifyDataSetChanged();
+                            completedTasks.set(completedTasks.get()+1);
+                            if(completedTasks.get() == 6) {
+                                progressBar.setVisibility(View.GONE);
+                            }
                         });
                         return pagamento;
                     }).collect(Collectors.toList());
@@ -179,6 +208,10 @@ public class SpeseSituazioneFragment extends Fragment {
                         return;
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
                     listStorico.setDividerHeight(dividerHeight);
+                    completedTasks.set(completedTasks.get()+1);
+                    if(completedTasks.get() == 6) {
+                        progressBar.setVisibility(View.GONE);
+                    }
                 });
 
         return view;
