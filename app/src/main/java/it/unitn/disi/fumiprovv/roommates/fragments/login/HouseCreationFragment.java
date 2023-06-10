@@ -99,7 +99,7 @@ public class HouseCreationFragment extends Fragment {
         ProgressBar progressBar = view.findViewById(R.id.houseProgressBar);
         progressBar.setVisibility(View.VISIBLE);
 
-        String houseId = ((TextView) view.findViewById(R.id.joinHouseField)).getText().toString();
+        String houseId = ((TextView) view.findViewById(R.id.joinHouseField)).getText().toString().toUpperCase();
         String userId = mAuth.getUid();
 
         if (userId == null) return;
@@ -142,8 +142,7 @@ public class HouseCreationFragment extends Fragment {
         String userId = mAuth.getUid();
         House house = House.createHouse(houseName, userId);
 
-        if (userId == null)
-            return;
+        if (userId == null) return;
 
         WriteBatch batch = db.batch();
         batch.set(db.collection("case").document(house.getId()), house);
