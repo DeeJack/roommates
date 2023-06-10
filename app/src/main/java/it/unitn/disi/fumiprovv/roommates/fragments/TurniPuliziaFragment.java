@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -83,7 +84,7 @@ public class TurniPuliziaFragment extends Fragment {
         ListView turniListView = view.findViewById(R.id.turniListView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        ImageButton addTurniButton = view.findViewById(R.id.addTurniButton);
+        Button addTurniButton = view.findViewById(R.id.addTurniButton);
 
         //navigazione a nuovo turno di pulizia
         addTurniButton.setOnClickListener(v -> {
