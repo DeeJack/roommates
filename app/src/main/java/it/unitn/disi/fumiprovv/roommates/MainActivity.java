@@ -2,8 +2,14 @@ package it.unitn.disi.fumiprovv.roommates;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -96,5 +102,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        applyCustomMenuTextAppearance(navigationView.getMenu());
+    }
+
+    private void applyCustomMenuTextAppearance(Menu menu) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem menuItem = menu.getItem(i);
+            SpannableString spannableString = new SpannableString(menuItem.getTitle());
+            spannableString.setSpan(new TextAppearanceSpan(this, R.style.PopupMenuStyle), 0, spannableString.length(), 0);
+            menuItem.setTitle(spannableString);
+            Drawable icon = menuItem.getIcon();
+            if (icon != null) {
+                icon.mutate(); // Ensure the same Drawable instance is not shared among multiple menu items
+                icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            }
+        }
     }
 }

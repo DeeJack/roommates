@@ -23,7 +23,6 @@
             tools:layout="@layout/fragment_main"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp"
-
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph" />
 
