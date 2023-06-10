@@ -83,4 +83,6 @@
     <string name="prompt_spinner_new_turno">Aggiungi gli utenti in ordine</string>
     <string name="share_turno_title">Condividi un turno di pulizia</string>
     <string name="failed_registration">Registrazione fallita.</string>
+    <string name="error_empty_house_id">Inserisci un codice valido.</string>
+    <string name="error_create_house">Errore nella creazione della casa. Riprova.</string>
 </resources>
