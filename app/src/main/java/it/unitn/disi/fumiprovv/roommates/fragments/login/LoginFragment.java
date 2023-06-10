@@ -2,32 +2,30 @@ package it.unitn.disi.fumiprovv.roommates.fragments.login;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
-import java.util.concurrent.Executor;
+import com.google.firebase.auth.FirebaseAuth;
 
 import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.utils.FieldValidation;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +59,10 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setDrawerLocked(true);
+
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         Button loginBtn = (Button) view.findViewById(R.id.loginButton);
         loginBtn.setOnClickListener((a) -> onLoginButtonClick(view));
@@ -73,7 +75,7 @@ public class LoginFragment extends Fragment {
 
     private void onForgotPasswordButtonClick(View view) {
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.forgotPasswordFragment);
+        navController.navigate(R.id.action_loginFragment_to_forgotPasswordFragment);
     }
 
     public void onLoginButtonClick(View view) {
@@ -83,32 +85,31 @@ public class LoginFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.email_not_valid), Toast.LENGTH_SHORT).show();
             return;
         }
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.loginProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
         String password = ((TextView) view.findViewById(R.id.registerPasswordField)).getText().toString();
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            NavController navController = Navigation.findNavController(view);
-                            navController.navigate(R.id.homeFragment);
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(view.getContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-                    }
+                .addOnSuccessListener(task -> {
+                    Log.d(TAG, "signInWithEmail:success");
+                    progressBar.setVisibility(View.GONE);
+                    NavController navController = Navigation.findNavController(view);
+
+                    SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
+                    HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
+
+                    NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity(), null);
+                })
+                .addOnFailureListener(task -> {
+                    Toast.makeText(getContext(), "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                    Log.w(TAG, "signInWithEmail:failure" + task.getMessage(), task.getCause());
+                    progressBar.setVisibility(View.GONE);
                 });
     }
 
     public void onRegistrationButtonClick(View view) {
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.registrationFragment);
+        navController.navigate(R.id.action_loginFragment_to_registrationFragment);
     }
 }

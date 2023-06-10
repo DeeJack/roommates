@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/buyItemsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.BuyItemsFragment" >
+
+    <EditText
+        android:id="@+id/buyNameField"
+        android:layout_width="361dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/border"
+        android:ems="10"
+        android:hint="@string/buy_name_hint"
+        android:inputType="text"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:textColor="@android:color/primary_text_dark"
+        android:textColorHint="@android:color/secondary_text_dark"
+        android:textColorLink="@android:color/secondary_text_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/buyAmountField"
+        android:layout_width="361dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/border"
+        android:ems="10"
+        android:hint="@string/buy_amount_hint"
+        android:inputType="numberDecimal"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:textColor="@android:color/primary_text_dark"
+        android:textColorHint="@android:color/secondary_text_dark"
+        android:textColorLink="@android:color/secondary_text_dark"
+        app:layout_constraintEnd_toEndOf="@+id/buyNameField"
+        app:layout_constraintStart_toStartOf="@+id/buyNameField"
+        app:layout_constraintTop_toBottomOf="@+id/buyNameField"
+        />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/division_between"
+        app:layout_constraintStart_toStartOf="@+id/buyAmountField"
+        app:layout_constraintTop_toBottomOf="@+id/buyAmountField" />
+
+    <ListView
+        android:id="@+id/listViewRoommates"
+        android:layout_width="362dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="213dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/buyAmountField"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" >
+
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="365dp"
+        android:layout_height="135dp"
+        android:layout_marginTop="36dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="@id/listViewRoommates"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/listViewRoommates"
+        app:layout_constraintTop_toBottomOf="@id/listViewRoommates">
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/summary_products" />
+
+        <ListView
+            android:id="@+id/listViewProducts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foregroundTint="@android:color/primary_text_dark"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarThumbVertical="@android:color/white"
+            android:scrollbars="vertical" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/buyItemsProgressbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

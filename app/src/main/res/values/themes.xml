@@ -14,6 +14,49 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+        <!-- Appbar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="iconTint">@color/white</item>
+
+
+        <item name="android:windowTitleBackgroundStyle">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <!-- Splash screen options -->
+        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">@color/background_dark</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:ignore="NewApi">@drawable/home</item>
+        <item name="android:windowSplashScreenBehavior" tools:ignore="NewApi">icon_preferred</item>
+        <item name="android:windowSplashScreenAnimationDuration" tools:ignore="NewApi">1000</item>
+
+
+    </style>
+
+    <style name="Theme.Roommates.Asd">
+        <item name="colorPrimary">#7C98FF</item>
+        <item name="itemBackground">@android:color/transparent</item>
+
+
+        <!--
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+
+        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+        -->
+    </style>
+
+    <style name="Theme.Roommates.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Roommates.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="backgroundColor">@color/purple_500</item>
+        <item name="android:colorBackground">@color/purple_500</item>
+        <item name="android:background">@color/purple_500</item>
     </style>
 </resources>

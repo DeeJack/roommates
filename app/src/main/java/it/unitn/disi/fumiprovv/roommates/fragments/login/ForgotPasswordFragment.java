@@ -101,6 +101,6 @@ public class ForgotPasswordFragment extends Fragment {
     public void onBackToLoginClick(View view) {
         NavController navController = Navigation.findNavController(view);
         //navController.popBackStack(R.id.loginFragment, true);
-        navController.navigate(R.id.loginFragment);
+        navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
     }
 }

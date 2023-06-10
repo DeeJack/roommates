@@ -10,7 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <ListView
+            android:id="@+id/usersListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="10dp"/>
+        <View
+            android:id="@+id/linea"
+            app:layout_constraintBottom_toBottomOf="@id/usersListView"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/white"/>
+
+        <!--<TextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,6 +41,6 @@
             android:text="Logout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_name" />
+            app:layout_constraintTop_toBottomOf="@+id/user_name" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

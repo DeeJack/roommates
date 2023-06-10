@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <group
+        android:id="@+id/group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_item_home"
+            android:icon="@drawable/home"
+            android:checked="true"
+            android:checkable="true"
+            android:title="@string/home"
+            />
+        <item
+            android:id="@+id/menu_item_turni"
+            android:icon="@drawable/turni"
+            android:checkable="true"
+            android:title="@string/turni" />
+        <item
+            android:id="@+id/menu_item_calendario"
+            android:icon="@drawable/calendar"
+            android:checkable="true"
+            android:title="@string/Calendario" />
+        <item
+            android:id="@+id/menu_item_listaSpesa"
+            android:icon="@drawable/cart"
+            android:checkable="true"
+            android:title="@string/listaSpesa" />
+        <item
+            android:id="@+id/menu_item_gestioneSpese"
+            android:icon="@drawable/spese"
+            android:checkable="true"
+            android:title="@string/gestioneSpese" />
+        <item
+            android:id="@+id/menu_item_rubrica"
+            android:icon="@drawable/phone"
+            android:checkable="true"
+            android:title="@string/rubrica" />
+        <item
+            android:id="@+id/menu_item_note"
+            android:icon="@drawable/note"
+            android:checkable="true"
+            android:title="@string/note" />
+        <item
+            android:id="@+id/menu_item_sondaggi"
+            android:icon="@drawable/sondaggi"
+            android:checkable="true"
+            android:title="@string/sondaggi" />
+        <item
+            android:id="@+id/menu_item_impostazioni"
+            android:icon="@drawable/settings_foreground"
+            android:checkable="true"
+            android:title="@string/impostazioni" />
+    </group>
+
+</menu>

@@ -1,5 +1,6 @@
 package it.unitn.disi.fumiprovv.roommates.fragments.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +32,7 @@ public class HouseCreatedFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String houseId;
 
     public HouseCreatedFragment() {
         // Required empty public constructor
@@ -67,11 +72,34 @@ public class HouseCreatedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_house_created, container, false);
         Button homeBtn = (Button) view.findViewById(R.id.homeButton);
         homeBtn.setOnClickListener((a) -> onHomeButtonClick(view));
+        Bundle bundle = getArguments();
+        String houseName = bundle.getString("houseName");
+        this.houseId = bundle.getString("houseId");
+
+        TextView houseNameTextView = (TextView) view.findViewById(R.id.houseNameField);
+        houseNameTextView.setText(houseName);
+        TextView houseIdTextView = (TextView) view.findViewById(R.id.houseIdField);
+        houseIdTextView.setText(houseId);
+        ImageView shareBtn = (ImageView) view.findViewById(R.id.shareButton);
+        shareBtn.setOnClickListener((v) -> onShareClick(view));
         return view;
     }
 
+    public void onShareClick(View view) {
+        String text = getString(R.string.share_code_text)
+                .replace("{code}", houseId)
+                .replace("{link}", "http://roommates.asd/join?code=" + houseId)
+                .replace("\\n", "\n");
+
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.setType("text/plain");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+
+        Intent shareIntent = Intent.createChooser(sendIntent, getString(R.string.share_code_title));
+        startActivity(shareIntent);
+    }
+
     public void onHomeButtonClick(View view) {
-        NavController navController = NavHostFragment.findNavController(this);
-        navController.navigate(R.id.homeFragment);
+        NavigationUtils.navigateTo(R.id.action_houseCreatedFragment_to_homeFragment, view);
     }
 }

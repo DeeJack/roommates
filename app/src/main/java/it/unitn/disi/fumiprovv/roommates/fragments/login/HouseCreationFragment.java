@@ -1,17 +1,32 @@
 package it.unitn.disi.fumiprovv.roommates.fragments.login;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
+
+import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.models.House;
+import it.unitn.disi.fumiprovv.roommates.models.Roommate;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,12 +34,12 @@ import it.unitn.disi.fumiprovv.roommates.R;
  * create an instance of this fragment.
  */
 public class HouseCreationFragment extends Fragment {
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -61,24 +76,90 @@ public class HouseCreationFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setDrawerLocked(true);
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_house_creation, container, false);
-        Button joinBtn = (Button) view.findViewById(R.id.joinButton);
+        Button joinBtn = view.findViewById(R.id.joinButton);
         joinBtn.setOnClickListener((a) -> onJoinButtonClick(view));
-        Button createBtn = (Button) view.findViewById(R.id.createButton);
+        Button createBtn = view.findViewById(R.id.createButton);
         createBtn.setOnClickListener((a) -> onCreateButtonClick(view));
+        JoinHouseViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(JoinHouseViewModel.class);
+        if (sharedViewModel.isHouseIdValid()) {
+            String code = sharedViewModel.getHouseId();
+            ((TextView) view.findViewById(R.id.joinHouseField)).setText(sharedViewModel.getHouseId());
+        }
         return view;
     }
 
     public void onJoinButtonClick(View view) {
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.homeFragment);
+        ProgressBar progressBar = view.findViewById(R.id.houseProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        String houseId = ((TextView) view.findViewById(R.id.joinHouseField)).getText().toString().toUpperCase();
+        String userId = mAuth.getUid();
+
+        if (userId == null) return;
+        if (houseId.isEmpty()) {
+            Toast.makeText(getContext(), R.string.error_empty_house_id, Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        WriteBatch batch = db.batch();
+        batch.update(db.collection("case").document(houseId), "roommates", FieldValue.arrayUnion(new Roommate(userId, Timestamp.now(), false)));
+        batch.update(db.collection("utenti").document(userId), "casa", houseId);
+
+        batch.commit().addOnSuccessListener(task -> {
+            updateHouseId(houseId);
+
+            progressBar.setVisibility(View.GONE);
+            NavigationUtils.navigateTo(R.id.action_houseCreationFragment_to_homeFragment, view);
+        }).addOnFailureListener(task -> {
+            Toast.makeText(getContext(), R.string.error_join_house, Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+        });
+    }
+
+    public void updateHouseId(String houseId) {
+        SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("houseId", houseId);
+        editor.apply();
+
+        HouseViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+        sharedViewModel.setHouseId(houseId);
     }
 
     public void onCreateButtonClick(View view) {
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.houseCreatedFragment);
+        ProgressBar progressBar = view.findViewById(R.id.houseProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        String houseName = ((TextView) view.findViewById(R.id.createHouseField)).getText().toString();
+        String userId = mAuth.getUid();
+        House house = House.createHouse(houseName, userId);
+
+        if (userId == null) return;
+
+        WriteBatch batch = db.batch();
+        batch.set(db.collection("case").document(house.getId()), house);
+        batch.update(db.collection("utenti").document(userId), "casa", house.getId());
+
+        batch.commit().addOnSuccessListener(task -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("houseName", house.getName());
+            bundle.putString("houseId", house.getId());
+
+            updateHouseId(house.getId());
+
+            progressBar.setVisibility(View.GONE);
+            NavigationUtils.navigateTo(R.id.action_houseCreationFragment_to_houseCreatedFragment, view, bundle);
+        }).addOnFailureListener(task -> {
+            Toast.makeText(getContext(), R.string.error_create_house, Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+        });
     }
 }

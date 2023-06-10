@@ -10,6 +10,48 @@
         app:popUpTo="@id/loginFragment"
         app:popUpToInclusive="true" />
 
+    <action android:id="@+id/action_to_calendario"
+        app:destination="@id/calendarioFragment"
+        app:popUpTo="@id/homeFragment"/>
+
+    <action android:id="@+id/action_to_turnipulizia"
+        app:destination="@id/turniPuliziaFragment"
+        app:popUpTo="@id/homeFragment"/>
+
+    <action android:id="@+id/action_to_turni2"
+        app:destination="@id/turniProvaFragment"/>
+
+    <action
+        android:id="@+id/action_to_spesa"
+        app:destination="@id/shoppingListFragment"
+        app:popUpTo="@id/homeFragment" />
+
+    <action
+        android:id="@+id/action_to_rubrica"
+        app:destination="@id/contactFragment"
+        app:popUpTo="@id/homeFragment" />
+
+    <action
+        android:id="@+id/action_to_note"
+        app:destination="@id/noteFragment"
+        app:popUpTo="@id/homeFragment" />
+
+    <action
+        android:id="@+id/action_to_impostazioni"
+        app:destination="@id/settingsFragment"
+        app:popUpTo="@id/homeFragment" />
+
+    <action
+        android:id="@+id/action_to_sondaggi"
+        app:destination="@id/sondaggiFragment"
+        app:popUpTo="@id/homeFragment" />
+
+    <action
+        android:id="@+id/action_to_home"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@id/homeFragment"
+        app:launchSingleTop="true"/>
+
 
     <fragment
         android:id="@+id/loginFragment"
@@ -44,7 +86,7 @@
         <action
             android:id="@+id/action_registrationFragment_to_houseCreationFragment"
             app:destination="@id/houseCreationFragment"
-            app:popUpTo="@id/registrationFragment"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -55,6 +97,11 @@
         <action
             android:id="@+id/action_homeFragment_to_houseCreationFragment"
             app:destination="@id/houseCreationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/houseCreationFragment"
@@ -63,14 +110,14 @@
         tools:layout="@layout/fragment_house_creation" >
         <action
             android:id="@+id/action_houseCreationFragment_to_houseCreatedFragment"
-            app:destination="@id/houseCreatedFragment" />
+            app:destination="@id/houseCreatedFragment"
+            app:popUpTo="@id/houseCreationFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_houseCreationFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-        <action
-            android:id="@+id/action_houseCreationFragment_self"
+            app:destination="@id/homeFragment"
             app:popUpTo="@id/houseCreationFragment"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/houseCreatedFragment"
@@ -79,7 +126,12 @@
         tools:layout="@layout/fragment_house_created" >
         <action
             android:id="@+id/action_houseCreatedFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/houseCreatedFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_houseCreatedFragment_to_noteFragment"
+            app:destination="@id/noteFragment" />
     </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment"
@@ -98,4 +150,135 @@
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/settingsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_houseCreationFragment"
+            app:destination="@id/houseCreationFragment"
+            app:popUpTo="@id/settingsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_self"
+            app:destination="@id/settingsFragment"
+            app:popUpTo="@id/settingsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/noteFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NoteFragment"
+        android:label="fragment_note"
+        tools:layout="@layout/fragment_note" >
+        <action
+            android:id="@+id/action_noteFragment_to_newNoteFragment"
+            app:destination="@id/newNoteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newNoteFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewNoteFragment"
+        android:label="fragment_new_note"
+        tools:layout="@layout/fragment_new_note" />
+    <fragment
+        android:id="@+id/calendarioFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.CalendarioFragment"
+        android:label="fragment_calendario"
+        tools:layout="@layout/fragment_calendario" >
+        <action
+            android:id="@+id/action_calendarioFragment_to_nuovoEvento"
+            app:destination="@id/nuovoEvento" />
+    </fragment>
+    <fragment
+        android:id="@+id/turniPuliziaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TurniPuliziaFragment"
+        android:label="fragment_turnipulizia"
+        tools:layout="@layout/fragment_turni_pulizia" >
+        <action
+            android:id="@+id/action_turniPuliziaFragment_to_nuovoTurnoPulizia"
+            app:destination="@id/nuovoTurnoPulizia" />
+    </fragment>
+    <fragment
+        android:id="@+id/nuovoEvento"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoEvento"
+        android:label="fragment_nuovo_evento"
+        tools:layout="@layout/fragment_nuovo_evento" >
+        <action
+            android:id="@+id/action_nuovoEvento_to_calendarioFragment"
+            app:destination="@id/calendarioFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shoppingListFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.ShoppingListFragment"
+        android:label="fragment_shopping_list"
+        tools:layout="@layout/fragment_shopping_list" >
+        <action
+            android:id="@+id/action_shoppingListFragment_to_buyItemsFragment"
+            app:destination="@id/buyItemsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/buyItemsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.BuyItemsFragment"
+        android:label="fragment_buy_items"
+        tools:layout="@layout/fragment_buy_items" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.ContactsFragment"
+        android:label="fragment_contact"
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_contactFragment_to_newContactFragment"
+            app:destination="@id/newContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newContactFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewContactFragment"
+        android:label="fragment_new_contact"
+        tools:layout="@layout/fragment_new_contact" />
+    <fragment
+        android:id="@+id/tabsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TabsFragment"
+        android:label="fragment_tabs"
+        tools:layout="@layout/fragment_tabs" />
+    <fragment
+        android:id="@+id/sondaggiFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SondaggiFragment"
+        android:label="fragment_sondaggi"
+        tools:layout="@layout/fragment_sondaggi" >
+        <action
+            android:id="@+id/action_sondaggiFragment_to_nuovo_sondaggio"
+            app:destination="@id/nuovo_sondaggio" />
+    </fragment>
+    <fragment
+        android:id="@+id/nuovo_sondaggio"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovoSondaggio"
+        android:label="fragment_nuovo_sondaggio"
+        tools:layout="@layout/fragment_nuovo_sondaggio" />
+    <fragment
+        android:id="@+id/nuovoTurnoPulizia"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewTurnoPuliziaFragment"
+        android:label="fragment_nuovo_turno_pulizia"
+        tools:layout="@layout/fragment_new_turno_pulizia" />
+    <fragment
+        android:id="@+id/turniProvaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TurniPuliziaFragment"
+        android:label="fragment_turni_prova"
+        tools:layout="@layout/fragment_turni_pulizia" >
+        <action
+            android:id="@+id/action_turniProvaFragment_to_nuovoTurnoPulizia"
+            app:destination="@id/nuovoTurnoPulizia" />
+        <action
+            android:id="@+id/action_turniProvaFragment_to_newTurnoProva"
+            app:destination="@id/newTurnoProva" />
+    </fragment>
+    <fragment
+        android:id="@+id/newTurnoProva"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NewTurnoPuliziaFragment"
+        android:label="NewTurnoProva" />
+
 </navigation>
