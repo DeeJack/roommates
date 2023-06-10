@@ -1,10 +1,15 @@
 package it.unitn.disi.fumiprovv.roommates;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -80,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         View view = findViewById(R.id.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         // This will display an Up icon (<-), we will replace it with hamburger later
@@ -159,6 +165,13 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.action_to_impostazioni);
         }
         menuItem.setChecked(true);
+        /*TextView customTitleTextView = new TextView(this);
+        customTitleTextView.setBackgroundColor(Color.TRANSPARENT);
+        customTitleTextView.setText(menuItem.getTitle());
+        customTitleTextView.setTextColor(Color.WHITE);
+
+        toolbar.addView(customTitleTextView);
+        toolbar.setTitle("");*/
         setTitle(menuItem.getTitle());
 
         // Close the drawer
