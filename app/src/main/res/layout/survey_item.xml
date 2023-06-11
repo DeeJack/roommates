@@ -28,8 +28,8 @@
                 android:id="@+id/shareSurvey"
                 android:layout_width="36dp"
                 android:layout_height="match_parent"
-                android:src="@android:drawable/ic_menu_share"
-                app:tint="@color/primaryTextColor" />
+                app:srcCompat="?attr/actionModeShareDrawable"
+                app:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/deleteSurvey"
