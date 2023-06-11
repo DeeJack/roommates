@@ -88,6 +88,8 @@
     <string name="complete">Completa</string>
     <string name="completed">Completato</string>
     <string name="to_complete">Da completare</string>
+    <string name="contact_notext">Inserisci tutti i campi</string>
+    <string name="duties_order">Inserisci utenti che devono pulire, nell\'ordine desiderato</string>
     <string name="situazioneText">Situazione</string>
     <string name="storicoSituazioneText">Storico</string>
     <string name="segna_pagato">Segna come pagato</string>

@@ -167,7 +167,7 @@ public class TurniPuliziaAdapter extends BaseAdapter {
 
     private void onDeleteButtonClick(Turno turno) {
         // Create alert dialog to confirm deletion
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Theme_Roommates_AlertDialg);
         builder.setTitle("Elimina il turno " + turno.getName());
         builder.setMessage("Vuoi eliminare il turno?");
         builder.setPositiveButton("Ok", (dialog, which) -> {

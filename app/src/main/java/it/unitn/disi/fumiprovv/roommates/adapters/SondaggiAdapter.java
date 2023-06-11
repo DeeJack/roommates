@@ -139,7 +139,7 @@ public class SondaggiAdapter extends BaseAdapter {
 
     private void deleteSurvey(Sondaggio sondaggio) {
         // Create alert dialog to confirm deletion
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Theme_Roommates_AlertDialg);
         builder.setTitle(R.string.delete_note_title);
         builder.setMessage(R.string.delete_survey_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {

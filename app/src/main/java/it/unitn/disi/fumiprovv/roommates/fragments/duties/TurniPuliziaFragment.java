@@ -11,10 +11,13 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
@@ -73,8 +76,7 @@ public class TurniPuliziaFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_turni_pulizia, container, false);
 
@@ -82,44 +84,48 @@ public class TurniPuliziaFragment extends Fragment {
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
         Button addTurniButton = view.findViewById(R.id.addTurniButton);
+        addTurniButton.setVisibility(View.GONE);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        db.collection("case").document(houseViewModel.getHouseId()).get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                return;
+            }
+            List<Map<String, Object>> roommates = (List<Map<String, Object>>) task.getResult().get("roommates");
+            roommates.stream().filter(roommate -> Objects.equals(roommate.get("userId"), auth.getCurrentUser().getUid())).forEach(roommate -> {
+                if ((boolean) roommate.get("moderator")) {
+                    addTurniButton.setVisibility(View.VISIBLE);
+                }
+            });
+        });
 
         //navigazione a nuovo turno di pulizia
-        addTurniButton.setOnClickListener(v ->
-                NavigationUtils.navigateTo(R.id.action_turniPuliziaFragment_to_nuovoTurnoPulizia, view));
+        addTurniButton.setOnClickListener(v -> NavigationUtils.navigateTo(R.id.action_turniPuliziaFragment_to_nuovoTurnoPulizia, view));
 
-        db.collection("turniPulizia").whereEqualTo("house", houseViewModel.getHouseId())
-                .get()
-                .addOnCompleteListener(task -> {
-                    //NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
-                    TurniPuliziaAdapter adapter = new TurniPuliziaAdapter(getContext(), new ArrayList<>());
-                    if (!task.isSuccessful()) {
-                        return;
-                    }
-                    List<Turno> turni = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                        Turno turno = new Turno(
-                                documentSnapshot.getString("name"),
-                                documentSnapshot.getLong("weekStart"),
-                                documentSnapshot.getLong("yearStart"),
-                                (ArrayList<String>) documentSnapshot.get("users"),
-                                documentSnapshot.getString("house"),
-                                documentSnapshot.getLong("yearLast"),
-                                documentSnapshot.getLong("weekLast")
-                        );
-                        turno.setId(documentSnapshot.getId());
-                        Log.d("turnoaaa", turno.getUsers().toString());
-                        for (String id : turno.getUsers()) {
-                            Log.d("turnobbb", id);
-                            db.collection("utenti").document(id).get().addOnCompleteListener(task1 -> {
-                                if (!task1.isSuccessful()) {
-                                    return;
-                                }
-                                String nome = task1.getResult().getString("name");
-                                Log.d("turnoccc", nome);
-                                turno.addUserName(id, nome);
-                                Log.d("turnoddd", turno.getUserNameAt(id));
-                                adapter.notifyDataSetChanged();
-                            });
+        db.collection("turniPulizia").whereEqualTo("house", houseViewModel.getHouseId()).get().addOnCompleteListener(task -> {
+            //NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
+            TurniPuliziaAdapter adapter = new TurniPuliziaAdapter(getContext(), new ArrayList<>());
+            if (!task.isSuccessful()) {
+                return;
+            }
+            List<Turno> turni = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                Turno turno = new Turno(documentSnapshot.getString("name"), documentSnapshot.getLong("weekStart"), documentSnapshot.getLong("yearStart"), (ArrayList<String>) documentSnapshot.get("users"), documentSnapshot.getString("house"), documentSnapshot.getLong("yearLast"), documentSnapshot.getLong("weekLast"));
+                turno.setId(documentSnapshot.getId());
+                Log.d("turnoaaa", turno.getUsers().toString());
+                for (String id : turno.getUsers()) {
+                    Log.d("turnobbb", id);
+                    db.collection("utenti").document(id).get().addOnCompleteListener(task1 -> {
+                        if (!task1.isSuccessful()) {
+                            return;
                         }
+                        String nome = task1.getResult().getString("name");
+                        Log.d("turnoccc", nome);
+                        turno.addUserName(id, nome);
+                        Log.d("turnoddd", turno.getUserNameAt(id));
+                        adapter.notifyDataSetChanged();
+                    });
+                }
                         /*for(String id: turno.getUsers()) {
                             documentSnapshot.getDocumentReference(id).get().addOnCompleteListener(task1 -> {
                                 if (!task1.isSuccessful()) {
@@ -130,21 +136,20 @@ public class TurniPuliziaFragment extends Fragment {
                             });
                         }*/
 
-                        return turno;
-                    }).collect(Collectors.toList());
-                    adapter.setTurni(turni);
+                return turno;
+            }).collect(Collectors.toList());
+            adapter.setTurni(turni);
 
-                    turniListView.setAdapter(adapter);
-                    if (getContext() == null)
-                        return;
-                    int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
-                    turniListView.setDividerHeight(dividerHeight);
+            turniListView.setAdapter(adapter);
+            if (getContext() == null) return;
+            int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
+            turniListView.setDividerHeight(dividerHeight);
 
-                    // Imposta il listener di click sugli elementi della lista
-                    //turniListView.setOnItemClickListener((parent, view1, position, id) -> {
-                    //    Turno selectedItem = turni.get(position);
-                    //});
-                });
+            // Imposta il listener di click sugli elementi della lista
+            //turniListView.setOnItemClickListener((parent, view1, position, id) -> {
+            //    Turno selectedItem = turni.get(position);
+            //});
+        });
 
         return view;
     }

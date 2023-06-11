@@ -5,12 +5,13 @@
     android:id="@+id/newNoteLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.notes.NewNoteFragment" >
+    tools:context=".fragments.notes.NewNoteFragment">
 
     <EditText
         android:id="@+id/noteText"
         android:layout_width="366dp"
         android:layout_height="275dp"
+        android:background="@drawable/border"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/note_new_hint"

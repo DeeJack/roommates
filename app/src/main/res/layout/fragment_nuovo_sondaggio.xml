@@ -17,17 +17,20 @@
             android:id="@+id/nuovaDomanda"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:autofillHints="none"
             android:background="@drawable/border"
             android:hint="@string/survey_domanda"
+            android:inputType="text"
             android:padding="5dp"
-            android:autofillHints="none"
-            android:inputType="text" />
+            android:textColor="@color/primaryTextColor"
+            android:textColorHint="@android:color/darker_gray" />
 
         <CheckBox
             android:id="@+id/sceltaMultipla"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="@string/multiple_choiice"/>
+            android:text="@string/multiple_choiice"
+            android:textColor="@color/primaryTextColor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -68,13 +71,6 @@
             android:layout_height="386dp">
 
         </ListView>
-
-        <Button
-            android:id="@+id/buttonCreaSondaggio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_survey_btn"
-            android:layout_gravity="center" />
 
     </LinearLayout>
 
