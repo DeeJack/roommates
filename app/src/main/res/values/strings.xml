@@ -88,4 +88,19 @@
     <string name="complete">Completa</string>
     <string name="completed">Completato</string>
     <string name="to_complete">Da completare</string>
+    <string name="situazioneText">Situazione</string>
+    <string name="storicoSituazioneText">Storico</string>
+    <string name="segna_pagato">Segna come pagato</string>
+    <string name="name_new_spesa_comune">Nome spesa...</string>
+    <string name="euro">€...</string>
+    <string name="responsabile">Responsabile pagamento:</string>
+    <string name="ripetizioneSpesaComune">Si ripete:</string>
+    <string name="mensile">Mensile</string>
+    <string name="settimanale">Settimanale</string>
+    <string name="name">name</string>
+    <string name="houseId">houseId</string>
+    <string name="amount">amount</string>
+    <string name="repeating">repeating</string>
+    <string name="payer">payer</string>
+    <string name="mai">Mai</string>
 </resources>

@@ -11,12 +11,20 @@
         app:popUpToInclusive="true" />
 
     <action android:id="@+id/action_to_calendario"
-        app:destination="@id/calendarioFragment"
-        app:popUpTo="@id/homeFragment"/>
+        app:destination="@id/calendarioFragment"/>
 
     <action android:id="@+id/action_to_turnipulizia"
         app:destination="@id/turniPuliziaFragment"
         app:popUpTo="@id/homeFragment"/>
+
+    <action android:id="@+id/action_to_spese_comuni"
+        app:destination="@id/provaFragment"/>
+    <action android:id="@+id/action_to_spese2"
+        app:destination="@id/tabsFragment"/>
+    <action android:id="@+id/action_to_prova"
+        app:destination="@id/provaFragment"/>
+    <action android:id="@+id/action_to_nuova_spesa_comune"
+        app:destination="@id/nuovaSpesaComune"/>
 
     <action android:id="@+id/action_to_turni2"
         app:destination="@id/turniProvaFragment"/>
@@ -51,7 +59,6 @@
         app:destination="@id/homeFragment"
         app:popUpTo="@id/homeFragment"
         app:launchSingleTop="true"/>
-
 
     <fragment
         android:id="@+id/loginFragment"
@@ -242,7 +249,7 @@
         tools:layout="@layout/fragment_new_contact" />
     <fragment
         android:id="@+id/tabsFragment"
-        android:name="it.unitn.disi.fumiprovv.roommates.fragments.TabsFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseFragment"
         android:label="fragment_tabs"
         tools:layout="@layout/fragment_tabs" />
     <fragment
@@ -280,5 +287,13 @@
         android:id="@+id/newTurnoProva"
         android:name="it.unitn.disi.fumiprovv.roommates.fragments.duties.NewTurnoPuliziaFragment"
         android:label="NewTurnoProva" />
-
+    <fragment
+        android:id="@+id/provaFragment"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.SpeseComuniFragment"
+        android:label="fragment_prova"
+        tools:layout="@layout/fragment_spese_comuni" />
+    <fragment
+        android:id="@+id/nuovaSpesaComune"
+        android:name="it.unitn.disi.fumiprovv.roommates.fragments.NuovaSpesaComune"
+        android:label="NuovaSpesaComune" />
 </navigation>

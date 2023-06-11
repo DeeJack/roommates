@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <!-- Customize the content of each item here -->
+    <!-- Example: TextView to display the item's text -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/border"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginVertical="10dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titoloGenericItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:text="Marco"
+                android:textColor="@color/white"/>
+            <TextView
+                android:id="@+id/descrizioneGenericItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Devi 5€ a Marco"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonGenericItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="paga"
+            android:visibility="invisible"
+            android:layout_gravity="center"/>
+
+
+    </LinearLayout>
+
+
+
+
+</FrameLayout>
