@@ -72,13 +72,6 @@
 
         </ListView>
 
-        <Button
-            android:id="@+id/buttonCreaSondaggio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_survey_btn"
-            android:layout_gravity="center" />
-
     </LinearLayout>
 
 </FrameLayout>
