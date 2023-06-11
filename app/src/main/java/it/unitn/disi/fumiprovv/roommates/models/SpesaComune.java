@@ -1,13 +1,18 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
 public class SpesaComune {
+    private String id;
     private String casa;
     private String nome;
-    private Long valore;
+    private Double valore;
     private String responsabile;
     private String ripetizione;
+    private Long lastWeek;
+    private Long lastMonth;
+    private Long lastYear;
 
-    public SpesaComune(String casa, String nome, Long valore, String responsabile, String ripetizione) {
+    public SpesaComune(String id, String casa, String nome, Double valore, String responsabile, String ripetizione) {
+        this.id = id;
         this.casa = casa;
         this.nome = nome;
         this.valore = valore;
@@ -31,11 +36,11 @@ public class SpesaComune {
         this.nome = nome;
     }
 
-    public Long getValore() {
+    public Double getValore() {
         return valore;
     }
 
-    public void setValore(Long valore) {
+    public void setValore(Double valore) {
         this.valore = valore;
     }
 
@@ -53,5 +58,37 @@ public class SpesaComune {
 
     public void setRipetizione(String ripetizione) {
         this.ripetizione = ripetizione;
+    }
+
+    public Long getLastWeek() {
+        return lastWeek;
+    }
+
+    public void setLastWeek(Long lastWeek) {
+        this.lastWeek = lastWeek;
+    }
+
+    public Long getLastMonth() {
+        return lastMonth;
+    }
+
+    public void setLastMonth(Long lastMonth) {
+        this.lastMonth = lastMonth;
+    }
+
+    public Long getLastYear() {
+        return lastYear;
+    }
+
+    public void setLastYear(Long lastYear) {
+        this.lastYear = lastYear;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

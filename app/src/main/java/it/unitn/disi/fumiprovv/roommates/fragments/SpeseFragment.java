@@ -1,10 +1,12 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,12 +76,14 @@ public class SpeseFragment extends Fragment {
         //SpeseSituazione speseSituazioneFragment = new SpeseSituazione();
         SpeseSituazioneFragment speseSituazioneFragment = new SpeseSituazioneFragment();
         SpeseComuniFragment prova = new SpeseComuniFragment();
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
+                        Log.d("first", "first tab");
                         getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), speseSituazioneFragment).commit();
                         break;
                     case 1:
@@ -101,6 +105,9 @@ public class SpeseFragment extends Fragment {
 
             }
         });
+
+        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), speseSituazioneFragment).commit();
+
         return view;
     }
 }

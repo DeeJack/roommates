@@ -10,14 +10,26 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.WriteBatch;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 public class SpeseComuniAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
@@ -31,6 +43,7 @@ public class SpeseComuniAdapter extends BaseAdapter {
         this.items = items;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
+
     }
 
     @Override
@@ -62,23 +75,65 @@ public class SpeseComuniAdapter extends BaseAdapter {
             holder.valore = convertView.findViewById(R.id.valoreSpesaComune);
             holder.buttonPaga = convertView.findViewById(R.id.pagaSpesaComune);
 
-            /*holder.itemCheckbox = convertView.findViewById(R.id.itemCheckbox);
-            holder.deleteItemButton = convertView.findViewById(R.id.deleteItemButton);*/
-
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.buttonPaga.setVisibility(View.INVISIBLE);
+
         SpesaComune item = items.get(position);
         holder.nome.setText(item.getNome());
         holder.responsabile.setText(item.getResponsabile());
+        holder.valore.setText(item.getValore().toString());
 
-        if(item.getResponsabile().equals(mAuth.getUid())) {
+        String ripetizione = item.getRipetizione();
+
+        boolean pagata = false;
+
+        if(ripetizione.equals(context.getResources().getString(R.string.mensile))) {
+            Long currentMonth = (long) Calendar.MONTH;
+            Long currentYear = (long) Calendar.YEAR;
+            Log.d("year", currentYear + "");
+            Long month = item.getLastMonth();
+            Long year = item.getLastYear();
+            if (currentMonth.equals(month) && currentYear.equals(year)) {
+                pagata = true;
+            }
+        } else if(ripetizione.equals("Settimanale")) {
+            Long currentWeek = (long) Calendar.WEEK_OF_YEAR;
+            Long currentYear = (long) Calendar.YEAR;
+            Long week = item.getLastWeek();
+            Long year = item.getLastYear();
+            if (currentWeek.equals(week) && currentYear.equals(year)) {
+                pagata = true;
+            }
+        }
+
+        if(pagata) {
+            holder.scadenza.setText("Spesa già pagata ");
+            if(ripetizione.equals(context.getResources().getString(R.string.mensile))) {
+                holder.scadenza.append("questo mese");
+            } else if(ripetizione.equals(context.getResources().getString(R.string.settimanale))){
+                holder.scadenza.append("questa settimana");
+            }
+        } else {
+            holder.buttonPaga.setVisibility(View.VISIBLE);
+            holder.scadenza.setText("Da pagare entro fine");
+            if(ripetizione.equals(context.getResources().getString(R.string.mensile))) {
+                holder.scadenza.append(" mese");
+            } else if(ripetizione.equals(context.getResources().getString(R.string.settimanale))){
+                holder.scadenza.append(" settimana");
+            }
+        }
+
+        if(item.getResponsabile().equals(mAuth.getUid()) && !pagata) {
             holder.buttonPaga.setVisibility(View.VISIBLE);
         }
 
         holder.buttonPaga.setOnClickListener(view -> onPagaButtonClick(item));
+
+        //aggiungi pulsante per eliminare spesa se sono il moderatore
 
         return convertView;
     }
@@ -94,14 +149,75 @@ public class SpeseComuniAdapter extends BaseAdapter {
     private void onPagaButtonClick(SpesaComune spesa) {
         // Create alert dialog to confirm pagamento
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("PagamentoUtente");
+        builder.setTitle("Pagamento");
         builder.setMessage("Confermi il pagamento?");
         builder.setPositiveButton("Ok", (dialog, which) -> {
-            //Setta la spesa come pagata
-            /*db.collection("listaspesa").document(spesa.getId()).delete();
-            items.remove(spesa);*/
             Log.d("Pago spesa", "pagata");
-            notifyDataSetChanged();
+            //aggiorna data ultimo pagamento nel db
+            db.collection("utenti")
+                    .whereEqualTo("houseId", spesa.getCasa())
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            ArrayList<DocumentReference> userRefs = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                DocumentReference userRef = document.getReference();
+                                userRefs.add(userRef);
+                            }
+
+                            WriteBatch batch = db.batch();
+                            String spesaId = spesa.getId();
+                            DocumentReference spesaRef = db.collection("speseComuni").document(spesaId);
+                            if(spesa.getRipetizione().equals(context.getResources().getString(R.string.mensile))) {
+                                Long mese = (long) Calendar.MONTH;
+                                Long anno = (long) Calendar.YEAR;
+                                spesa.setLastMonth(mese);
+                                spesa.setLastYear(anno);
+                                batch.update(spesaRef, "lastMonth", mese);
+                                batch.update(spesaRef, "lastYear", anno);
+                            } else if(spesa.getRipetizione().equals(context.getResources().getString(R.string.settimanale))) {
+                                Long settimana = (long) Calendar.WEEK_OF_YEAR;
+                                Long anno = (long) Calendar.YEAR;
+                                spesa.setLastWeek(settimana);
+                                spesa.setLastYear(anno);
+                                batch.update(spesaRef, "lastWeek", settimana);
+                                batch.update(spesaRef, "lastYear", anno);
+                            }
+
+                            //aggiungi a storico spese
+                            Map<String, Object> newSpesaStorico = new HashMap<>();
+                            newSpesaStorico.put("houseId", spesa.getCasa());
+                            newSpesaStorico.put("name", spesa.getNome());
+                            newSpesaStorico.put("amount", spesa.getValore());
+                            newSpesaStorico.put("payer", spesa.getResponsabile());
+                            Timestamp t = Timestamp.now();
+                            newSpesaStorico.put("date", t);
+                            newSpesaStorico.put("usersPaying", userRefs);
+                            batch.set(db.collection("listaspesaeffettuata").document(), newSpesaStorico);
+
+                            //aggiorna tutti i debiti
+                            /*String debitiId = boh;
+                            DocumentReference debitiRef = db.collection("debiti").document(debitiId);
+                            batch.update(debitiRef, bohData);*/
+
+                            // Commit the batch
+                            batch.commit()
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Batch operation successful
+                                        // Handle success case
+                                        notifyDataSetChanged();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Batch operation failed
+                                        // Handle failure case
+                                    });
+
+                        } else {
+                            // Handle any errors
+                        }
+                    });
+
+
         });
         builder.setNegativeButton("Cancella", (dialog, which) -> {
             // Do nothing
@@ -114,13 +230,14 @@ public class SpeseComuniAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    //funzione per eliminare spesa comune
+
     private static class ViewHolder {
         TextView nome;
         TextView scadenza;
         TextView responsabile;
         TextView valore;
         Button buttonPaga;
-        Button buttonNuovaSpesaComune;
     }
 }
 

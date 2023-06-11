@@ -3,7 +3,9 @@ package it.unitn.disi.fumiprovv.roommates.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.adapters.SpeseComuniAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
+import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
+import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,12 +83,28 @@ public class SpeseComuniFragment extends Fragment {
 
         ListView lista = view.findViewById(R.id.provaList);
 
-        db.collection("speseComuni").get().addOnCompleteListener( task -> {
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+
+        db.collection("speseComuni").whereEqualTo(getResources().getString(R.string.houseId), houseViewModel.getHouseId()).get().addOnCompleteListener( task -> {
             if (!task.isSuccessful()) {
                 return;
             }
             List<SpesaComune> spese = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                SpesaComune spesa = new SpesaComune((String) documentSnapshot.get("casa"), (String) documentSnapshot.get("nome"), (Long) documentSnapshot.get("valore"), (String) documentSnapshot.get("responsabile"), (String) documentSnapshot.get("ripetizione"));
+                SpesaComune spesa = new SpesaComune(
+                        (String) documentSnapshot.getId(),
+                        (String) documentSnapshot.get(getResources().getString(R.string.houseId)),
+                        (String) documentSnapshot.get(getResources().getString(R.string.name)),
+                        (Double) documentSnapshot.get(getResources().getString(R.string.amount)),
+                        (String) documentSnapshot.get(getResources().getString(R.string.payer)),
+                        (String) documentSnapshot.get(getResources().getString(R.string.repeating)));
+                if(documentSnapshot.getString(getResources().getString(R.string.repeating)).equals(getResources().getString(R.string.mensile))) {
+                    spesa.setLastMonth(documentSnapshot.getLong("lastMonth"));
+                    spesa.setLastYear(documentSnapshot.getLong("lastYear"));
+                } else if(documentSnapshot.getString(getResources().getString(R.string.repeating)).equals(getResources().getString(R.string.settimanale))) {
+                    spesa.setLastWeek(documentSnapshot.getLong("lastWeek"));
+                    spesa.setLastYear(documentSnapshot.getLong("lastYear"));
+                }
+                Log.d("spesa", spesa.toString());
                 return spesa;
             }).collect(Collectors.toList());
             adapter.setItems(spese);
@@ -97,12 +117,17 @@ public class SpeseComuniFragment extends Fragment {
 
         Button buttonNuovaSpesaComune = view.findViewById(R.id.buttonNuovaSpesaComune);
 
+        buttonNuovaSpesaComune.setOnClickListener(view1 -> {
+            NavigationUtils.navigateTo(R.id.action_to_nuova_spesa_comune, view);
+        });
 
 
-        if(true) {
+        if(true) { //se sono un moderatore
             buttonNuovaSpesaComune.setVisibility(View.VISIBLE);
         }
 
+
         return view;
     }
+
 }
