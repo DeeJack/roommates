@@ -8,4 +8,7 @@
         <item name="colorPrimary">@color/purple_500</item>
 
     </style>
+    <style name="PopupMenuStyle" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>
