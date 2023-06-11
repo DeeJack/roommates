@@ -88,6 +88,11 @@ public class NavigationUtils {
                 bundle.putString("id", data.getQueryParameter("id"));
                 result = true;
                 navController.navigate(R.id.action_to_note, bundle);
+            } else if (path.equals("/turni")) { // Note link
+                Bundle bundle = new Bundle();
+                bundle.putString("id", data.getQueryParameter("id"));
+                result = true;
+                navController.navigate(R.id.action_to_turnipulizia, bundle);
             }
         }
         return result;
