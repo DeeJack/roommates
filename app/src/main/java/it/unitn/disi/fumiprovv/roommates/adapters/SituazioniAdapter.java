@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,6 @@ public class SituazioniAdapter extends BaseAdapter {
         return i;
     }
 
-
     @SuppressLint("ResourceAsColor")
     public View getView(int position, View convertView, ViewGroup parent) {
         SituazioniAdapter.ViewHolder holder;
@@ -86,22 +86,32 @@ public class SituazioniAdapter extends BaseAdapter {
         holder.viewButton.removeAllViews();
 
         Debt item = debts.get(position);
-        holder.titolo.setText(item.getUserNameTo());
 
-        Double amount = item.getAmount();
-
-        if(amount == 0.0) {
-            holder.descrizione.setText("Sei in pari con " + item.getUserNameTo());
-        } else if(amount >= 0) {
-            holder.descrizione.setText("Devi " + item.getAmount() + "€ a " + item.getUserNameTo());
-        } else {
-            holder.descrizione.setText(item.getUserNameTo() + " ti deve " + Math.abs(amount) + "€");
-            Button b = new Button(convertView.getContext());
-            b.setText("Paga");
-            b.setBackgroundColor(R.color.purple_200);
-            b.setOnClickListener(view -> onSegnaPagatoButtonClick(item));
-            holder.viewButton.addView(b);
+        //se sono in idTo sono in debito
+        double amount = item.getAmount();
+        if(item.getIdTo().equals(mAuth.getUid())) { //debito
+            String user = item.getUserNameFrom();
+            holder.titolo.setText(user);
+            if(amount == 0.0) {
+                holder.descrizione.setText("Sei in pari con " + user);
+            } else {
+                holder.descrizione.setText("Devi " + amount + " a " + user);
+            }
+        } else {//credito
+            String user = item.getUserNameTo();
+            holder.titolo.setText(user);
+            if(amount == 0.0) {
+                holder.descrizione.setText("Sei in pari con " + user);
+            } else {
+                holder.descrizione.setText(user + " ti deve " + amount);
+                Button b = new Button(convertView.getContext());
+                b.setText("Paga");
+                b.setBackgroundColor(R.color.purple_200);
+                b.setOnClickListener(view -> onSegnaPagatoButtonClick(item));
+                holder.viewButton.addView(b);
+            }
         }
+
         return convertView;
     }
 
@@ -128,16 +138,10 @@ public class SituazioniAdapter extends BaseAdapter {
                         Toast.makeText(context, "Please enter a valid number", Toast.LENGTH_SHORT).show();
                     } else {
                         //update db
-                        Double nuovo1 = new Double(debt.getAmount() + number);
-                        Double nuovo2 = new Double(Math.abs(nuovo1));
-
-                        DocumentReference debt1Ref = db.collection("debiti").document(debt.getId());
-                        DocumentReference debt2Ref = db.collection("debiti").document(debt.getInverse());
-
+                        Double newAmount = new Double((debt.getAmount()) - number);
+                        DocumentReference debtRef = db.collection("debiti").document(debt.getId());
                         WriteBatch batch = db.batch();
-                        batch.update(debt1Ref, "amount", nuovo1);
-                        batch.update(debt2Ref, "amount", nuovo2);
-
+                        batch.update(debtRef, "amount", newAmount);
                         CollectionReference collectionRef = db.collection("storicoPagamentiUtenti");
                         DocumentReference newDocumentRef = collectionRef.document();
                         Map<String, Object> newData = new HashMap<>();
@@ -151,7 +155,7 @@ public class SituazioniAdapter extends BaseAdapter {
                         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                debt.setAmount(nuovo1);
+                                debt.setAmount(newAmount);
                                 notifyDataSetChanged();
                             }
                         });
@@ -170,6 +174,7 @@ public class SituazioniAdapter extends BaseAdapter {
 
     public void setDebts(List<Debt> debiti) {
         this.debts = debiti;
+        notifyDataSetChanged();
     }
 
     private static class ViewHolder {

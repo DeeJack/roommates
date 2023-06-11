@@ -1,5 +1,7 @@
 package it.unitn.disi.fumiprovv.roommates.models;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,15 +14,13 @@ public class Debt {
     private String userNameFrom;
     private String userNameTo;
     private Double amount;
-    private String inverse;
 
-    public Debt(String id, String house, String idFrom, String idTo, Double amount, String inverse) {
+    public Debt(String id, String house, String idFrom, String idTo, Double amount) {
         this.id = id;
         this.house = house;
         this.idFrom = idFrom;
         this.idTo = idTo;
         this.amount = amount;
-        this.inverse = inverse;
     }
 
     public String getId() {
@@ -55,6 +55,14 @@ public class Debt {
         this.idTo = idTo;
     }
 
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
     public String getUserNameFrom() {
         return userNameFrom;
     }
@@ -71,22 +79,6 @@ public class Debt {
         this.userNameTo = userNameTo;
     }
 
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public String getInverse() {
-        return inverse;
-    }
-
-    public void setInverse(String inverse) {
-        this.inverse = inverse;
-    }
-
     @Override
     public String toString() {
         return "Debt{" +
@@ -94,10 +86,7 @@ public class Debt {
                 ", house='" + house + '\'' +
                 ", idFrom='" + idFrom + '\'' +
                 ", idTo='" + idTo + '\'' +
-                ", userNameFrom='" + userNameFrom + '\'' +
-                ", userNameTo='" + userNameTo + '\'' +
                 ", amount=" + amount +
-                ", inverse='" + inverse + '\'' +
                 '}';
     }
 }

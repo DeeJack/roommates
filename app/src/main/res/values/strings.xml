@@ -103,4 +103,6 @@
     <string name="repeating">repeating</string>
     <string name="payer">payer</string>
     <string name="mai">Mai</string>
+    <string name="idFrom">idFrom</string>
+    <string name="idTo">idTo</string>
 </resources>
