@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -70,61 +71,47 @@ public class NoteFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_note, container, false);
 
         ListView notesListView = view.findViewById(R.id.notesListView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        Button addNoteButton = view.findViewById(R.id.addNoteButton);
-        addNoteButton.setOnClickListener(v ->
-                NavigationUtils.navigateTo(R.id.action_noteFragment_to_newNoteFragment, view));
+        ProgressBar progressBar = view.findViewById(R.id.notesProgressbar);
+        progressBar.setVisibility(View.VISIBLE);
 
-        db.collection("note").whereEqualTo("houseId", db.collection("case")
-                        .document(houseViewModel.getHouseId()))
-                .orderBy("creationDate", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(task -> {
-                    NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
-                    if (!task.isSuccessful()) {
+        Button addNoteButton = view.findViewById(R.id.addNoteButton);
+        addNoteButton.setOnClickListener(v -> NavigationUtils.navigateTo(R.id.action_noteFragment_to_newNoteFragment, view));
+
+        db.collection("note").whereEqualTo("houseId", db.collection("case").document(houseViewModel.getHouseId())).orderBy("creationDate", Query.Direction.DESCENDING).get().addOnCompleteListener(task -> {
+            NoteListAdapter adapter = new NoteListAdapter(getContext(), new ArrayList<>());
+            if (!task.isSuccessful()) {
+                return;
+            }
+            //List<Map<String, Object>> notes = task.getResult().getDocuments().stream()
+            //        .map(DocumentSnapshot::getData).collect(Collectors.toList());
+            List<Note> notes = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+                //Note note = documentSnapshot.getString("userId");
+                Note note = new Note(documentSnapshot.getId(), documentSnapshot.getDocumentReference("userId").getId(), "", documentSnapshot.getTimestamp("creationDate"), (String) documentSnapshot.get("text"));
+                documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
+                    if (!task1.isSuccessful()) {
                         return;
                     }
-                    //List<Map<String, Object>> notes = task.getResult().getDocuments().stream()
-                    //        .map(DocumentSnapshot::getData).collect(Collectors.toList());
-                    List<Note> notes = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                        //Note note = documentSnapshot.getString("userId");
-                        Note note = new Note(
-                                documentSnapshot.getId(),
-                                documentSnapshot.getDocumentReference("userId").getId(),
-                                "",
-                                documentSnapshot.getTimestamp("creationDate"),
-                                (String) documentSnapshot.get("text")
-                        );
-                        documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
-                            if (!task1.isSuccessful()) {
-                                return;
-                            }
-                            note.setUserName((String) task1.getResult().get("name"));
-                            adapter.notifyDataSetChanged();
-                        });
-                        return note;
-                    }).collect(Collectors.toList());
-                    //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
-                    adapter.setNotes(notes);
-
-                    notesListView.setAdapter(adapter);
-                    if (getContext() == null)
-                        return;
-                    int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
-                    notesListView.setDividerHeight(dividerHeight);
-
-                    // Imposta il listener di click sugli elementi della lista
-                    //notesListView.setOnItemClickListener((parent, view1, position, id) -> {
-                    //    Note selectedItem = notes.get(position);
-                    //});
+                    note.setUserName((String) task1.getResult().get("name"));
+                    adapter.notifyDataSetChanged();
                 });
+                progressBar.setVisibility(View.GONE);
+                return note;
+            }).collect(Collectors.toList());
+            //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
+            adapter.setNotes(notes);
+
+            notesListView.setAdapter(adapter);
+            if (getContext() == null) return;
+            int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
+            notesListView.setDividerHeight(dividerHeight);
+        });
 
 
         return view;
