@@ -26,12 +26,9 @@
         <item name="android:textColorPrimary">@color/white</item>
 
         <!-- Splash screen options -->
-        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">@color/background_dark</item>
-        <item name="android:windowSplashScreenAnimatedIcon" tools:ignore="NewApi">@drawable/home</item>
-        <item name="android:windowSplashScreenBehavior" tools:ignore="NewApi">icon_preferred</item>
-        <item name="android:windowSplashScreenAnimationDuration" tools:ignore="NewApi">1000</item>
-
-
+        <item name="windowSplashScreenBackground">@color/background_dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/home</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
     </style>
 
     <style name="Theme.Roommates.Asd">

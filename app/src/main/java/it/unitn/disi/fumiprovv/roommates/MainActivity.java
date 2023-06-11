@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -32,12 +31,12 @@ import it.unitn.disi.fumiprovv.roommates.viewmodels.JoinHouseViewModel;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.UserViewModel;
 
 public class MainActivity extends AppCompatActivity {
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private TextView nameView;
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,27 +52,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         AtomicBoolean ready = new AtomicBoolean(false);
         if (mAuth.getCurrentUser() != null)
-            db.collection("utenti").document(mAuth.getCurrentUser().getUid())
-                    .get()
-                    .addOnCompleteListener(task -> ready.set(true));
-
-        // Wait for the data to be ready before drawing the content.
-        final View content = findViewById(android.R.id.content);
-        content.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        // Check whether the initial data is ready.
-                        if (ready.get()) {
-                            // The content is ready. Start drawing.
-                            content.getViewTreeObserver().removeOnPreDrawListener(this);
-                            return true;
-                        } else {
-                            // The content isn't ready. Suspend.
-                            return false;
-                        }
-                    }
-                });
+            db.collection("utenti").document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(task -> ready.set(true));
 
         setContentView(R.layout.activity_main);
 
