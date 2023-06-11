@@ -22,6 +22,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +51,7 @@ public class BuyItemsFragment extends Fragment {
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private View view;
     private CheckboxListAdapter adapter;
+    private ArrayList<ShoppingItem> items;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -129,8 +131,8 @@ public class BuyItemsFragment extends Fragment {
                     //});
                     progressBar.setVisibility(View.GONE);
                 });
-        ArrayList<ShoppingItem> items = (ArrayList<ShoppingItem>) bundle.getSerializable("shoppingItems");
-        String[] itemsString = items.stream().map(ShoppingItem::getName).toArray(String[]::new);
+        this.items = (ArrayList<ShoppingItem>) bundle.getSerializable("shoppingItems");
+        String[] itemsString = this.items.stream().map(ShoppingItem::getName).toArray(String[]::new);
         ListView shoppingItemsListView = view.findViewById(R.id.listViewProducts);
         ArrayAdapter<String> shoppingItemsAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, itemsString);
         shoppingItemsListView.setAdapter(shoppingItemsAdapter);
@@ -176,6 +178,7 @@ public class BuyItemsFragment extends Fragment {
         expense.put("payer", mAuth.getCurrentUser().getUid());
         expense.put("date", Timestamp.now());
         expense.put("houseId", houseViewModel.getHouseId());
+        expense.put("shoppingItems", items.stream().map(ShoppingItem::getName).collect(Collectors.toList()));
 
         ProgressBar progressBar = view.findViewById(R.id.buyItemsProgressbar);
         progressBar.setVisibility(View.VISIBLE);
@@ -185,12 +188,19 @@ public class BuyItemsFragment extends Fragment {
                 usersPayingReferences.add(db.collection("utenti").document(user.getId())));
         expense.put("usersPaying", usersPayingReferences);
 
-        db.collection("listaspesaeffettuata").add(expense)
-                .addOnCompleteListener(task -> {
-                    progressBar.setVisibility(View.GONE);
-                    if (!task.isSuccessful())
-                        return;
-                    requireActivity().onBackPressed();
-                });
+        WriteBatch batch = db.batch();
+
+        batch.set(db.collection("listaspesaeffettuata").document(), expense);
+        // Delete all shopping items
+        for (ShoppingItem item : items) {
+            batch.delete(db.collection("listaspesa").document(item.getId()));
+        }
+
+        batch.commit().addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.GONE);
+            if (!task.isSuccessful())
+                return;
+            requireActivity().onBackPressed();
+        });
     }
 }
