@@ -110,4 +110,7 @@
     <string name="your_duties">I tuoi turni questi settimana</string>
     <string name="no_events">Nessun evento oggi</string>
     <string name="events_today">Eventi di oggi</string>
+    <string name="no_notes">Nessuna nota presente, aggiungine una!</string>
+    <string name="no_contacts">Nessun contatto presente, aggiungine uno!</string>
+    <string name="no_surveys">Nessun sondaggio presente, aggiungine uno!</string>
 </resources>
