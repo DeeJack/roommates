@@ -53,7 +53,11 @@ public class NavigationUtils {
                         houseViewModel.setHouseId(casaId);
                         sharedPref.edit().putString("houseId", casaId).apply();
 
-                        navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle);
+                        try {
+                            navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle);
+                        } catch (IllegalArgumentException e) {
+                            Log.d(TAG, "conditionalLogin: " + e.getMessage());
+                        }
                         if (intent != null) {
                             handleIntent(intent, navController);
                         }
