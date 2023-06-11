@@ -11,23 +11,28 @@
         app:popUpToInclusive="true" />
 
     <action android:id="@+id/action_to_calendario"
-        app:destination="@id/calendarioFragment"/>
+        app:destination="@id/calendarioFragment"
+        app:popUpTo="@id/homeFragment"/>
 
     <action android:id="@+id/action_to_turnipulizia"
         app:destination="@id/turniPuliziaFragment"
         app:popUpTo="@id/homeFragment"/>
 
     <action android:id="@+id/action_to_spese_comuni"
-        app:destination="@id/provaFragment"/>
+        app:destination="@id/provaFragment"
+        app:popUpTo="@id/homeFragment"/>
     <action android:id="@+id/action_to_spese2"
-        app:destination="@id/tabsFragment"/>
+        app:destination="@id/tabsFragment"
+        app:popUpTo="@id/homeFragment"/>
     <action android:id="@+id/action_to_prova"
-        app:destination="@id/provaFragment"/>
+        app:destination="@id/provaFragment"
+        app:popUpTo="@id/homeFragment"/>
     <action android:id="@+id/action_to_nuova_spesa_comune"
         app:destination="@id/nuovaSpesaComune"/>
 
     <action android:id="@+id/action_to_turni2"
-        app:destination="@id/turniProvaFragment"/>
+        app:destination="@id/turniProvaFragment"
+        app:popUpTo="@id/homeFragment"/>
 
     <action
         android:id="@+id/action_to_spesa"
