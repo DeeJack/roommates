@@ -105,4 +105,9 @@
     <string name="repeating">repeating</string>
     <string name="payer">payer</string>
     <string name="mai">Mai</string>
+    <string name="empty_fields">Email o password vuoti!</string>
+    <string name="no_duties">Nessun turno</string>
+    <string name="your_duties">I tuoi turni questi settimana</string>
+    <string name="no_events">Nessun evento oggi</string>
+    <string name="events_today">Eventi di oggi</string>
 </resources>

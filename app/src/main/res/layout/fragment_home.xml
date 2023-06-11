@@ -12,16 +12,73 @@
 
         <ListView
             android:id="@+id/usersListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:padding="10dp"/>
+            android:layout_width="414dp"
+            android:layout_height="336dp"
+            android:padding="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <View
             android:id="@+id/linea"
-            app:layout_constraintBottom_toBottomOf="@id/usersListView"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/white"/>
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/usersListView" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linea">
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/events_today" />
+
+            <ListView
+                android:id="@+id/eventsListView"
+                android:layout_width="match_parent"
+                android:layout_height="138dp" />
+
+            <TextView
+                android:id="@+id/list_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/no_events" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/your_duties" />
+
+            <ListView
+                android:id="@+id/dutiesListView"
+                android:layout_width="match_parent"
+                android:layout_height="138dp" />
+
+            <TextView
+                android:id="@+id/list_empty2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/no_duties" />
+        </LinearLayout>
 
         <!--<TextView
             android:id="@+id/user_name"

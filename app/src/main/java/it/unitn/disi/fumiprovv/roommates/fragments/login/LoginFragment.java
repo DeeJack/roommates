@@ -54,8 +54,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setDrawerLocked(true);
@@ -86,22 +85,26 @@ public class LoginFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         String password = ((TextView) view.findViewById(R.id.registerPasswordField)).getText().toString();
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(task -> {
-                    Log.d(TAG, "signInWithEmail:success");
-                    progressBar.setVisibility(View.GONE);
-                    NavController navController = Navigation.findNavController(view);
 
-                    SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(getContext(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
 
-                    NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity(), null);
-                })
-                .addOnFailureListener(task -> {
-                    Toast.makeText(getContext(), "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
-                    Log.w(TAG, "signInWithEmail:failure" + task.getMessage(), task.getCause());
-                    progressBar.setVisibility(View.GONE);
-                });
+        mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(task -> {
+            Log.d(TAG, "signInWithEmail:success");
+            progressBar.setVisibility(View.GONE);
+            NavController navController = Navigation.findNavController(view);
+
+            SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
+
+            NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity(), null);
+        }).addOnFailureListener(task -> {
+            Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "signInWithEmail:failure" + task.getMessage(), task.getCause());
+            progressBar.setVisibility(View.GONE);
+        });
     }
 
     public void onRegistrationButtonClick(View view) {
