@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -78,6 +79,8 @@ public class ContactsFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         ListView contactListView = view.findViewById(R.id.contactsListView);
+        TextView noContactsTextView = view.findViewById(R.id.noContactsTextView);
+        contactListView.setEmptyView(noContactsTextView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
         Button addContactButton = view.findViewById(R.id.addContactButton);
@@ -91,17 +94,7 @@ public class ContactsFragment extends Fragment {
                         progressBar.setVisibility(View.GONE);
                         return;
                     }
-                    //List<Map<String, Object>> notes = task.getResult().getDocuments().stream()
-                    //        .map(DocumentSnapshot::getData).collect(Collectors.toList());
                     List<Contact> contacts = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                        //Note note = documentSnapshot.getString("userId");
-                        //                        documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
-//                            if (!task1.isSuccessful()) {
-//                                return;
-//                            }
-//                            contact.setUserName((String) task1.getResult().get("name"));
-//                            adapter.notifyDataSetChanged();
-//                        });
                         return new Contact(
                                 documentSnapshot.getId(),
                                 documentSnapshot.getString("name"),
@@ -115,10 +108,6 @@ public class ContactsFragment extends Fragment {
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
                     contactListView.setDividerHeight(dividerHeight);
 
-                    // Imposta il listener di click sugli elementi della lista
-                    //contactListView.setOnItemClickListener((parent, view1, position, id) -> {
-                    //    Contact selectedItem = contacts.get(position);
-                    //});
                     progressBar.setVisibility(View.GONE);
                 });
 

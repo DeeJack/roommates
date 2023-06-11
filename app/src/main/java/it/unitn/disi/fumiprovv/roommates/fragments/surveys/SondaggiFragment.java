@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -83,6 +84,8 @@ public class SondaggiFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_sondaggi, container, false);
 
         ListView sondaggiListView = view.findViewById(R.id.sondaggiListView);
+        TextView noSurveysTextView = view.findViewById(R.id.noSurveysTextView);
+        sondaggiListView.setEmptyView(noSurveysTextView);
         ProgressBar surveyProgressbar = view.findViewById(R.id.surveyProgressbar);
 
         Button newSurveyButton = view.findViewById(R.id.button_new_sondaggio);
