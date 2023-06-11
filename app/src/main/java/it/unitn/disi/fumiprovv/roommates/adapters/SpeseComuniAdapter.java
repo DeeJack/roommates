@@ -14,8 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -29,6 +31,7 @@ import java.util.Map;
 
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
+import it.unitn.disi.fumiprovv.roommates.models.User;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 public class SpeseComuniAdapter extends BaseAdapter {
@@ -200,17 +203,54 @@ public class SpeseComuniAdapter extends BaseAdapter {
                             DocumentReference debitiRef = db.collection("debiti").document(debitiId);
                             batch.update(debitiRef, bohData);*/
 
-                            // Commit the batch
-                            batch.commit()
-                                    .addOnSuccessListener(aVoid -> {
-                                        // Batch operation successful
-                                        // Handle success case
-                                        notifyDataSetChanged();
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        // Batch operation failed
-                                        // Handle failure case
-                                    });
+                            String casa = spesa.getCasa();
+
+                            Double amountToAdd = spesa.getValore();
+
+                            CollectionReference debitiCollectionRef = db.collection("debiti");
+                            String currentUser = mAuth.getUid();
+
+                            Query query = debitiCollectionRef.whereEqualTo("houseId", casa);
+
+                            query.get().addOnSuccessListener(querySnapshot -> {
+                                WriteBatch batch2 = db.batch();
+                                for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                                    double currentAmount = documentSnapshot.getDouble("amount");
+                                    String userFrom = documentSnapshot.getString("idFrom");
+                                    String userTo = documentSnapshot.getString("idTo");
+                                    Double newAmount = new Double(0.0);
+                                    if(userFrom.equals(currentUser)) {
+                                        newAmount = currentAmount - amountToAdd;
+                                    } else if(userTo.equals(currentUser)) {
+                                        newAmount = currentAmount + amountToAdd;
+                                    }
+
+                                    DocumentReference debtRef = debitiCollectionRef.document(documentSnapshot.getId());
+                                    batch2.update(debtRef, "amount", newAmount);
+                                }
+                                batch2.commit().addOnCompleteListener(task2 -> {
+                                    if (task2.isSuccessful()) {
+                                        // Update successful
+                                        // Commit the batch
+                                        batch.commit()
+                                                .addOnSuccessListener(aVoid -> {
+                                                    // Batch operation successful
+                                                    // Handle success case
+                                                    notifyDataSetChanged();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    // Batch operation failed
+                                                    // Handle failure case
+                                                });
+                                    } else {
+                                        // Handle update failure
+                                    }
+                                });
+                            }).addOnFailureListener(e -> {
+                                // Handle query failure
+                            });
+
+
 
                         } else {
                             // Handle any errors

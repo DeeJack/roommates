@@ -18,17 +18,25 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.R;
@@ -196,9 +204,63 @@ public class BuyItemsFragment extends Fragment {
             batch.delete(db.collection("listaspesa").document(item.getId()));
         }
 
-        batch.commit().addOnCompleteListener(task -> {
+        //hehehe qua dobbiamo settare i debiti
+        //ho voglia di marmellata
+        //vado a mangiare la marmellata
+
+        Double amountPerUser = amount/usersPaying.size();
+
+        List<DocumentReference> documentReferences = new ArrayList<>();
+
+        for(User u : usersPaying) {
+            if(!u.getId().equals(mAuth.getCurrentUser())) {
+                Query query1 = db.collection("debiti")
+                        .whereEqualTo("idFrom", u.getId());
+                Query query2 = db.collection("debiti")
+                        .whereEqualTo("idTo", u.getId());
+
+                query1.get().addOnSuccessListener(querySnapshot -> {
+                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                        double currentAmount = documentSnapshot.getDouble("amount");
+                        double newAmount = currentAmount + amountPerUser;
+
+                        DocumentReference debtRef = db.collection("debiti").document(documentSnapshot.getId());
+                        debtRef.update("amount", newAmount);
+
+                        documentReferences.add(debtRef);
+                    }
+                }).addOnFailureListener(e -> {
+                    // Handle query failure
+                });
+
+                query2.get().addOnSuccessListener(querySnapshot -> {
+                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                        double currentAmount = documentSnapshot.getDouble("amount");
+                        double newAmount = currentAmount - amountPerUser;
+
+                        DocumentReference debtRef = db.collection("debiti").document(documentSnapshot.getId());
+                        debtRef.update("amount", newAmount);
+
+                        documentReferences.add(debtRef);
+                    }
+                }).addOnFailureListener(e -> {
+                    // Handle query failure
+                });
+            }
+        }
+
+        /*try {
+            Tasks.await(Tasks.whenAll((Task<?>) documentReferences));
+
+            // All updates completed successfully
+
+        } catch (Exception e) {
+            // Handle errors in updates
+        }*/
+
+        batch.commit().addOnCompleteListener(commitTask -> {
             progressBar.setVisibility(View.GONE);
-            if (!task.isSuccessful())
+            if (!commitTask.isSuccessful())
                 return;
             requireActivity().onBackPressed();
         });

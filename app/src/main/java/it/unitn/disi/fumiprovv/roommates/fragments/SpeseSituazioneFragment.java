@@ -106,58 +106,6 @@ public class SpeseSituazioneFragment extends Fragment {
                         Filter.equalTo(getString(R.string.idTo), currentUser)
                 ));
 
-        /*query.get().addOnCompleteListener(task -> {
-            SituazioniAdapter debtAdapter = new SituazioniAdapter(getContext(), new ArrayList<>());
-            if (!task.isSuccessful()) {
-                progressBar.setVisibility(View.GONE);
-                return;
-            }
-            List<Debt> debts = new ArrayList<>();
-            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                Log.d("boh", documentSnapshot.toString());
-                String idFrom = documentSnapshot.getString(getString(R.string.idFrom));
-                String idTo = documentSnapshot.getString(getString(R.string.idTo));
-                String houseId = documentSnapshot.getString(getString(R.string.houseId));
-
-                // Fetch both user documents
-                Task<DocumentSnapshot> idFromTask = db.collection("utenti").document(idFrom).get();
-                Task<DocumentSnapshot> idToTask = db.collection("utenti").document(idTo).get();
-
-                // Handle both user document fetch tasks
-                Tasks.whenAllComplete(idFromTask, idToTask).addOnCompleteListener(userTasks -> {
-                    if (userTasks.isSuccessful()) {
-                        String userNameFrom = idFromTask.getResult().getString("name");
-                        String userNameTo = idToTask.getResult().getString("name");
-
-                        if (userNameFrom != null && userNameTo != null) {
-                            // Create the Debt object and include the user names
-                            Debt debt = new Debt(
-                                    documentSnapshot.getId(),
-                                    houseId,
-                                    idFrom,
-                                    idTo,
-                                    documentSnapshot.getDouble(getString(R.string.amount)),
-                                    userNameFrom,
-                                    userNameTo
-                            );
-                            Log.d("debito", debt.toString());
-                            debts.add(debt);
-
-                        }
-                    } else {
-                        // Handle any errors fetching the user documents
-                    }
-                });
-            }
-            debtAdapter.setDebts(debts);
-            listSituazioni.setAdapter(debtAdapter);
-            debtAdapter.notifyDataSetChanged();
-            completedTasks.set(completedTasks.get() + 1);
-            if (completedTasks.get() == 4) {
-                progressBar.setVisibility(View.GONE);
-            }
-        });*/
-
         query.get().addOnCompleteListener(task -> {
             SituazioniAdapter adapterSituazioni = new SituazioniAdapter(getContext(), new ArrayList<>());
             if (!task.isSuccessful()) {
@@ -218,70 +166,6 @@ public class SpeseSituazioneFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
-
-        /*db.collection("debiti").whereEqualTo("house", houseViewModel.getHouseId())
-                .whereEqualTo("idFrom", currentUser)
-                .get()
-                .addOnCompleteListener(task -> {
-                    SituazioniAdapter adapterSituazioni = new SituazioniAdapter(getContext(), new ArrayList<>());
-                    if (!task.isSuccessful()) {
-                        progressBar.setVisibility(View.GONE);
-                        return;
-                    }
-                    List<Debt> debiti = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                        Debt debito = new Debt(
-                                documentSnapshot.getId(),
-                                documentSnapshot.getString("house"),
-                                documentSnapshot.getString("idFrom"),
-                                documentSnapshot.getString("idTo"),
-                                documentSnapshot.getDouble("amount"),
-                                documentSnapshot.getString("inverse")
-                        );
-                        Log.d("debito", debito.toString());
-                        String idFrom = documentSnapshot.getString("idFrom");
-                        String idTo = documentSnapshot.getString("idTo");
-
-                        db.collection("utenti").document(idFrom).get().addOnCompleteListener(task1 -> {
-                                    if (!task1.isSuccessful()) {
-                                        return;
-                                    }
-                                    String nome = task1.getResult().getString("name");
-                                    debito.setUserNameFrom(nome);
-                                    adapterSituazioni.notifyDataSetChanged();
-                            completedTasks.set(completedTasks.get()+1);
-                            if(completedTasks.get() == 6) {
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
-                        db.collection("utenti").document(idTo).get().addOnCompleteListener(task1 -> {
-                            if (!task1.isSuccessful()) {
-                                return;
-                            }
-                            String nome = task1.getResult().getString("name");
-                            debito.setUserNameTo(nome);
-                            adapterSituazioni.notifyDataSetChanged();
-                            completedTasks.set(completedTasks.get()+1);
-                            if(completedTasks.get() == 6) {
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
-                        return debito;
-                    }).collect(Collectors.toList());
-                    Log.d("boh", debiti.toString());
-                    adapterSituazioni.setDebts(debiti);
-                    //adapterSituazioni.notifyDataSetChanged();
-
-                    listSituazioni.setAdapter(adapterSituazioni);
-                    if (getContext() == null)
-                        return;
-                    int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
-                    listSituazioni.setDividerHeight(dividerHeight);
-
-                    completedTasks.set(completedTasks.get()+1);
-                    if(completedTasks.get() == 6) {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });*/
 
         db.collection("storicoPagamentiUtenti").whereEqualTo("house", houseViewModel.getHouseId())
                 .get()
