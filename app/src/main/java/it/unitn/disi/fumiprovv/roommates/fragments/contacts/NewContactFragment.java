@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
@@ -91,8 +92,12 @@ public class NewContactFragment extends Fragment {
     }
 
     private void addContactToDb() {
-        String text = ((EditText) getView().findViewById(R.id.contactNameField)).getText().toString();
-        String number = ((EditText) getView().findViewById(R.id.contactNumField)).getText().toString();
+        String text = ((EditText) getView().findViewById(R.id.contactNameField)).getText().toString().trim();
+        String number = ((EditText) getView().findViewById(R.id.contactNumField)).getText().toString().trim();
+        if (text.isEmpty() || number.isEmpty()) {
+            Toast.makeText(getContext(), R.string.contact_notext, Toast.LENGTH_SHORT).show();
+            return;
+        }
         String userId = mAuth.getUid();
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         String houseId = houseViewModel.getHouseId();

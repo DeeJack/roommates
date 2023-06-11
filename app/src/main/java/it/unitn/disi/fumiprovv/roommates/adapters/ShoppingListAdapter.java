@@ -87,7 +87,7 @@ public class ShoppingListAdapter extends BaseAdapter {
 
     private void onDeleteButtonClick(ShoppingItem shoppingItem) {
         // Create alert dialog to confirm deletion
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Theme_Roommates_AlertDialg);
         builder.setTitle(R.string.delete_note_title);
         builder.setMessage(R.string.delete_shopitem_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {
