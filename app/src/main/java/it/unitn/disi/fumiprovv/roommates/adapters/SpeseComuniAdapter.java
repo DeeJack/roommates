@@ -16,6 +16,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -134,8 +135,12 @@ public class SpeseComuniAdapter extends BaseAdapter {
             holder.buttonPaga.setVisibility(View.VISIBLE);
         }
 
-        holder.buttonPaga.setOnClickListener(view -> onPagaButtonClick(item));
-
+        if (item.getResponsabile().equals(mAuth.getUid()) && !pagata) {
+            holder.buttonPaga.setVisibility(View.VISIBLE);
+            holder.buttonPaga.setOnClickListener(view -> onPagaButtonClick(item));
+        } else {
+            holder.buttonPaga.setVisibility(View.GONE);
+        }
         //aggiungi pulsante per eliminare spesa se sono il moderatore
 
         return convertView;
@@ -210,7 +215,10 @@ public class SpeseComuniAdapter extends BaseAdapter {
                             CollectionReference debitiCollectionRef = db.collection("debiti");
                             String currentUser = mAuth.getUid();
 
-                            Query query = debitiCollectionRef.whereEqualTo("houseId", casa);
+                            Query query = debitiCollectionRef
+                                    .whereEqualTo("houseId", casa)
+                                    .where(Filter.or(Filter.equalTo("idFrom", spesa.getResponsabile()),
+                                            Filter.equalTo("idTo", spesa.getResponsabile())));
 
                             query.get().addOnSuccessListener(querySnapshot -> {
                                 WriteBatch batch2 = db.batch();

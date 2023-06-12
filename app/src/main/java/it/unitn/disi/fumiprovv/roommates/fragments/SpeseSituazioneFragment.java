@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -112,7 +113,11 @@ public class SpeseSituazioneFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
                 return;
             }
-            List<Debt> debiti = task.getResult().getDocuments().stream().map(documentSnapshot -> {
+            List<Debt> debiti = task.getResult().getDocuments().stream()
+                    .filter(documentSnapshot ->
+                            !(Objects.equals(documentSnapshot.getString("idFrom"), currentUser) &&
+                                    Objects.equals(documentSnapshot.getString("idTo"), currentUser)))
+                    .map(documentSnapshot -> {
                 Debt debito = new Debt(
                         documentSnapshot.getId(),
                         documentSnapshot.getString("houseId"),
@@ -126,10 +131,12 @@ public class SpeseSituazioneFragment extends Fragment {
 
                 db.collection("utenti").document(idFrom).get().addOnCompleteListener(task1 -> {
                     if (!task1.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
                         return;
                     }
                     String nome = task1.getResult().getString("name");
                     debito.setUserNameFrom(nome);
+                    adapterSituazioni.notifyDataSetChanged();
                     completedTasks.set(completedTasks.get()+1);
                     if(completedTasks.get() == 6) {
                         adapterSituazioni.notifyDataSetChanged();
@@ -138,10 +145,12 @@ public class SpeseSituazioneFragment extends Fragment {
                 });
                 db.collection("utenti").document(idTo).get().addOnCompleteListener(task1 -> {
                     if (!task1.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
                         return;
                     }
                     String nome = task1.getResult().getString("name");
                     debito.setUserNameTo(nome);
+                    adapterSituazioni.notifyDataSetChanged();
                     //adapterSituazioni.notifyDataSetChanged();
                     completedTasks.set(completedTasks.get()+1);
                     if(completedTasks.get() == 6) {
@@ -154,6 +163,7 @@ public class SpeseSituazioneFragment extends Fragment {
             Log.d("boh", debiti.toString());
             adapterSituazioni.setDebts(debiti);
             adapterSituazioni.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
 
             listSituazioni.setAdapter(adapterSituazioni);
             if (getContext() == null)
@@ -201,6 +211,7 @@ public class SpeseSituazioneFragment extends Fragment {
                         });
                         db.collection("utenti").document(idTo).get().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful()) {
+                                progressBar.setVisibility(View.GONE);
                                 return;
                             }
                             String nome = task1.getResult().getString("name");

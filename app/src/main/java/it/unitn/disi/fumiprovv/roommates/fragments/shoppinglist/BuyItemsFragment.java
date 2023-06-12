@@ -213,10 +213,12 @@ public class BuyItemsFragment extends Fragment {
         List<DocumentReference> documentReferences = new ArrayList<>();
 
         for(User u : usersPaying) {
-            if(!u.getId().equals(mAuth.getCurrentUser())) {
+            if(!u.getId().equals(mAuth.getCurrentUser().getUid())) {
                 Query query1 = db.collection("debiti")
-                        .whereEqualTo("idFrom", u.getId());
+                        .whereEqualTo("idFrom", u.getId())
+                        .whereEqualTo("idTo", mAuth.getCurrentUser().getUid());
                 Query query2 = db.collection("debiti")
+                        .whereEqualTo("idFrom", mAuth.getCurrentUser().getUid())
                         .whereEqualTo("idTo", u.getId());
 
                 query1.get().addOnSuccessListener(querySnapshot -> {
