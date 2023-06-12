@@ -16,9 +16,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
@@ -111,6 +116,31 @@ public class HouseCreationFragment extends Fragment {
         WriteBatch batch = db.batch();
         batch.update(db.collection("case").document(houseId), "roommates", FieldValue.arrayUnion(new Roommate(userId, Timestamp.now(), false)));
         batch.update(db.collection("utenti").document(userId), "casa", houseId);
+
+        db.collection("case").document(houseId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
+                    if (roommates != null) {
+                        for (Map<String, Object> roommate : roommates) {
+                            String user = (String) roommate.get("userId");
+                            // Use the userId as needed
+                            Map<String, Object> newDebt = new HashMap<>();
+                            newDebt.put("houseId", houseId);
+                            newDebt.put("idFrom", userId);
+                            newDebt.put("idTo", user);
+                            newDebt.put("amount", new Double(0.0));
+                            db.collection("debiti").add(newDebt);
+                        }
+                    }
+                } else {
+                    // Document does not exist
+                }
+            } else {
+                // Handle task failure
+            }
+        });
 
         batch.commit().addOnSuccessListener(task -> {
             updateHouseId(houseId);
