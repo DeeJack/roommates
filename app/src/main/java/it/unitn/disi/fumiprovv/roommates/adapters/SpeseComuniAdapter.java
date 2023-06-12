@@ -88,7 +88,7 @@ public class SpeseComuniAdapter extends BaseAdapter {
 
         SpesaComune item = items.get(position);
         holder.nome.setText(item.getNome());
-        holder.responsabile.setText(item.getResponsabile());
+        holder.responsabile.setText(item.getUserName());
         holder.valore.setText(item.getValore().toString());
 
         String ripetizione = item.getRipetizione();
