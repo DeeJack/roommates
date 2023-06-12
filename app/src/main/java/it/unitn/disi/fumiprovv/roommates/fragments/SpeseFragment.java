@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 
+import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Note;
 
@@ -66,6 +67,10 @@ public class SpeseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tabs, container, false);
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setTitle("Spese");
+
         FragmentContainerView fragmentContainerView = view.findViewById(R.id.fragmentContainerView);
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
 

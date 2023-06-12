@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.adapters.ExpenseAdapter;
 import it.unitn.disi.fumiprovv.roommates.adapters.SpeseComuniAdapter;
@@ -81,6 +82,9 @@ public class SpeseStorico extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_spese_storico, container, false);
         ExpenseAdapter adapter = new ExpenseAdapter(getContext(), new ArrayList<>());
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setTitle(getString(R.string.storico_spese));
 
         ListView lista = view.findViewById(R.id.listaStoricoSpese);
 

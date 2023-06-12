@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.adapters.SpeseComuniAdapter;
 import it.unitn.disi.fumiprovv.roommates.models.SpesaComune;
@@ -79,6 +80,9 @@ public class SpeseComuniFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_spese_comuni, container, false);
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setTitle(getString(R.string.spese_comuni));
         SpeseComuniAdapter adapter = new SpeseComuniAdapter(getContext(), new ArrayList<>());
 
         ListView lista = view.findViewById(R.id.provaList);
