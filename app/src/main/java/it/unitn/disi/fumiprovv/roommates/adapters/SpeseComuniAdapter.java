@@ -127,6 +127,8 @@ public class SpeseComuniAdapter extends BaseAdapter {
                 holder.scadenza.append(context.getString(R.string.questo_mese));
             } else if(ripetizione.equals(context.getResources().getString(R.string.settimanale))){
                 holder.scadenza.append(context.getString(R.string.questa_settimana));
+            } else {
+                holder.scadenza.setText(context.getString(R.string.da_pagare));
             }
         }
 

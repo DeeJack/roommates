@@ -138,4 +138,5 @@
     <string name="euro2">€</string>
     <string name="amount2">"Amount: "</string>
     <string name="enter_valid_number">Inserisci un numero valido</string>
+    <string name="da_pagare">Da pagare</string>
 </resources>
