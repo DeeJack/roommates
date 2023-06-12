@@ -150,6 +150,8 @@ public class HomeFragment extends Fragment {
             for (DocumentSnapshot document : task.getResult()) {
                 events.add((String) document.getData().get("nome"));
             }
+            if (getContext() == null)
+                return;
             Log.d("HomeFragment", "showEvents: " + events);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, events);
             eventsListView.setAdapter(adapter);
@@ -190,6 +192,8 @@ public class HomeFragment extends Fragment {
                     duties.add((String) document.getData().get("name"));
                 }
             }
+            if (getContext() == null)
+                return;
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, duties);
             dutiesListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();

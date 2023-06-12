@@ -89,6 +89,8 @@ public class SpeseComuniFragment extends Fragment {
             if (!task.isSuccessful()) {
                 return;
             }
+            if (getContext() == null)
+                return;
             List<SpesaComune> spese = task.getResult().getDocuments().stream().map(documentSnapshot -> {
                 SpesaComune spesa = new SpesaComune(
                         (String) documentSnapshot.getId(),
