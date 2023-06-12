@@ -115,4 +115,7 @@
     <string name="no_surveys">Nessun sondaggio presente, aggiungine uno!</string>
     <string name="idFrom">idFrom</string>
     <string name="idTo">idTo</string>
+    <string name="situazione_spese">Situazione spese</string>
+    <string name="storico_spese">Storico spese</string>
+    <string name="spese_comuni">Spese comuni</string>
 </resources>

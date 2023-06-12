@@ -30,6 +30,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.adapters.SituazioniAdapter;
 import it.unitn.disi.fumiprovv.roommates.adapters.StoricoPagamentiUtentiAdapter;
@@ -93,6 +94,9 @@ public class SpeseSituazioneFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_spese_situazione, container, false);
         ProgressBar progressBar = view.findViewById(R.id.situazioneProgressbar);
         progressBar.setVisibility(View.VISIBLE);
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setTitle(getString(R.string.situazione_spese));
 
         ListView listSituazioni = view.findViewById(R.id.situazioniListView);
         ListView listStorico = view.findViewById(R.id.situazioniStoricoListView);
