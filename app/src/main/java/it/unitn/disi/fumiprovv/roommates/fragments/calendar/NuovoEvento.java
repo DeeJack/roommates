@@ -1,14 +1,19 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.calendar;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,6 +45,7 @@ public class NuovoEvento extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View view;
 
     public NuovoEvento() {
         // Required empty public constructor
@@ -72,39 +78,56 @@ public class NuovoEvento extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setupMenu();
+    }
+
+    private void setupMenu() {
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.note_new_bar, menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.menuAddButton) {
+                    createEvent();
+                }
+                return true;
+            }
+        }, this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_nuovo_evento, container, false);
-        Button submitButton = view.findViewById(R.id.submitButton);
+        this.view = inflater.inflate(R.layout.fragment_nuovo_evento, container, false);
+        return view;
+    }
+
+    private void createEvent() {
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         EditText nomeEvento = view.findViewById(R.id.nomeEvento);
         DatePicker dataEvento = view.findViewById(R.id.dataEvento);
-        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
-        submitButton.setOnClickListener(v -> {
-            // Retrieve input values
-            String eventName = nomeEvento.getText().toString();
-            int y = dataEvento.getYear();
-            int m = dataEvento.getMonth();
-            int d = dataEvento.getDayOfMonth();
-            Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-            c.set(y, m, d);
+        String eventName = nomeEvento.getText().toString();
+        int y = dataEvento.getYear();
+        int m = dataEvento.getMonth();
+        int d = dataEvento.getDayOfMonth();
+        Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+        c.set(y, m, d);
 
-            DocumentReference casa = db.collection("case").document(houseViewModel.getHouseId());
+        DocumentReference casa = db.collection("case").document(houseViewModel.getHouseId());
 
-            // Create a data model object
-            Event event = new Event(casa, eventName, (long) d, (long) (m + 1), (long) y);
+        // Create a data model object
+        Event event = new Event(casa, eventName, (long) d, (long) (m + 1), (long) y);
 
-            //aggiungi evento al db
-            db.collection("eventi").add(event).addOnSuccessListener(documentReference -> {
-                Log.d("nuovoEvento", "DocumentSnapshot written with ID: " + documentReference.getId());
-                requireActivity().onBackPressed();
-            }).addOnFailureListener(e -> {
-                Log.w("nuovoEvento", "Error adding document", e);
-                requireActivity().onBackPressed();
-            });
+        //aggiungi evento al db
+        db.collection("eventi").add(event).addOnSuccessListener(documentReference -> {
+            Log.d("nuovoEvento", "DocumentSnapshot written with ID: " + documentReference.getId());
+            requireActivity().onBackPressed();
+        }).addOnFailureListener(e -> {
+            Log.w("nuovoEvento", "Error adding document", e);
+            requireActivity().onBackPressed();
         });
-        return view;
     }
 }

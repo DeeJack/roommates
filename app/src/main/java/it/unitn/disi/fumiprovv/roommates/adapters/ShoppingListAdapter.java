@@ -23,7 +23,7 @@ public class ShoppingListAdapter extends BaseAdapter {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final ArrayList<ShoppingItem> checkedItems = new ArrayList<>();
     private List<ShoppingItem> items;
-    private List<ViewHolder> itemsHolders = new ArrayList<>();
+    private final List<ViewHolder> itemsHolders = new ArrayList<>();
 
     public ShoppingListAdapter(Context context, ArrayList<ShoppingItem> items) {
         this.items = items;
@@ -87,7 +87,7 @@ public class ShoppingListAdapter extends BaseAdapter {
 
     private void onDeleteButtonClick(ShoppingItem shoppingItem) {
         // Create alert dialog to confirm deletion
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Theme_Roommates_AlertDialg);
         builder.setTitle(R.string.delete_note_title);
         builder.setMessage(R.string.delete_shopitem_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {

@@ -13,8 +13,8 @@ public class Turno {
     private String house;
     private Long yearLast;
     private Long weekLast;
-    private ArrayList<String> userNames;
-    private Map<String, String> userNames2;
+    private final ArrayList<String> userNames;
+    private final Map<String, String> userNames2;
 
     public Turno(String name, Long weekInizio, Long yearStart, ArrayList<String> users, String house, Long yearLast, Long weekLast) {
         this.name = name;
@@ -110,15 +110,16 @@ public class Turno {
         this.userNames.add(name);
     }
 
-    public String getUserNames(){
+    public String getUserNames() {
         return userNames.toString();
     }
-    public String getUserNames2(){
+
+    public String getUserNames2() {
         return userNames2.toString();
     }
 
     public void addUserName(String id, String name) {
-        userNames2.put(id,name);
+        userNames2.put(id, name);
     }
 
     public String getUserNameAt(String id) {

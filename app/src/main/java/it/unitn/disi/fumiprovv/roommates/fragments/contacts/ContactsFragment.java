@@ -1,18 +1,17 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.contacts;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ public class ContactsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -81,12 +79,13 @@ public class ContactsFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         ListView contactListView = view.findViewById(R.id.contactsListView);
+        TextView noContactsTextView = view.findViewById(R.id.noContactsTextView);
+        contactListView.setEmptyView(noContactsTextView);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
         Button addContactButton = view.findViewById(R.id.addContactButton);
-        addContactButton.setOnClickListener(v -> {
-            NavigationUtils.navigateTo(R.id.action_contactFragment_to_newContactFragment, view);
-        });
+        addContactButton.setOnClickListener(v ->
+                NavigationUtils.navigateTo(R.id.action_contactFragment_to_newContactFragment, view));
 
         db.collection("contatti").whereEqualTo("houseId", db.collection("case").document(houseViewModel.getHouseId())).get()
                 .addOnCompleteListener(task -> {
@@ -95,23 +94,12 @@ public class ContactsFragment extends Fragment {
                         progressBar.setVisibility(View.GONE);
                         return;
                     }
-                    //List<Map<String, Object>> notes = task.getResult().getDocuments().stream()
-                    //        .map(DocumentSnapshot::getData).collect(Collectors.toList());
                     List<Contact> contacts = task.getResult().getDocuments().stream().map(documentSnapshot -> {
-                        //Note note = documentSnapshot.getString("userId");
-                        Contact contact = new Contact(
+                        return new Contact(
                                 documentSnapshot.getId(),
                                 documentSnapshot.getString("name"),
                                 documentSnapshot.getString("number")
                         );
-//                        documentSnapshot.getDocumentReference("userId").get().addOnCompleteListener(task1 -> {
-//                            if (!task1.isSuccessful()) {
-//                                return;
-//                            }
-//                            contact.setUserName((String) task1.getResult().get("name"));
-//                            adapter.notifyDataSetChanged();
-//                        });
-                        return contact;
                     }).collect(Collectors.toList());
                     //String[] items = notes.stream().map(note -> (String) note.get("text")).toArray(String[]::new);
                     adapter.setContacts(contacts);
@@ -120,11 +108,6 @@ public class ContactsFragment extends Fragment {
                     int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
                     contactListView.setDividerHeight(dividerHeight);
 
-                    // Imposta il listener di click sugli elementi della lista
-                    contactListView.setOnItemClickListener((parent, view1, position, id) -> {
-                        Contact selectedItem = contacts.get(position);
-                        String a = "";
-                    });
                     progressBar.setVisibility(View.GONE);
                 });
 

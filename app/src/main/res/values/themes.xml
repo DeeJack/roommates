@@ -26,11 +26,13 @@
         <item name="android:textColorPrimary">@color/white</item>
 
         <!-- Splash screen options -->
-        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">@color/background_dark</item>
-        <item name="android:windowSplashScreenAnimatedIcon" tools:ignore="NewApi">@drawable/home</item>
-        <item name="android:windowSplashScreenBehavior" tools:ignore="NewApi">icon_preferred</item>
-        <item name="android:windowSplashScreenAnimationDuration" tools:ignore="NewApi">1000</item>
+        <item name="windowSplashScreenBackground">@color/background_dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/home</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
 
+
+        <item name="android:checkboxStyle">@style/Theme.Roommates.Checkbox</item>
+        <item name="android:radioButtonStyle">@style/Theme.Roommates.Radio</item>
 
     </style>
 
@@ -38,15 +40,6 @@
         <item name="colorPrimary">#7C98FF</item>
         <item name="itemBackground">@android:color/transparent</item>
 
-
-        <!--
-        <item name="colorControlHighlight">@color/white</item>
-        <item name="colorControlActivated">@color/white</item>
-
-        <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/white</item>
-        <item name="colorOnSecondary">@color/white</item>
-        -->
     </style>
 
     <style name="Theme.Roommates.NoActionBar">
@@ -54,9 +47,46 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.Roommates.Checkbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/white</item>
+        <item name="buttonTint">@color/white</item>
+        <item name="android:buttonTint">@color/white</item>
+    </style>
+
+    <style name="Theme.Roommates.Radio" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="buttonTint">@color/white</item>
+        <item name="android:buttonTint">@color/white</item>
+    </style>
+
+    <style name="Theme.Roommates.Calendar">
+        <item name="android:textColor">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+    </style>
+
+    <style name="MyDatePickerStyle"  >
+        <item name="android:calendarTextColor">@color/white</item>
+        <item name="android:dayOfWeekBackground">@color/white</item>
+    </style>
+
+
     <style name="Theme.Roommates.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
         <item name="backgroundColor">@color/purple_500</item>
         <item name="android:colorBackground">@color/purple_500</item>
         <item name="android:background">@color/purple_500</item>
+    </style>
+
+    <style name="Theme.Roommates.AlertDialg" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:colorAccent">#1b5e20</item>
+        <item name="backgroundColor">@color/background_dark</item>
+        <item name="android:background">@color/background_dark</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 </resources>

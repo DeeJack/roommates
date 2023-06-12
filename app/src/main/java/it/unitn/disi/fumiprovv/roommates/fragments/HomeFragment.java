@@ -1,34 +1,34 @@
 package it.unitn.disi.fumiprovv.roommates.fragments;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.adapters.NoteListAdapter;
+import it.unitn.disi.fumiprovv.roommates.adapters.HomeListAdapter;
 import it.unitn.disi.fumiprovv.roommates.adapters.UserAdapter;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
@@ -82,8 +82,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -100,43 +99,104 @@ public class HomeFragment extends Fragment {
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        ArrayList<String> listUtenti = new ArrayList<>();
-        ListView utentiListView = view.findViewById(R.id.usersListView);
+        RecyclerView utentiListView = view.findViewById(R.id.usersListView);
+        HomeListAdapter adapter = new HomeListAdapter(getContext(), new ArrayList<>());
 
-        db.collection("case").document(houseViewModel.getHouseId()).get()
-                .addOnCompleteListener(task -> {
-                    UserAdapter adapter = new UserAdapter(getContext(), new ArrayList<>());
-                    if (!task.isSuccessful()) {
-                        return;
-                    }
-                    DocumentSnapshot document = task.getResult();
-                    List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
-                    for (Map<String, Object> roommate : roommates) {
-                        //prendo nome utente
-                        db.collection("utenti").document((String)roommate.get("userId")).get().addOnCompleteListener(task1 -> {
-                            String nome = task1.getResult().getString("name");
-                            adapter.addUser(nome);
-                            adapter.notifyDataSetChanged();
-                        });
-                    }
+        utentiListView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        utentiListView.setAdapter(adapter);
 
-                    utentiListView.setAdapter(adapter);
-                    if (getContext() == null)
-                        return;
-                    int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
-                    utentiListView.setDividerHeight(dividerHeight);
+        showEvents(view);
+        showDuties(view);
+
+        db.collection("case").document(houseViewModel.getHouseId()).get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                return;
+            }
+            DocumentSnapshot document = task.getResult();
+            List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
+            List<String> names = new ArrayList<>();
+            for (Map<String, Object> roommate : roommates) {
+                //prendo nome utente
+                db.collection("utenti").document((String) roommate.get("userId")).get().addOnCompleteListener(task1 -> {
+                    String nome = task1.getResult().getString("name");
+                    names.add(nome);
+                    adapter.notifyDataSetChanged();
                 });
+            }
+            adapter.setUsers(names);
+        });
 
         return view;
     }
 
-    void onLogoutClick(View view) {
+    private void showEvents(View view) {
+        ListView eventsListView = view.findViewById(R.id.eventsListView);
+        TextView emptyView = view.findViewById(R.id.list_empty);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
-        houseViewModel.setHouseId("");
-        SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", MODE_PRIVATE);
-        sharedPref.edit().putString("houseId", "").apply();
-        FirebaseAuth.getInstance().signOut();
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.action_homeFragment_to_loginFragment);
+        eventsListView.setEmptyView(emptyView);
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        Log.d("HomeFragment", "showEvents: " + year + " " + month + " " + day + " " + houseViewModel.getHouseId());
+
+        db.collection("eventi").where(Filter.and(Filter.equalTo("anno", year), Filter.equalTo("mese", month), Filter.equalTo("giorno", day), Filter.equalTo("casa", db.collection("case").document(houseViewModel.getHouseId())))).get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                return;
+            }
+            List<String> events = new ArrayList<>();
+            Log.d("HomeFragment", "showEvents: " + task.getResult().getDocuments());
+            for (DocumentSnapshot document : task.getResult()) {
+                events.add((String) document.getData().get("nome"));
+            }
+            if (getContext() == null)
+                return;
+            Log.d("HomeFragment", "showEvents: " + events);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, events);
+            eventsListView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        });
+    }
+
+    private void showDuties(View view) {
+        ListView dutiesListView = view.findViewById(R.id.dutiesListView);
+        TextView emptyView = view.findViewById(R.id.list_empty2);
+        dutiesListView.setEmptyView(emptyView);
+
+        HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
+        db.collection("turniPulizia").whereEqualTo("house", houseViewModel.getHouseId()).whereArrayContains("users", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                return;
+            }
+            List<String> duties = new ArrayList<>();
+            for (DocumentSnapshot document : task.getResult()) {
+                Log.d("HomeFragment", "showDuties: " + document.getData().toString());
+                Map<String, Object> data = document.getData();
+
+                long weekStart = (long) data.get("weekStart");
+                long yearStart = (long) data.get("yearStart");
+
+                long currentYear = Calendar.getInstance().get(Calendar.YEAR);
+                long currentWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+
+                List<String> users = (List<String>) data.get("users");
+
+                //calcola indice
+                long weeksPassed = ((currentYear - yearStart) * 52) + currentWeek - weekStart + 1;
+
+                long userIndex = (weeksPassed - 1) % users.size();
+                int index = Math.toIntExact(userIndex);
+
+                if (Objects.equals(FirebaseAuth.getInstance().getCurrentUser().getUid(), users.get(index))) {
+                    duties.add((String) document.getData().get("name"));
+                }
+            }
+            if (getContext() == null)
+                return;
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, duties);
+            dutiesListView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        });
     }
 }

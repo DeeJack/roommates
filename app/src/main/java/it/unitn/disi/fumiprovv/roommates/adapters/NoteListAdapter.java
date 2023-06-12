@@ -62,7 +62,7 @@ public class NoteListAdapter extends BaseAdapter {
             holder.noteNameField = convertView.findViewById(R.id.noteNameField);
             holder.noteTextField = convertView.findViewById(R.id.noteTextField);
             holder.noteShareButton = convertView.findViewById(R.id.noteShareBtn);
-            holder.noteDeleteButton= convertView.findViewById(R.id.noteDeleteBtn);
+            holder.noteDeleteButton = convertView.findViewById(R.id.noteDeleteBtn);
 
             convertView.setTag(holder);
         } else {
@@ -97,7 +97,7 @@ public class NoteListAdapter extends BaseAdapter {
 
     private void onDeleteButtonClick(Note note) {
         // Create alert dialog to confirm deletion
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Theme_Roommates_AlertDialg);
         builder.setTitle(R.string.delete_note_title);
         builder.setMessage(R.string.delete_note_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {

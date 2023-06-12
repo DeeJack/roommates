@@ -3,11 +3,6 @@ package it.unitn.disi.fumiprovv.roommates.fragments.login;
 import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -94,13 +91,10 @@ public class ForgotPasswordFragment extends Fragment {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Email sent.");
                         Toast.makeText(getContext(), getString(R.string.forgot_password_sent), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d(TAG, "Email not sent.");
+                        Toast.makeText(getContext(), R.string.forgot_password_not_sent, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    public void onBackToLoginClick(View view) {
-        NavController navController = Navigation.findNavController(view);
-        //navController.popBackStack(R.id.loginFragment, true);
-        navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
     }
 }

@@ -1,4 +1,4 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.duties;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +44,7 @@ public class NewTurnoPuliziaFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<String> selectedUsers = new ArrayList<>();
     ArrayList<String> userIds = new ArrayList<>();
     HashMap<String, String> userNamesIds = new HashMap<>();
@@ -51,7 +52,6 @@ public class NewTurnoPuliziaFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public NewTurnoPuliziaFragment() {
         // Required empty public constructor
@@ -94,12 +94,8 @@ public class NewTurnoPuliziaFragment extends Fragment {
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.menuAddButton:
-                        addTurnoToDb();
-                        break;
-                    default:
-                        break;
+                if (menuItem.getItemId() == R.id.menuAddButton) {
+                    addTurnoToDb();
                 }
                 return true;
             }
@@ -113,8 +109,8 @@ public class NewTurnoPuliziaFragment extends Fragment {
             HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            Long currentWeek = Long.valueOf(calendar.get(Calendar.WEEK_OF_YEAR));
-            Long currentYear = Long.valueOf(calendar.get(Calendar.YEAR));
+            long currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+            long currentYear = calendar.get(Calendar.YEAR);
             Map<String, Object> newTurno = new HashMap<>();
             newTurno.put("house", houseViewModel.getHouseId());
             newTurno.put("name", ((EditText) getView().findViewById(R.id.turnoNameField)).getText().toString());
@@ -183,23 +179,20 @@ public class NewTurnoPuliziaFragment extends Fragment {
                     userListView.setDividerHeight(dividerHeight);
                 });
 
-        buttonNewUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (spinner.getSelectedItem() != null && userIds.size() > 0) {
-                    String selectedUser = (String) spinner.getSelectedItem().toString();
-                    Log.d("user", selectedUser);
-                    idDaAggiungere.add(userNamesIds.get(selectedUser));
-                    selectedUsers.add(selectedUser);
-                    userIds.remove(selectedUser);
-                    userNames.remove(selectedUser);
-                    if (userNames.size() > 0)
-                        spinner.setPrompt(userIds.get(0));
-                    adapter.notifyDataSetChanged();
-                    spinnerAdapter.notifyDataSetChanged();
-                }
-
+        buttonNewUser.setOnClickListener(view1 -> {
+            if (spinner.getSelectedItem() != null && userIds.size() > 0) {
+                String selectedUser = spinner.getSelectedItem().toString();
+                Log.d("user", selectedUser);
+                idDaAggiungere.add(userNamesIds.get(selectedUser));
+                selectedUsers.add(selectedUser);
+                userIds.remove(selectedUser);
+                userNames.remove(selectedUser);
+                if (userNames.size() > 0)
+                    spinner.setPrompt(userIds.get(0));
+                adapter.notifyDataSetChanged();
+                spinnerAdapter.notifyDataSetChanged();
             }
+
         });
 
         return view;

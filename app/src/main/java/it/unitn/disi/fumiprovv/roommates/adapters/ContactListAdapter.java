@@ -85,7 +85,7 @@ public class ContactListAdapter extends BaseAdapter {
 
     private void onDeleteButtonClick(Contact contact) {
         // Create alert dialog to confirm deletion
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Theme_Roommates_AlertDialg);
         builder.setTitle(R.string.delete_note_title);
         builder.setMessage(R.string.delete_contact_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {

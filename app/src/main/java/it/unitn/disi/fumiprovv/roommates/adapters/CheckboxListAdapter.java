@@ -1,15 +1,11 @@
 package it.unitn.disi.fumiprovv.roommates.adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
-
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,19 +13,15 @@ import java.util.List;
 import java.util.Set;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.models.ShoppingItem;
 import it.unitn.disi.fumiprovv.roommates.models.User;
 
 public class CheckboxListAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
-    private final Context context;
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final Set<User> checkedItems = new HashSet<>();
     private List<User> items;
 
     public CheckboxListAdapter(Context context, ArrayList<User> items) {
         this.items = items;
-        this.context = context;
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -84,11 +76,6 @@ public class CheckboxListAdapter extends BaseAdapter {
 
     public void setItems(List<User> items) {
         this.items = items;
-    }
-
-    public void addItem(User shoppingItem) {
-        items.add(shoppingItem);
-        notifyDataSetChanged();
     }
 
     private static class ViewHolder {

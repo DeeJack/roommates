@@ -22,15 +22,10 @@ import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
 
 public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.SurveyViewHolder> {
-    private List<Sondaggio> surveyList;
+    private final List<Sondaggio> surveyList;
 
     public SurveyAdapter() {
         this.surveyList = new ArrayList<>();
-    }
-
-    public void setData(List<Sondaggio> surveyList) {
-        this.surveyList = surveyList;
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -52,10 +47,10 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.SurveyView
     }
 
     public static class SurveyViewHolder extends RecyclerView.ViewHolder {
-        private TextView questionTextView;
-        private RadioGroup optionsRadioGroup;
-        private Button voteButton;
-        private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        private final TextView questionTextView;
+        private final RadioGroup optionsRadioGroup;
+        private final Button voteButton;
+        private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         public SurveyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,12 +67,12 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.SurveyView
             String currentUserId = mAuth.getUid();
 
             // Create and add radio buttons for each option
-            if (survey.getSceltaMultipla()==Boolean.TRUE) {
+            if (survey.getSceltaMultipla() == Boolean.TRUE) {
                 // Survey allows multiple choices, use checkboxes
                 for (String option : survey.getOpzioni()) {
                     CheckBox checkBox = new CheckBox(itemView.getContext());
                     checkBox.setText(option);
-                    if(survey.getVotanti().contains(currentUserId)) {
+                    if (survey.getVotanti().contains(currentUserId)) {
                         checkBox.setEnabled(false);
                     }
                     optionsRadioGroup.addView(checkBox);
@@ -87,28 +82,21 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.SurveyView
                 for (String option : survey.getOpzioni()) {
                     RadioButton radioButton = new RadioButton(itemView.getContext());
                     radioButton.setText(option);
-                    if(survey.getVotanti().contains(currentUserId)) {
+                    if (survey.getVotanti().contains(currentUserId)) {
                         radioButton.setEnabled(false);
                     }
                     optionsRadioGroup.addView(radioButton);
                 }
             }
 
-            if (survey.getVotanti().contains(currentUserId)) {
-                // User has already voted, disable the vote button
-                voteButton.setEnabled(false);
-            } else {
-                // User has not voted, enable the vote button
-                voteButton.setEnabled(true);
-            }
+            // User has already voted, disable the vote button
+            // User has not voted, enable the vote button
+            voteButton.setEnabled(!survey.getVotanti().contains(currentUserId));
 
-            voteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    survey.addVotante(currentUserId);
-                    Log.d("boh", currentUserId);
-                    //aggiungi voto all'opzione selezionata
-                }
+            voteButton.setOnClickListener(view -> {
+                survey.addVotante(currentUserId);
+                Log.d("boh", currentUserId);
+                //aggiungi voto all'opzione selezionata
             });
         }
     }

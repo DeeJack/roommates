@@ -2,8 +2,6 @@ package it.unitn.disi.fumiprovv.roommates.utils;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -21,8 +19,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.concurrent.CompletableFuture;
-
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
@@ -36,9 +32,6 @@ public class NavigationUtils {
         navController.navigate(destinationId, bundle);
     }
 
-    /**
-     * @return A completable future which returns true if the user has a house, false otherwise.
-     */
     public static void conditionalLogin(NavController navController, SharedPreferences sharedPref,
                                         ViewModelStoreOwner owner, Intent intent) {
         conditionalLogin(navController, null, sharedPref, owner, intent);
@@ -60,7 +53,11 @@ public class NavigationUtils {
                         houseViewModel.setHouseId(casaId);
                         sharedPref.edit().putString("houseId", casaId).apply();
 
-                        navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle);
+                        try {
+                            navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle);
+                        } catch (IllegalArgumentException e) {
+                            Log.d(TAG, "conditionalLogin: " + e.getMessage());
+                        }
                         if (intent != null) {
                             handleIntent(intent, navController);
                         }
@@ -80,7 +77,6 @@ public class NavigationUtils {
     }
 
     private static boolean handleIntent(Intent intent, NavController navController) {
-        String action = intent.getAction();
         Uri data = intent.getData();
         boolean result = false;
 
@@ -96,6 +92,11 @@ public class NavigationUtils {
                 bundle.putString("id", data.getQueryParameter("id"));
                 result = true;
                 navController.navigate(R.id.action_to_note, bundle);
+            } else if (path.equals("/turni")) { // Note link
+                Bundle bundle = new Bundle();
+                bundle.putString("id", data.getQueryParameter("id"));
+                result = true;
+                navController.navigate(R.id.action_to_turnipulizia, bundle);
             }
         }
         return result;

@@ -1,4 +1,4 @@
-package it.unitn.disi.fumiprovv.roommates.fragments;
+package it.unitn.disi.fumiprovv.roommates.fragments.settings;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +33,6 @@ import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.models.Roommate;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
-import it.unitn.disi.fumiprovv.roommates.viewmodels.UserViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,8 +84,7 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("settings", MODE_PRIVATE);
@@ -106,7 +106,7 @@ public class SettingsFragment extends Fragment {
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
         ImageView shareBtn = view.findViewById(R.id.shareButton2);
-        shareBtn.setOnClickListener((view1) -> openShareDialog(view, houseViewModel.getHouseId()));
+        shareBtn.setOnClickListener((view1) -> openShareDialog(houseViewModel.getHouseId()));
 
         TextView houseId = view.findViewById(R.id.houseIdField2);
         houseId.setText(houseViewModel.getHouseId());
@@ -117,22 +117,20 @@ public class SettingsFragment extends Fragment {
 
         newModerator = view.findViewById(R.id.newModeratorBtn);
 
-        db.collection("case").document(houseViewModel.getHouseId()).get()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        return;
-                    }
-                    DocumentSnapshot document = task.getResult();
-                    List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
-                    for (Map<String, Object> roommate : roommates) {
-                        if (Objects.equals(roommate.get("userId"), mAuth.getCurrentUser().getUid()) &&
-                                Boolean.TRUE.equals(roommate.get("moderator"))) {
-                            newModerator.setEnabled(true);
-                            newModerator.setOnClickListener((view1) -> openNewModeratorDialog());
-                        }
-                    }
+        db.collection("case").document(houseViewModel.getHouseId()).get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                return;
+            }
+            DocumentSnapshot document = task.getResult();
+            List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
+            for (Map<String, Object> roommate : roommates) {
+                if (Objects.equals(roommate.get("userId"), mAuth.getCurrentUser().getUid()) && Boolean.TRUE.equals(roommate.get("moderator"))) {
+                    newModerator.setEnabled(true);
+                    newModerator.setOnClickListener((view1) -> openNewModeratorDialog());
+                }
+            }
 
-                });
+        });
 
         return view;
     }
@@ -163,22 +161,45 @@ public class SettingsFragment extends Fragment {
 
     private void leaveHouse(View view) {
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
-        UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         DocumentReference documentSnapshotTask = db.collection("case").document(houseViewModel.getHouseId());
         documentSnapshotTask.get().addOnCompleteListener(task -> {
             DocumentSnapshot document = task.getResult();
 
             List<Map<String, Object>> roommatesList = (List<Map<String, Object>>) document.getData().get("roommates");
+
+            WriteBatch batch = db.batch();
+
             roommatesList.stream().filter(roommate -> Objects.equals(roommate.get("userId"), mAuth.getCurrentUser().getUid())).findFirst().ifPresent(roommate -> {
                 if (roommatesList.size() == 1) {
-                    db.collection("case").document(houseViewModel.getHouseId()).delete();
+                    batch.delete(documentSnapshotTask);
                 } else {
-                    db.collection("case").document(houseViewModel.getHouseId())
-                            .update("roommates", FieldValue.arrayRemove(new Roommate(mAuth.getCurrentUser().getUid(), (Timestamp) roommate.get("joinDate"), (Boolean) roommate.get("moderator"))));
+                    batch.update(documentSnapshotTask, "roommates", FieldValue.arrayRemove(new Roommate(mAuth.getCurrentUser().getUid(), (Timestamp) roommate.get("joinDate"), (Boolean) roommate.get("moderator"))));
+                    if (Boolean.TRUE.equals(roommate.get("moderator"))) {
+                        Map<String, Object> otherRoommate = roommatesList.stream().filter(r -> !Objects.equals(r.get("userId"), mAuth.getCurrentUser().getUid())).findFirst().get();
+                        // remove the otherRoommate and add it again with moderator = true
+                        batch.update(documentSnapshotTask, "roommates", FieldValue.arrayRemove(new Roommate(otherRoommate.get("userId").toString(), (Timestamp) otherRoommate.get("joinDate"), (Boolean) otherRoommate.get("moderator"))));
+                        batch.update(documentSnapshotTask, "roommates", FieldValue.arrayUnion(new Roommate(otherRoommate.get("userId").toString(), (Timestamp) otherRoommate.get("joinDate"), true)));
+                    }
                 }
-                db.collection("utenti").document(mAuth.getCurrentUser().getUid())
-                        .update("casa", null);
-                NavigationUtils.navigateTo(R.id.action_settingsFragment_to_houseCreationFragment, view);
+                batch.update(db.collection("utenti").document(mAuth.getCurrentUser().getUid()), "casa", null);
+
+                batch.commit().addOnSuccessListener(task1 -> {
+                    db.collection("turniPulizia")
+                            .whereEqualTo("house", houseViewModel.getHouseId())
+                            .whereArrayContains("users", mAuth.getCurrentUser().getUid()).get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                        WriteBatch batch1 = db.batch();
+                        // Update the document removing the user
+                        queryDocumentSnapshots.getDocuments().forEach(documentSnapshot -> {
+                            batch1.update(documentSnapshot.getReference(), "users", FieldValue.arrayRemove(mAuth.getCurrentUser().getUid()));
+                        });
+                        batch1.commit();
+                    });
+                    houseViewModel.setHouseId("");
+                    NavigationUtils.navigateTo(R.id.action_settingsFragment_to_houseCreationFragment, view);
+                }).addOnFailureListener(task1 -> {
+                    Toast.makeText(getContext(), "Errore!", Toast.LENGTH_SHORT).show();
+                });
             });
         });
 
@@ -189,11 +210,8 @@ public class SettingsFragment extends Fragment {
 
     }
 
-    public void openShareDialog(View view, String houseId) {
-        String text = getString(R.string.share_code_text)
-                .replace("{code}", houseId)
-                .replace("{link}", "http://roommates.asd/join?code=" + houseId)
-                .replace("\\n", "\n");
+    public void openShareDialog(String houseId) {
+        String text = getString(R.string.share_code_text).replace("{code}", houseId).replace("{link}", "http://roommates.asd/join?code=" + houseId).replace("\\n", "\n");
 
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
         sendIntent.setType("text/plain");

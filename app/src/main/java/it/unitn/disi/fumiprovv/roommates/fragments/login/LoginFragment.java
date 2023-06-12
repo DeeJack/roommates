@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -25,7 +24,6 @@ import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
 import it.unitn.disi.fumiprovv.roommates.utils.FieldValidation;
 import it.unitn.disi.fumiprovv.roommates.utils.NavigationUtils;
-import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,8 +44,7 @@ public class LoginFragment extends Fragment {
      * @return A new instance of fragment LoginFragment.
      */
     public static LoginFragment newInstance() {
-        LoginFragment fragment = new LoginFragment();
-        return fragment;
+        return new LoginFragment();
     }
 
     @Override
@@ -57,18 +54,17 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setDrawerLocked(true);
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        Button loginBtn = (Button) view.findViewById(R.id.loginButton);
+        Button loginBtn = view.findViewById(R.id.loginButton);
         loginBtn.setOnClickListener((a) -> onLoginButtonClick(view));
-        Button registrationBtn = (Button) view.findViewById(R.id.registrationButton);
+        Button registrationBtn = view.findViewById(R.id.registrationButton);
         registrationBtn.setOnClickListener((a) -> onRegistrationButtonClick(view));
-        TextView forgotPassword = (TextView) view.findViewById(R.id.forgotPassButton);
+        TextView forgotPassword = view.findViewById(R.id.forgotPassButton);
         forgotPassword.setOnClickListener((a) -> onForgotPasswordButtonClick(view));
         return view;
     }
@@ -85,27 +81,30 @@ public class LoginFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.email_not_valid), Toast.LENGTH_SHORT).show();
             return;
         }
-        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.loginProgressBar);
+        ProgressBar progressBar = view.findViewById(R.id.loginProgressBar);
         progressBar.setVisibility(View.VISIBLE);
 
         String password = ((TextView) view.findViewById(R.id.registerPasswordField)).getText().toString();
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(task -> {
-                    Log.d(TAG, "signInWithEmail:success");
-                    progressBar.setVisibility(View.GONE);
-                    NavController navController = Navigation.findNavController(view);
 
-                    SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
-                    HouseViewModel houseViewModel = new ViewModelProvider(this).get(HouseViewModel.class);
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(getContext(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
 
-                    NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity(), null);
-                })
-                .addOnFailureListener(task -> {
-                    Toast.makeText(getContext(), "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
-                    Log.w(TAG, "signInWithEmail:failure" + task.getMessage(), task.getCause());
-                    progressBar.setVisibility(View.GONE);
-                });
+        mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(task -> {
+            Log.d(TAG, "signInWithEmail:success");
+            progressBar.setVisibility(View.GONE);
+            NavController navController = Navigation.findNavController(view);
+
+            SharedPreferences sharedPref = requireActivity().getSharedPreferences("house", Context.MODE_PRIVATE);
+
+            NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity(), null);
+        }).addOnFailureListener(task -> {
+            Toast.makeText(getContext(), R.string.authentication_failed, Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "signInWithEmail:failure" + task.getMessage(), task.getCause());
+            progressBar.setVisibility(View.GONE);
+        });
     }
 
     public void onRegistrationButtonClick(View view) {

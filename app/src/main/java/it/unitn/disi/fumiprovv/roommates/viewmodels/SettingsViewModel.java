@@ -1,8 +1,5 @@
 package it.unitn.disi.fumiprovv.roommates.viewmodels;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import androidx.lifecycle.ViewModel;
 
 public class SettingsViewModel extends ViewModel {

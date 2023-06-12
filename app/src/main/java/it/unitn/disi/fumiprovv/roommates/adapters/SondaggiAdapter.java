@@ -1,6 +1,5 @@
 package it.unitn.disi.fumiprovv.roommates.adapters;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,25 +18,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import it.unitn.disi.fumiprovv.roommates.R;
-import it.unitn.disi.fumiprovv.roommates.models.Note;
 import it.unitn.disi.fumiprovv.roommates.models.Sondaggio;
-import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
 public class SondaggiAdapter extends BaseAdapter {
     private List<Sondaggio> sondaggi;
@@ -95,19 +84,15 @@ public class SondaggiAdapter extends BaseAdapter {
         Boolean isSceltaMultipla = item.getSceltaMultipla();
         String currentUserId = mAuth.getUid();
 
-        ArrayList<String> vincitori = new ArrayList<String>();
+        ArrayList<String> vincitori = new ArrayList<>();
         boolean votato = item.getVotanti().contains(currentUserId);
         if (votato) {
             vincitori = item.getVincitori();
         }
 
-        createSurvey(convertView, holder, item, options, isSceltaMultipla, currentUserId, vincitori, votato);
+        createSurvey(convertView, holder, item, options, isSceltaMultipla, vincitori, votato);
 
-        if (votato) {
-            holder.buttonVota.setEnabled(false);
-        } else {
-            holder.buttonVota.setEnabled(true);
-        }
+        holder.buttonVota.setEnabled(!votato);
 
         holder.buttonVota.setOnClickListener(view -> {
             List<Integer> selectedOptions = getSelectedOptions(holder.optionsRadioGroup);
@@ -120,11 +105,11 @@ public class SondaggiAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void createSurvey(View convertView, ViewHolder holder, Sondaggio item, List<String> options, Boolean isSceltaMultipla, String currentUserId, ArrayList<String> vincitori, boolean votato) {
+    private void createSurvey(View convertView, ViewHolder holder, Sondaggio item, List<String> options, Boolean isSceltaMultipla, ArrayList<String> vincitori, boolean votato) {
         if (isSceltaMultipla) {
             for (int i = 0; i < options.size(); i++) {
                 CheckBox checkBox = new CheckBox(convertView.getContext());
-                checkBox.setText(String.format("%s (%d)", options.get(i), item.getVoto(i)));
+                checkBox.setText(String.format(Locale.getDefault(), "%s (%d)", options.get(i), item.getVoto(i)));
                 checkBox.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 if (votato) {
                     checkBox.setEnabled(false);
@@ -138,7 +123,7 @@ public class SondaggiAdapter extends BaseAdapter {
         } else {
             for (int i = 0; i < options.size(); i++) {
                 RadioButton radioButton = new RadioButton(convertView.getContext());
-                radioButton.setText(String.format("%s (%d)", options.get(i), item.getVoto(i)));
+                radioButton.setText(String.format(Locale.getDefault(), "%s (%d)", options.get(i), item.getVoto(i)));
                 radioButton.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 if (votato) {
                     radioButton.setEnabled(false);
@@ -154,7 +139,7 @@ public class SondaggiAdapter extends BaseAdapter {
 
     private void deleteSurvey(Sondaggio sondaggio) {
         // Create alert dialog to confirm deletion
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Theme_Roommates_AlertDialg);
         builder.setTitle(R.string.delete_note_title);
         builder.setMessage(R.string.delete_survey_message);
         builder.setPositiveButton("Ok", (dialog, which) -> {
