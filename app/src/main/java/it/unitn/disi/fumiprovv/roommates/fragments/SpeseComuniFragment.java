@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import it.unitn.disi.fumiprovv.roommates.MainActivity;
@@ -90,10 +91,10 @@ public class SpeseComuniFragment extends Fragment {
         ListView lista = view.findViewById(R.id.provaList);
 
         Button buttonNuovaSpesaComune = view.findViewById(R.id.buttonNuovaSpesaComune);
-
+        buttonNuovaSpesaComune.setVisibility(View.GONE);
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        db.collection("utenti").document(houseViewModel.getHouseId()).get().addOnCompleteListener(task -> {
+        db.collection("case").document(houseViewModel.getHouseId()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
@@ -102,9 +103,7 @@ public class SpeseComuniFragment extends Fragment {
                         for (Map<String, Object> roommate : roommates) {
                             String userId = (String) roommate.get("userId");
                             boolean isModerator = (boolean) roommate.get("moderator");
-                            if (!userId.equals(mAuth.getUid()) && isModerator) {
-                                buttonNuovaSpesaComune.setVisibility(View.INVISIBLE);
-                            } else {
+                            if (Objects.equals(userId, mAuth.getUid()) && isModerator) {
                                 buttonNuovaSpesaComune.setVisibility(View.VISIBLE);
                             }
                         }
