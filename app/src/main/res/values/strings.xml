@@ -118,4 +118,10 @@
     <string name="situazione_spese">Situazione spese</string>
     <string name="storico_spese">Storico spese</string>
     <string name="spese_comuni">Spese comuni</string>
+    <string name="passwords_do_not_match">Le password non corrispondono</string>
+    <string name="password_does_not_meet_requirements">La password non soddisfa i requisiti.</string>
+    <string name="registrazione_fallita_errore_del_db">Registrazione fallita (errore del db).</string>
+    <string name="authentication_failed">Autenticazione fallita.</string>
+    <string name="forgot_password_not_sent">Invio email di recupero fallito</string>
+    <string name="email_does_not_meet_requirements">L\'email non soddisfa i requisiti.</string>
 </resources>
