@@ -91,6 +91,9 @@ public class ForgotPasswordFragment extends Fragment {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Email sent.");
                         Toast.makeText(getContext(), getString(R.string.forgot_password_sent), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d(TAG, "Email not sent.");
+                        Toast.makeText(getContext(), R.string.forgot_password_not_sent, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

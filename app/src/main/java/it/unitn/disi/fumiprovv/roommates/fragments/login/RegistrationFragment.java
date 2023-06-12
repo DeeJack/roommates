@@ -84,7 +84,7 @@ public class RegistrationFragment extends Fragment {
     public void onRegistrationButtonClick(View view) {
         String email = ((TextView) view.findViewById(R.id.registerEmailField)).getText().toString();
         if (!FieldValidation.checkEmailRequirements(email)) {
-            Toast.makeText(view.getContext(), "Email does not meet requirements.",
+            Toast.makeText(view.getContext(), R.string.email_does_not_meet_requirements,
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -93,13 +93,13 @@ public class RegistrationFragment extends Fragment {
         String password2 = ((TextView) view.findViewById(R.id.registerPassword2Field)).getText().toString();
 
         if (!Objects.equals(password, password2)) {
-            Toast.makeText(view.getContext(), "Passwords do not match.",
+            Toast.makeText(view.getContext(), R.string.passwords_do_not_match,
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!FieldValidation.checkPasswordRequirements(password)) {
-            Toast.makeText(view.getContext(), "Password does not meet requirements.",
+            Toast.makeText(view.getContext(), R.string.password_does_not_meet_requirements,
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -134,7 +134,7 @@ public class RegistrationFragment extends Fragment {
                 })
                 .addOnFailureListener(task -> {
                     Log.w(TAG, "createUserOnDb:failure", task.getCause());
-                    Toast.makeText(getContext(), "Registrazione fallita (errore del db).",
+                    Toast.makeText(getContext(), R.string.registrazione_fallita_errore_del_db,
                             Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 });

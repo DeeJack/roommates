@@ -101,7 +101,7 @@ public class LoginFragment extends Fragment {
 
             NavigationUtils.conditionalLogin(navController, sharedPref, requireActivity(), null);
         }).addOnFailureListener(task -> {
-            Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.authentication_failed, Toast.LENGTH_SHORT).show();
             Log.w(TAG, "signInWithEmail:failure" + task.getMessage(), task.getCause());
             progressBar.setVisibility(View.GONE);
         });
