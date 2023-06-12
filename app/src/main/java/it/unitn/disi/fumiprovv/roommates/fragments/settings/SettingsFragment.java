@@ -182,7 +182,20 @@ public class SettingsFragment extends Fragment {
                     }
                 }
                 batch.update(db.collection("utenti").document(mAuth.getCurrentUser().getUid()), "casa", null);
+
                 batch.commit().addOnSuccessListener(task1 -> {
+                    db.collection("turniPulizia")
+                            .whereEqualTo("house", houseViewModel.getHouseId())
+                            .whereArrayContains("users", mAuth.getCurrentUser().getUid()).get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                        WriteBatch batch1 = db.batch();
+                        // Update the document removing the user
+                        queryDocumentSnapshots.getDocuments().forEach(documentSnapshot -> {
+                            batch1.update(documentSnapshot.getReference(), "users", FieldValue.arrayRemove(mAuth.getCurrentUser().getUid()));
+                        });
+                        batch1.commit();
+                    });
+                    houseViewModel.setHouseId("");
                     NavigationUtils.navigateTo(R.id.action_settingsFragment_to_houseCreationFragment, view);
                 }).addOnFailureListener(task1 -> {
                     Toast.makeText(getContext(), "Errore!", Toast.LENGTH_SHORT).show();
