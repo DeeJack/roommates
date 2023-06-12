@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,6 +28,7 @@ import java.util.Objects;
 
 import it.unitn.disi.fumiprovv.roommates.MainActivity;
 import it.unitn.disi.fumiprovv.roommates.R;
+import it.unitn.disi.fumiprovv.roommates.adapters.HomeListAdapter;
 import it.unitn.disi.fumiprovv.roommates.adapters.UserAdapter;
 import it.unitn.disi.fumiprovv.roommates.viewmodels.HouseViewModel;
 
@@ -95,31 +99,31 @@ public class HomeFragment extends Fragment {
 
         HouseViewModel houseViewModel = new ViewModelProvider(requireActivity()).get(HouseViewModel.class);
 
-        ListView utentiListView = view.findViewById(R.id.usersListView);
+        RecyclerView utentiListView = view.findViewById(R.id.usersListView);
+        HomeListAdapter adapter = new HomeListAdapter(getContext(), new ArrayList<>());
+
+        utentiListView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        utentiListView.setAdapter(adapter);
 
         showEvents(view);
         showDuties(view);
 
         db.collection("case").document(houseViewModel.getHouseId()).get().addOnCompleteListener(task -> {
-            UserAdapter adapter = new UserAdapter(getContext(), new ArrayList<>());
             if (!task.isSuccessful()) {
                 return;
             }
             DocumentSnapshot document = task.getResult();
             List<Map<String, Object>> roommates = (List<Map<String, Object>>) document.get("roommates");
+            List<String> names = new ArrayList<>();
             for (Map<String, Object> roommate : roommates) {
                 //prendo nome utente
                 db.collection("utenti").document((String) roommate.get("userId")).get().addOnCompleteListener(task1 -> {
                     String nome = task1.getResult().getString("name");
-                    adapter.addUser(nome);
+                    names.add(nome);
                     adapter.notifyDataSetChanged();
                 });
             }
-
-            utentiListView.setAdapter(adapter);
-            if (getContext() == null) return;
-            int dividerHeight = getResources().getDimensionPixelSize(R.dimen.divider_height);
-            utentiListView.setDividerHeight(dividerHeight);
+            adapter.setUsers(names);
         });
 
         return view;
