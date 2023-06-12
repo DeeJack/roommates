@@ -129,7 +129,6 @@ public class SpeseSituazioneFragment extends Fragment {
                         documentSnapshot.getString("idTo"),
                         documentSnapshot.getDouble("amount")
                 );
-                Log.d("debito", debito.toString());
                 String idFrom = documentSnapshot.getString("idFrom");
                 String idTo = documentSnapshot.getString("idTo");
 
@@ -164,7 +163,6 @@ public class SpeseSituazioneFragment extends Fragment {
                 });
                 return debito;
             }).collect(Collectors.toList());
-            Log.d("boh", debiti.toString());
             adapterSituazioni.setDebts(debiti);
             adapterSituazioni.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);

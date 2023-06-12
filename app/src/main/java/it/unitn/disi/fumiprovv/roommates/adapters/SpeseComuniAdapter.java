@@ -98,13 +98,12 @@ public class SpeseComuniAdapter extends BaseAdapter {
         if(ripetizione.equals(context.getResources().getString(R.string.mensile))) {
             Long currentMonth = (long) Calendar.MONTH;
             Long currentYear = (long) Calendar.YEAR;
-            Log.d("year", currentYear + "");
             Long month = item.getLastMonth();
             Long year = item.getLastYear();
             if (currentMonth.equals(month) && currentYear.equals(year)) {
                 pagata = true;
             }
-        } else if(ripetizione.equals("Settimanale")) {
+        } else if(ripetizione.equals(context.getString(R.string.settimanale))) {
             Long currentWeek = (long) Calendar.WEEK_OF_YEAR;
             Long currentYear = (long) Calendar.YEAR;
             Long week = item.getLastWeek();
@@ -115,19 +114,19 @@ public class SpeseComuniAdapter extends BaseAdapter {
         }
 
         if(pagata) {
-            holder.scadenza.setText("Spesa già pagata ");
+            holder.scadenza.setText(context.getString(R.string.spesa_gia_pagata));
             if(ripetizione.equals(context.getResources().getString(R.string.mensile))) {
-                holder.scadenza.append("questo mese");
+                holder.scadenza.append(context.getString(R.string.questo_mese));
             } else if(ripetizione.equals(context.getResources().getString(R.string.settimanale))){
-                holder.scadenza.append("questa settimana");
+                holder.scadenza.append(context.getString(R.string.questa_settimana));
             }
         } else {
             holder.buttonPaga.setVisibility(View.VISIBLE);
-            holder.scadenza.setText("Da pagare entro fine");
+            holder.scadenza.setText(context.getString(R.string.da_pagare_entro));
             if(ripetizione.equals(context.getResources().getString(R.string.mensile))) {
-                holder.scadenza.append(" mese");
+                holder.scadenza.append(context.getString(R.string.questo_mese));
             } else if(ripetizione.equals(context.getResources().getString(R.string.settimanale))){
-                holder.scadenza.append(" settimana");
+                holder.scadenza.append(context.getString(R.string.questa_settimana));
             }
         }
 
@@ -157,10 +156,9 @@ public class SpeseComuniAdapter extends BaseAdapter {
     private void onPagaButtonClick(SpesaComune spesa) {
         // Create alert dialog to confirm pagamento
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Pagamento");
-        builder.setMessage("Confermi il pagamento?");
-        builder.setPositiveButton("Ok", (dialog, which) -> {
-            Log.d("Pago spesa", "pagata");
+        builder.setTitle(context.getString(R.string.pagamento));
+        builder.setMessage(context.getString(R.string.conferma_pagamento));
+        builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
             //aggiorna data ultimo pagamento nel db
             db.collection("utenti")
                     .whereEqualTo("houseId", spesa.getCasa())
@@ -267,7 +265,7 @@ public class SpeseComuniAdapter extends BaseAdapter {
 
 
         });
-        builder.setNegativeButton("Cancella", (dialog, which) -> {
+        builder.setNegativeButton(context.getString(R.string.cancella), (dialog, which) -> {
             // Do nothing
         });
         builder.show();

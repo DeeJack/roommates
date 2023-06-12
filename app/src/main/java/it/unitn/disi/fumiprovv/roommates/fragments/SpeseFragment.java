@@ -69,7 +69,7 @@ public class SpeseFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tabs, container, false);
 
         MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle("Spese");
+        mainActivity.setTitle(getString(R.string.spese));
 
         FragmentContainerView fragmentContainerView = view.findViewById(R.id.fragmentContainerView);
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);

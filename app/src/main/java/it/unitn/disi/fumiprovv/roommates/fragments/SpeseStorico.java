@@ -113,7 +113,6 @@ public class SpeseStorico extends Fragment {
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 if (documentSnapshot.exists()) {
                                     String fieldValue = documentSnapshot.getString("name");
-                                    Log.d("boh", fieldValue);
                                     spesa.addUserName(fieldValue);
                                     adapter.notifyDataSetChanged();
                                 }

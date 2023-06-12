@@ -124,4 +124,18 @@
     <string name="authentication_failed">Autenticazione fallita.</string>
     <string name="forgot_password_not_sent">Invio email di recupero fallito</string>
     <string name="email_does_not_meet_requirements">L\'email non soddisfa i requisiti.</string>
+    <string name="spesa_gia_pagata">"Spesa già pagata "</string>
+    <string name="questo_mese">questo mese</string>
+    <string name="da_pagare_entro">"Da pagare entro "</string>
+    <string name="questa_settimana">questa settimana</string>
+    <string name="pagamento">Pagamento</string>
+    <string name="conferma_pagamento">Confermi il pagamento?</string>
+    <string name="cancella">Cancella</string>
+    <string name="ok">Ok</string>
+    <string name="spese">Spese</string>
+    <string name="inserire_dati">Inserire i dati</string>
+    <string name="pagato_da">"Pagato da "</string>
+    <string name="euro2">€</string>
+    <string name="amount2">"Amount: "</string>
+    <string name="enter_valid_number">Inserisci un numero valido</string>
 </resources>

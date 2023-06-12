@@ -67,10 +67,13 @@ public class ExpenseAdapter extends BaseAdapter {
 
         Expense item = items.get(position);
         holder.nome.setText(item.getName());
-        holder.pagatoDa.setText("Pagato da: " + item.getUserNamePayer());
+        String pagato_da = context.getString(R.string.pagato_da);
+        holder.pagatoDa.setText(pagato_da + item.getUserNamePayer());
 
         holder.data.setText(item.getDataString());
-        holder.valore.setText("Amount: " + Double.toString(item.getAmount()) + "€");
+        String euro = context.getString(R.string.euro2);
+        String amount = context.getString(R.string.amount2);
+        holder.valore.setText(amount + Double.toString(item.getAmount()) + euro);
 
         //TO DO
         //retrieve nomi degli utenti che hanno pagato

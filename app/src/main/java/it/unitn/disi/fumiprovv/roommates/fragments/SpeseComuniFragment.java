@@ -142,7 +142,6 @@ public class SpeseComuniFragment extends Fragment {
                     spesa.setUserName(nome);
                     adapter.notifyDataSetChanged();
                 });
-                Log.d("spesa", spesa.toString());
                 return spesa;
             }).collect(Collectors.toList());
             adapter.setItems(spese);

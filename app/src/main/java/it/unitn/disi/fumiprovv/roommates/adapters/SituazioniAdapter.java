@@ -124,8 +124,10 @@ public class SituazioniAdapter extends BaseAdapter {
     }
 
     private void onSegnaPagatoButtonClick(Debt debt) {
+        String insertValidNumber = context.getString(R.string.enter_valid_number);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Pagamento Utente");
+        String pagamento = context.getString(R.string.pagamento);
+        builder.setTitle(pagamento);
         builder.setMessage("Inserisci la cifra che ti è stata pagata da " + debt.getUserNameFrom());
 
         // Create EditText programmatically and set it as the dialog's view
@@ -135,7 +137,7 @@ public class SituazioniAdapter extends BaseAdapter {
         input.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
         builder.setView(input);
 
-        builder.setPositiveButton("Ok", (dialog, which) -> {
+        builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
             String inputText = input.getText().toString();
 
             if (!TextUtils.isEmpty(inputText)) {
@@ -143,7 +145,7 @@ public class SituazioniAdapter extends BaseAdapter {
                     Double number = Double.parseDouble(inputText);
 
                     if(number>Math.abs(debt.getAmount())) {
-                        Toast.makeText(context, "Please enter a valid number", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, insertValidNumber, Toast.LENGTH_SHORT).show();
                     } else {
                         //update db
                         Double newAmount = 0.0;
@@ -175,11 +177,11 @@ public class SituazioniAdapter extends BaseAdapter {
                     }
                 } catch (NumberFormatException e) {
                     // Input is not a valid number
-                    Toast.makeText(context, "Please enter a valid number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, insertValidNumber, Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        builder.setNegativeButton("Cancella", (dialog, which) -> {
+        builder.setNegativeButton(context.getString(R.string.cancella), (dialog, which) -> {
             // Do nothing
         });
         builder.show();

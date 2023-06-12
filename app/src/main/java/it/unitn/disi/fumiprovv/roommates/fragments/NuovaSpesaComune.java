@@ -156,7 +156,7 @@ public class NuovaSpesaComune extends Fragment {
         String amountString = ((EditText) getView().findViewById(R.id.amountSpesaComune)).getText().toString();
         //if no input
         if(nome.isEmpty() || amountString.isEmpty()) {
-            Toast.makeText(getContext(), "Inserire i dati", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.inserire_dati), Toast.LENGTH_SHORT).show();
             return;
         }
         //get data
