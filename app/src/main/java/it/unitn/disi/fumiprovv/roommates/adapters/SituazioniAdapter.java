@@ -90,18 +90,23 @@ public class SituazioniAdapter extends BaseAdapter {
 
         //se sono in idTo sono in debito
         double amount = item.getAmount();
-        if(item.getIdFrom().equals(mAuth.getUid())) { //debito
+        if ((item.getIdFrom().equals(mAuth.getUid()) && amount >= 0) ||
+                (!item.getIdFrom().equals(mAuth.getUid()) && amount < 0)) { //debito
+            amount = Math.abs(amount);
             String user = item.getUserNameTo();
+            if (item.getIdTo().equals(mAuth.getUid()))
+                user = item.getUserNameFrom();
             holder.titolo.setText(user);
             if(amount == 0.0) {
                 holder.descrizione.setText("Sei in pari con " + user);
             } else if (amount > 0.0) {
                 holder.descrizione.setText(String.format(Locale.getDefault(), "Devi %.2f a %s", amount, user));
-            } else {
-                holder.descrizione.setText(String.format(Locale.getDefault(), "Devi %.2f a %s", -amount, user));
             }
         } else {//credito
             String user = item.getUserNameFrom();
+            if (item.getIdFrom().equals(mAuth.getUid()))
+                user = item.getUserNameTo();
+
             holder.titolo.setText(user);
             if(amount == 0.0) {
                 holder.descrizione.setText("Sei in pari con " + user);
