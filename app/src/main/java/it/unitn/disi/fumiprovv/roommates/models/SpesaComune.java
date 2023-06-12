@@ -10,6 +10,7 @@ public class SpesaComune {
     private Long lastWeek;
     private Long lastMonth;
     private Long lastYear;
+    private String userName;
 
     public SpesaComune(String id, String casa, String nome, Double valore, String responsabile, String ripetizione) {
         this.id = id;
@@ -90,5 +91,13 @@ public class SpesaComune {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setUserName(String nome) {
+        this.userName = nome;
+    }
+
+    public String getUserName() {
+        return this.userName;
     }
 }

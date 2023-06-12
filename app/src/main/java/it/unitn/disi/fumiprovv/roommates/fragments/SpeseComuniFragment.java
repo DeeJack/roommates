@@ -106,6 +106,11 @@ public class SpeseComuniFragment extends Fragment {
                     spesa.setLastWeek(documentSnapshot.getLong("lastWeek"));
                     spesa.setLastYear(documentSnapshot.getLong("lastYear"));
                 }
+                db.collection("utenti").document(documentSnapshot.getString(getString(R.string.payer))).get().addOnCompleteListener(task1 -> {
+                    String nome = task1.getResult().getString("name");
+                    spesa.setUserName(nome);
+                    adapter.notifyDataSetChanged();
+                });
                 Log.d("spesa", spesa.toString());
                 return spesa;
             }).collect(Collectors.toList());
